@@ -3,7 +3,7 @@
 
 # **UndefinedAPI**
 
-UndefinedAPI is a papermc api to make the life of develepers easier. This is a multi use libary from small util classes to a GUI manager.
+UndefinedAPI is a papermc api to make the life of developers easier. This is a multi use library from small util classes to a GUI manager.
 
 # Imports
 
@@ -36,7 +36,7 @@ dependencyResolutionManagement {
 
 ```<repositories>
 dependencies {
-    implementation 'com.github.TheRedMagic:UndefinedAPI:Tag'
+    implementation 'com.github.TheRedMagic:UndefinedAPI:Version'
 }
 ```
 
@@ -107,4 +107,53 @@ public class FunCommand extends UndefinedCommand {
     }
 }
 ```
+
+## **Menu/GUI**
+The menu part of this api is a powerful tool to help you make and use GUIS. You can start by extending the UndefinedMenu class.
+This class only has 2 parameters.
+
+``title``
+
+This is the title of the GUI
+
+> [!NOTE]
+> Optional. Default : LARGE
+> If you what to manually choose the size you can use an int
+
+``MenuSize``
+
+This is an enum to be able to choose the size of the GUI
+
+### Menu Creation
+
+> [!CAUTION]
+> KOTLIN ONLY
+
+Before you create a menu you need to put in onEnable `setup(JavaPlugin)` (See below) 
+
+```kotlin
+override fun onEnable() {
+    MenuManager.setup(this)
+}
+```
+
+To be able to create a GUI you have to extend the `generateInventory` method where you need to return a `Inventory`. There is a method for this called create Inventory.
+After you have created the Inventory you will be able to add buttons using the method `Inventory.addButton(Button)`. The button class needs to parameters `slot` and `consumer`
+The `consumer` will run then the button is pressed. (See below)
+
+```kotlin
+class FunMenu: UndefinedMenu("FUN") {
+    override fun generateInventory() = createInventory {
+
+        addButton(Button(10){
+            player?.sendMessage("Button clicked!")
+        })
+        
+        setRow(2, ItemBuilder(Material.DIAMOND).setName("DIAMOND!!").build())
+        
+    }
+}
+```
+
+#### Shared
 

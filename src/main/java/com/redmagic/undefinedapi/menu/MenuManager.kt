@@ -14,7 +14,7 @@ object MenuManager : Listener {
 
     private lateinit var plugin: JavaPlugin
 
-    val openMenus = HashMap<UUID, Menu>()
+    val openMenus = HashMap<UUID, UndefinedMenu>()
 
     fun setup(plugin: JavaPlugin) {
         this.plugin = plugin
@@ -26,11 +26,11 @@ object MenuManager : Listener {
         return openMenus.containsKey(player?.uniqueId)
     }
 
-    fun Player.openMenu(menu: Menu) {
+    fun Player.openMenu(undefinedMenu: UndefinedMenu) {
         Bukkit.getScheduler().runTaskLater(plugin, Runnable {
-            if (menu.inventory == null) menu.inventory = menu.generateInventory()
-            openMenus[player!!.uniqueId] = menu
-            openInventory(menu.inventory!!)
+            if (undefinedMenu.inventory == null) undefinedMenu.inventory = undefinedMenu.generateInventory()
+            openMenus[player!!.uniqueId] = undefinedMenu
+            openInventory(undefinedMenu.inventory!!)
         }, 1)
     }
 

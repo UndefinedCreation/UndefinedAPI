@@ -4,7 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-abstract class Menu(private val title: String, private val size: Int) {
+abstract class UndefinedMenu(private val title: String, private val size: Int) {
 
     var inventory: Inventory? = null
 
