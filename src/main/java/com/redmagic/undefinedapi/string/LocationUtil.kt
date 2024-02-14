@@ -25,7 +25,6 @@ fun Location.asString(format:String = "0.##"):String{
     val yaw = df.format(this.yaw)
 
     return "$uuid;$x;$y;$z;$pitch;$yaw"
-
 }
 
 /**

@@ -64,7 +64,7 @@ abstract class UndefinedCommand
         }
 
         return if (isCorrectType) {
-            execute(sender, args)
+            execute(sender, args!!)
             true
         } else false
     }
@@ -89,7 +89,7 @@ abstract class UndefinedCommand
      * @param sender the command sender
      * @param args the command arguments
      */
-    abstract fun execute(sender: CommandSender, args: Array<out String>?)
+    abstract fun execute(sender: CommandSender, args: Array<out String>)
 
     /**
      * This method is used to generate a list of tab completions for a command.
@@ -98,7 +98,7 @@ abstract class UndefinedCommand
      * @param args the arguments provided by the sender for the command
      * @return a CommandTabUtil object containing a list of tab completions and the index of the argument currently being completed
      */
-    abstract fun tabComplete(sender: CommandSender, args: Array<out String>?): CommandTabUtil
+    abstract fun tabComplete(sender: CommandSender, args: Array<out String>): CommandTabUtil
 
 }
 

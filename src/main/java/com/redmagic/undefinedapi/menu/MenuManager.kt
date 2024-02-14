@@ -16,51 +16,50 @@ object MenuManager : Listener {
 
     val openMenus = HashMap<UUID, Menu>()
 
-    fun getPlugin(): JavaPlugin {
-        return this.plugin
-    }
-
     fun setup(plugin: JavaPlugin) {
         this.plugin = plugin
         Bukkit.getPluginManager().registerEvents(this, plugin)
     }
 
-    fun hasMenuOpen(player: Player): Boolean {
-        return openMenus.containsKey(player.uniqueId)
-    }
 
     fun Player.hasMenuOpen(): Boolean {
-        return MenuManager.hasMenuOpen(this)
-    }
-
-    fun openMenu(player: Player, menu: Menu) {
-        Bukkit.getScheduler().runTaskLater(plugin, Runnable {
-            player.openInventory(menu.inventory)
-            openMenus[player.uniqueId] = menu
-        }, 1)
+        return openMenus.containsKey(player?.uniqueId)
     }
 
     fun Player.openMenu(menu: Menu) {
-        MenuManager.openMenu(this, menu)
+        Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+            if (menu.inventory == null) menu.inventory = menu.generateInventory()
+            openMenus[player!!.uniqueId] = menu
+            openInventory(menu.inventory!!)
+        }, 1)
     }
 
-    fun getMenu(player: Player) = openMenus[player.uniqueId]
+    fun Player.closeMenu(){
+        if (!hasMenuOpen()) return
+        val menu = getMenu()!!
+        if (menu.inventory?.viewers?.size!! >= 0){
+            menu.inventory = null
+        }
+        openMenus.remove(uniqueId)
+    }
 
-    fun Player.getMenu() = MenuManager.getMenu(this)
+    fun Player.getMenu() = openMenus[player!!.uniqueId]
 
 
     @EventHandler
     fun onClick(e: InventoryClickEvent) {
-        if (!hasMenuOpen(e.whoClicked as Player)) return
-        val menu = getMenu(e.whoClicked as Player)
-        menu?.buttons?.filter { it.slot == e.slot }?.forEach { button ->
-            run {
-                button.consumer(ClickData(e.rawSlot, e.whoClicked as Player, e.currentItem, e.click, e.action))
-            }
+        val player = e.whoClicked as Player
+        if (!player.hasMenuOpen()) return
+        val menu = player.getMenu()!!
+        menu.buttons.filter { it.slot == e.slot }.forEach { button ->
+            e.isCancelled = true
+            button.consumer.invoke(
+                ClickData(e.rawSlot, e.whoClicked as Player, e.currentItem, e.click, e.action, e.clickedInventory)
+            )
+            return
         }
 
-        menu?.movables?.contains(e.rawSlot).let {
-
+        if (!menu.movables.contains(e.rawSlot)){
             e.isCancelled = true
         }
     }
@@ -68,11 +67,12 @@ object MenuManager : Listener {
 
     @EventHandler
     fun onClose(e: InventoryCloseEvent) {
-        openMenus.remove(e.player.uniqueId)
+        if (e.player is Player)
+            (e.player as Player).closeMenu()
     }
 
     @EventHandler
     fun onLeave(e: PlayerQuitEvent) {
-        openMenus.remove(e.player.uniqueId)
+        e.player.closeMenu()
     }
 }

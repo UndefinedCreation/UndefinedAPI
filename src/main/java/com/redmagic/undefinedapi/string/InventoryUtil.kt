@@ -31,6 +31,25 @@ fun Inventory.asString(): String{
 
 }
 
+fun ItemStack.asString(): String{
+    val outputStream = ByteArrayOutputStream()
+    val dataOutput = BukkitObjectOutputStream(outputStream)
+
+    dataOutput.writeObject(this)
+    dataOutput.close()
+    return Base64Coder.encodeLines(outputStream.toByteArray())
+}
+
+
+fun String.asItemStack(): ItemStack{
+    val inputStream = ByteArrayInputStream(Base64Coder.decodeLines(this))
+    val dataInput = BukkitObjectInputStream(inputStream)
+    val itemStack = dataInput.readObject() as ItemStack
+    dataInput.close()
+    return itemStack
+}
+
+
 /**
  * This method creates an inventory from a base64 encoded string.
  *
