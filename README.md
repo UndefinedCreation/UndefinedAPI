@@ -1,5 +1,5 @@
 > [!WARNING]
-> This API is still in pre-release there will be bugs.
+> This API is still in pre-release there will might be bugs. If you find any please create an issue
 
 # **UndefinedAPI**
 
@@ -109,8 +109,30 @@ public class FunCommand extends UndefinedCommand {
 ```
 
 ## **Menu/GUI**
-The menu part of this api is a powerful tool to help you make and use GUIS. You can start by extending the UndefinedMenu class.
-This class only has 2 parameters.
+
+> [!CAUTION]
+> KOTLIN ONLY
+
+The menu part of this api is a powerful tool to help you make and use GUIS.
+
+Before you create or use a menus you need to put in onEnable `setup(JavaPlugin)` (See below)
+
+```kotlin
+override fun onEnable() {
+    MenuManager.setup(this)
+}
+```
+
+### Opening GUI
+To be able to open a GUI you will need a GUI Object and a Player Object then you can use the `openMenu(Menu)` method (See below)
+
+```kotlin
+player.openMenu(SettingsGUI())
+```
+
+### Menu Creation
+
+You can start creating one by extending the UndefinedMenu class. This class only has 2 parameters.
 
 ``title``
 
@@ -124,19 +146,6 @@ This is the title of the GUI
 
 This is an enum to be able to choose the size of the GUI
 
-### Menu Creation
-
-> [!CAUTION]
-> KOTLIN ONLY
-
-Before you create a menu you need to put in onEnable `setup(JavaPlugin)` (See below) 
-
-```kotlin
-override fun onEnable() {
-    MenuManager.setup(this)
-}
-```
-
 To be able to create a GUI you have to extend the `generateInventory` method where you need to return a `Inventory`. There is a method for this called create Inventory.
 After you have created the Inventory you will be able to add buttons using the method `Inventory.addButton(Button)`. The button class needs to parameters `slot` and `consumer`
 The `consumer` will run then the button is pressed. (See below)
@@ -149,11 +158,46 @@ class FunMenu: UndefinedMenu("FUN") {
             player?.sendMessage("Button clicked!")
         })
         
-        setRow(2, ItemBuilder(Material.DIAMOND).setName("DIAMOND!!").build())
-        
     }
 }
 ```
 
 #### Shared
+A shared GUI is an gui that can be opened by multiple players, it will update for all players as wel.
 
+##### Example
+Lets say you have a minion GUI that you what to be shared. You can have a minion object and in that object have a var of your GUI. (See below)
+
+**Main Class**
+```kotlin
+class Minion {
+    val menu = MinionGUI()
+}
+```
+
+**Menu Class**
+```kotlin
+class MinionGUI: UndefinedMenu("Minion") {
+    override fun generateInventory() = createInventory { 
+        //Creates GUI
+    }
+}
+```
+
+
+#### Per Player
+A per player GUI is an GUI that is that the gui can be different for every player. You can do this by creating a new instance of the Menu class when opening it (See below)
+
+**Opening**
+```kotlin
+player.openMenu(SettingsGUI())
+```
+
+**Menu Class**
+```kotlin
+class SettingsGUI: UndefinedMenu("Settings") {
+    override fun generateInventory() = createInventory {
+        //Creates GUI
+    }
+}
+```

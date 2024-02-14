@@ -1,6 +1,5 @@
 package com.redmagic.undefinedapi.command
 
-import com.google.common.base.Strings
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandMap
 import org.bukkit.command.CommandSender
@@ -8,7 +7,6 @@ import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.command.defaults.BukkitCommand
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
-import org.eclipse.sisu.Description
 
 /**
  * This class represents an abstract command that can be executed in a Bukkit server.
