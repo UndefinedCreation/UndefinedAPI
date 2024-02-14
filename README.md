@@ -82,10 +82,6 @@ class FunCommand: UndefinedCommand("Test") {
     override fun execute(sender: CommandSender, args: Array<out String>) {
         sender.sendMessage("FUN!!")
     }
-
-    override fun tabComplete(sender: CommandSender, args: Array<out String>): CommandTabUtil {
-        return CommandTabUtil(listOf(), 0)
-    }
 }
 ```
 
@@ -100,11 +96,33 @@ public class FunCommand extends UndefinedCommand {
     public void execute(CommandSender sender, String[] args) {
         sender.sendMessage("FUN!!");
     }
+}
+```
+## Tab Completion
+To be able to tab complete with the UndefinedCommand you will need to extend the `tabComplete` method.
+With this method you will be able to use it just like the default tab complete in spigot except you won't need to use `StringUtil` to be able to sort it. (See below)
 
-    @Override
-    public CommandTabUtil tabComplete(CommandSender sender, String[] args) {
-        return new CommandTabUtil(new ArrayList<>(), 0);
-    }
+### **Kotlin**
+```kotlin
+override fun tabComplete(sender: CommandSender, args: Array<out String>): CommandTabUtil {
+        
+    val nameList: MutableList<String> = mutableListOf()
+        
+    Bukkit.getOnlinePlayers().forEach{ nameList.add(it.name) }
+        
+    return CommandTabUtil(nameList, 0)
+}
+```
+
+### **Java**
+```java
+@Override
+public CommandTabUtil tabComplete(CommandSender sender, String[] args) {
+    ArrayList<String> nameList = new ArrayList<>();
+
+    Bukkit.getOnlinePlayers().forEach(player -> nameList.add(player.getName()));
+        
+    return new CommandTabUtil(nameList, 0);
 }
 ```
 
