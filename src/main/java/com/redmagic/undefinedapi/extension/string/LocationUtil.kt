@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.string
+package com.redmagic.undefinedapi.extension.string
 
 import org.bukkit.Bukkit
 import org.bukkit.Location

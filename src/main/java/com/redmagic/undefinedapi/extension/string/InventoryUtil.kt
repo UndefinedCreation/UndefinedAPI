@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.string
+package com.redmagic.undefinedapi.extension.string
 
 import org.bukkit.Bukkit
 import org.bukkit.inventory.Inventory
@@ -10,10 +10,9 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 /**
- * Convert the current inventory to a string representation using Base64 encoding.
- * This allows for easy storage or transmission of the inventory data.
+ * Converts the inventory to a Base64 encoded string representation.
  *
- * @return The string representation of the inventory.
+ * @return The Base64 encoded string representation of the inventory.
  */
 fun Inventory.asString(): String{
 
@@ -31,6 +30,11 @@ fun Inventory.asString(): String{
 
 }
 
+/**
+ * Converts the ItemStack object to a Base64 encoded string representation.
+ *
+ * @return The Base64 encoded string representation of the ItemStack.
+ */
 fun ItemStack.asString(): String{
     val outputStream = ByteArrayOutputStream()
     val dataOutput = BukkitObjectOutputStream(outputStream)
@@ -41,6 +45,11 @@ fun ItemStack.asString(): String{
 }
 
 
+/**
+ * Converts a Base64 encoded String into an ItemStack.
+ *
+ * @return The ItemStack represented by the Base64 encoded String.
+ */
 fun String.asItemStack(): ItemStack{
     val inputStream = ByteArrayInputStream(Base64Coder.decodeLines(this))
     val dataInput = BukkitObjectInputStream(inputStream)
@@ -51,9 +60,9 @@ fun String.asItemStack(): ItemStack{
 
 
 /**
- * This method creates an inventory from a base64 encoded string.
+ * Converts a Base64-encoded string to an inventory object.
  *
- * @return The created inventory.
+ * @return The converted inventory object.
  */
 fun String.asInventory(): Inventory{
     val inputStream = ByteArrayInputStream(Base64Coder.decodeLines(this))

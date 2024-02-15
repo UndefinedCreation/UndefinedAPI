@@ -1,5 +1,5 @@
 > [!WARNING]
-> This API is still in pre-release there will might be bugs. If you find any please create an issue
+> This API is still in pre-release there might be bugs. If you find any please create an issue
 
 # **UndefinedAPI**
 
@@ -39,6 +39,13 @@ dependencies {
     implementation 'com.github.TheRedMagic:UndefinedAPI:Version'
 }
 ```
+
+## Setup
+To set up UndefinedAPI you will need to put this in onEnable.
+```kotlin
+UndefinedAPI(this)
+```
+After that you are ready to go.
 
 ## Commands
 To be able to create a command with UndefinedAPI you will need to extend the UndefinedCommand Class (See below)
@@ -132,14 +139,6 @@ public CommandTabUtil tabComplete(CommandSender sender, String[] args) {
 > KOTLIN ONLY
 
 The menu part of this api is a powerful tool to help you make and use GUIS.
-
-Before you create or use a menus you need to put in onEnable `setup(JavaPlugin)` (See below)
-
-```kotlin
-override fun onEnable() {
-    MenuManager.setup(this)
-}
-```
 
 ### Opening GUI
 To be able to open a GUI you will need a GUI Object and a Player Object then you can use the `openMenu(Menu)` method (See below)

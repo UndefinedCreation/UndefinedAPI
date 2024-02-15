@@ -1,14 +1,11 @@
 package com.redmagic.undefinedapi.builders
 
-import com.redmagic.undefinedapi.string.asItemStack
+import com.redmagic.undefinedapi.extension.string.asItemStack
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Item
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
 import kotlin.collections.HashMap
@@ -30,8 +27,18 @@ class ItemBuilder(private var itemStack: ItemStack) {
     var unbreakable: Boolean = false
     var skullowner: UUID? = null
 
+    /**
+     * Constructs a new instance of an item using the specified material.
+     *
+     * @param material The material of the item.
+     */
     constructor(material: Material): this(ItemStack(material))
 
+    /**
+     * Creates a new instance of the class using a base64 string representation of an ItemStack.
+     *
+     * @param base64String The base64 string representation of an ItemStack.
+     */
     constructor(base64String: String): this(base64String.asItemStack())
 
 

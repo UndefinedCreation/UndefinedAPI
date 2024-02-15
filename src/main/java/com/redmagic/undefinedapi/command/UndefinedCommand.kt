@@ -9,13 +9,13 @@ import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
 /**
- * This class represents an abstract command that can be executed in a Bukkit server.
+ * Abstract class representing an undefined command in Bukkit.
  *
  * @param commandName The name of the command.
- * @param commandType The type of the command.
- * @param description The description of the command.
- * @param aliases The aliases for the command.
- * @param permission The permission required to execute the command.
+ * @param commandType The type of the command. Default is [CommandType.ALL].
+ * @param description The description of the command. Default is "Command created with UndefinedAPI".
+ * @param aliases The aliases for the command. Default is an empty list.
+ * @param permission The permission required to execute the command. Default is an empty string.
  */
 abstract class UndefinedCommand
 (
@@ -37,7 +37,8 @@ abstract class UndefinedCommand
     }
 
     /**
-     * Sets the field "commandMap" of the Bukkit server object to register the command.
+     * Sets the field "commandMap" of the Bukkit server object to enable registration of commands.
+     * This method is private and can only be accessed within the same class.
      */
     private fun setField(){
         val field = Bukkit.getServer().javaClass.getDeclaredField("commandMap");
@@ -47,11 +48,11 @@ abstract class UndefinedCommand
     }
 
     /**
-     * Executes a command based on the given command sender, command name, and arguments.
+     * Executes the command based on the command sender, command name, and arguments.
      *
-     * @param sender The command sender who executed the command.
+     * @param sender The command sender.
      * @param commandName The name of the command.
-     * @param args The arguments passed to the command.
+     * @param args The command arguments (optional).
      * @return Returns true if the command was executed successfully, false otherwise.
      */
     override fun execute(sender: CommandSender, commandName: String, args: Array<out String>?): Boolean {
@@ -68,12 +69,12 @@ abstract class UndefinedCommand
     }
 
     /**
-     * Provides tab completion for the tabComplete method in the UndefinedCommand class.
+     * Generates tab completions for a command.
      *
-     * @param sender the command sender
-     * @param alias the command alias
-     * @param args the command arguments
-     * @return a list of possible completions for the command
+     * @param sender The command sender.
+     * @param alias The command alias.
+     * @param args The command arguments.
+     * @return A list of tab completions.
      */
     override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>): List<String> {
         val commandUtil = tabComplete(sender, args)
@@ -84,17 +85,17 @@ abstract class UndefinedCommand
     /**
      * Executes the command.
      *
-     * @param sender the command sender
-     * @param args the command arguments
+     * @param sender The command sender.
+     * @param args The command arguments.
      */
     abstract fun execute(sender: CommandSender, args: Array<out String>)
 
     /**
-     * This method is used to generate a list of tab completions for a command.
+     * Performs tab completion for a command.
      *
-     * @param sender the CommandSender that triggered the tab completion
-     * @param args the arguments provided by the sender for the command
-     * @return a CommandTabUtil object containing a list of tab completions and the index of the argument currently being completed
+     * @param sender The command sender.
+     * @param args The command arguments.
+     * @return The CommandTabUtil object that represents the tab completion results.
      */
     abstract fun tabComplete(sender: CommandSender, args: Array<out String>): CommandTabUtil
 
