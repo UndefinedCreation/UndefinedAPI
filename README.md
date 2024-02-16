@@ -5,7 +5,7 @@
 
 UndefinedAPI is a papermc api to make the life of developers easier. This is a multi use library from small util classes to a GUI manager.
 
-# Imports
+## Imports
 
 Maven:
 ```<repositories>
