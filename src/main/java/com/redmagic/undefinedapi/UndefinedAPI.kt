@@ -1,5 +1,6 @@
 package com.redmagic.undefinedapi
 
+import com.redmagic.undefinedapi.event.EventManager
 import com.redmagic.undefinedapi.menu.MenuManager
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -10,7 +11,7 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
     init {
         plugin = javaPlugin
         MenuManager.setup(plugin)
-
+        EventManager()
     }
 
     companion object{
@@ -18,3 +19,5 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
     }
 
 }
+
+
