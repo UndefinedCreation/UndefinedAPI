@@ -240,3 +240,79 @@ public void onJoin(PlayerJoinEvent e){
     //Code
 }
 ```
+
+## Scheduler
+
+> [!CAUTION]
+> KOTLIN ONLY
+
+> [!Note]
+> TimeUntil class was taken from [TwilightAPI](https://github.com/flytegg/twilight)
+
+This API makes it easier to create tasks by make methods that be accessed any were. We are going to start by running code sync and async by using this. (See below)
+
+```kotlin
+sync { 
+    //Run sync code
+}
+        
+async { 
+    //Run async code
+}
+```
+
+### Delay
+
+Next is delaying a task. This is not much different. (See below)
+
+```kotlin
+delay(20) {
+    //This task will be run in 20 ticks
+}
+
+delay(20, true) {
+    //This task will be run in 20 ticks async
+}
+        
+delay(1, TimeUnit.SECONDS, false){
+    //This task will be run is 20 ticks sync
+}
+```
+
+### Repeating
+
+Last one is creating repeating tasks. With this you will be able to give in how many times the task will run as wel. (See below)
+
+```kotlin
+repeatingTask(1) {
+    //This will run every tick
+}
+
+repeatingTask(20, 5){
+    //This will run every 20 ticks 5 times
+}
+
+repeatingTask(1, true){
+    //This will run every tick async
+}
+
+repeatingTask(20, true, 5){
+    //This will run every 20 ticks 5 times async
+}
+
+repeatingTask(1, TimeUnit.SECONDS){
+    //This will run every second
+}
+
+repeatingTask(1, TimeUnit.SECONDS, 5){
+    //This will run every second 5 times
+}
+
+repeatingTask(1, TimeUnit.SECONDS, true){
+    //This will run every second async
+}
+
+repeatingTask(1, TimeUnit.SECONDS, 5, true){
+    //This will run every second 5 times async
+}
+```
