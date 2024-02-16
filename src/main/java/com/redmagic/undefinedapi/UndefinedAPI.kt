@@ -5,6 +5,7 @@ import com.redmagic.undefinedapi.menu.MenuManager
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.concurrent.TimeUnit
+import kotlin.random.Random
 
 class UndefinedAPI(javaPlugin: JavaPlugin) {
 

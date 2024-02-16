@@ -1,5 +1,7 @@
 package com.redmagic.undefinedapi.extension
 
+import org.bukkit.event.EventHandler
+import org.bukkit.event.player.PlayerJoinEvent
 import kotlin.random.Random
 
 /**
@@ -33,3 +35,4 @@ private fun getTotalWeight(map: Map<Any, Double>): Double {
 
     return total
 }
+

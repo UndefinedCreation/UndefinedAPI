@@ -218,3 +218,25 @@ class SettingsGUI: UndefinedMenu("Settings") {
     }
 }
 ```
+
+## Events
+When using this api for events you **won't** need to register any events or even extend the Listener Class. The only thing you will need to do to make events work is create a method with the `@EventHandler` and the event type as the first parameter. (See below)
+
+
+### Kotlin
+
+```kotlin
+@EventHandler
+fun onJoin(e: PlayerJoinEvent){
+    //Code
+}
+```
+
+### Java
+
+```kotlin
+@EventHandler
+public void onJoin(PlayerJoinEvent e){
+    //Code
+}
+```
