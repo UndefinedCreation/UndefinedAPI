@@ -49,4 +49,3 @@ tasks {
         minecraftVersion("1.20.4")
     }
 }
-
