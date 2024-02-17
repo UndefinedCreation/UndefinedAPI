@@ -7,6 +7,8 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.2.2"
 }
 
+apply(plugin = "maven-publish")
+
 afterEvaluate{
     publishing{
         publications{
@@ -20,7 +22,6 @@ afterEvaluate{
 
 group = "com.redmagic"
 version = "1.0.1"
-
 
 repositories {
     mavenCentral()
@@ -48,3 +49,4 @@ tasks {
         minecraftVersion("1.20.4")
     }
 }
+
