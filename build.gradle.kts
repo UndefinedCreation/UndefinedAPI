@@ -1,9 +1,9 @@
 plugins {
     java
     kotlin("jvm") version "1.9.22"
+    `maven-publish`
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.papermc.paperweight.userdev") version "1.5.10"
-
     id("xyz.jpenilla.run-paper") version "2.2.2"
 }
 
