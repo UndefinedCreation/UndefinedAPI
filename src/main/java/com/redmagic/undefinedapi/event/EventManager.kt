@@ -22,10 +22,11 @@ class EventManager : Listener {
             println(type)
 
             Bukkit.getPluginManager().registerEvent(type, this, eventHandler.priority, {
-                    _, event -> {
-                        println(event.eventName)
-                it.invoke(event)
-            }
+                    _, event ->
+                run {
+                    println(event.eventName)
+                    it.invoke(event)
+                }
             }, UndefinedAPI.plugin, eventHandler.ignoreCancelled)
 
         }
