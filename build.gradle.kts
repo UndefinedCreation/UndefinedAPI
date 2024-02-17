@@ -1,14 +1,26 @@
 plugins {
     java
     kotlin("jvm") version "1.9.22"
-    `maven-publish`
+    id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.papermc.paperweight.userdev") version "1.5.10"
     id("xyz.jpenilla.run-paper") version "2.2.2"
 }
 
+afterEvaluate{
+    publishing{
+        publications{
+            register("mavenJava", MavenPublication::class){
+                from(components["java"])
+                artifactId = "UndefinedAPI"
+            }
+        }
+    }
+}
+
 group = "com.redmagic"
 version = "1.0.1"
+
 
 repositories {
     mavenCentral()
