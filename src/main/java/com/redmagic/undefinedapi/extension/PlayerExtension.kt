@@ -45,6 +45,9 @@ fun Player.sendActionBar(string: String, time: Int, timeUnit: TimeUnit = TimeUni
  */
 fun Player.feed() { foodLevel = 20 }
 
+/**
+ * Restores the player's health to the maximum health value.
+ */
 fun Player.heal() { health = maxHealth }
 
 /**
@@ -56,8 +59,6 @@ fun Player.resetWalkSpeed() { walkSpeed = 0.2F }
  * The fly speed is set to the default value of 0.1F.
  */
 fun Player.resetFlySpeed() { flySpeed = 0.1F }
-
-
 
 /**
  * Hides the player from all online players.

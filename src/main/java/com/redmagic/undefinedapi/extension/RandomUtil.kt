@@ -12,17 +12,14 @@ import kotlin.random.Random
  */
 fun Random.weightedRandom(map: Map<Any, Double>): Any{
     val totalWeight = getTotalWeight(map)
-    var idx = 0;
-    var r = this.nextDouble() * totalWeight
-
-    while (idx < map.keys.size - 1){
-        val  s = map.keys.elementAt(idx)
-        r -= map[s] ?: 0.0
-        if (r <= 0) break
-        ++idx
+    var randomWeight = this.nextDouble(totalWeight)
+    for ((item, weight) in map) {
+        randomWeight -= weight
+        if (randomWeight <= 0) {
+            return item
+        }
     }
-
-    return map.keys.elementAt(idx)
+    throw IllegalArgumentException("The map is empty.")
 }
 
 /**
@@ -37,4 +34,3 @@ private fun getTotalWeight(map: Map<Any, Double>): Double {
 
     return total
 }
-
