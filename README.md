@@ -220,24 +220,40 @@ class SettingsGUI: UndefinedMenu("Settings") {
 ```
 
 ## Events
-When using this api for events you **won't** need to register any events or even extend the Listener Class. The only thing you will need to do to make events work is create a method with the `@EventHandler` and the event type as the first parameter. (See below)
 
+> [!CAUTION]
+> KOTLIN ONLY
 
-### Kotlin
+When using this API you won't need to do and registering of event or even extending the `Listener` class. Even creating custom events is easier.
+
+### Listening
+Listening to an event is straight forward and easy. You need to create a method called `event<EventType>`. (See below)
+
 
 ```kotlin
-@EventHandler
-fun onJoin(e: PlayerJoinEvent){
-    //Code
+event<PlayerJoinEvent> { 
+    //Player Join
 }
 ```
 
-### Java
+To be able to unregister the listener you can very easily put `.unregister` at the end. (See below)
 
 ```kotlin
-@EventHandler
-public void onJoin(PlayerJoinEvent e){
-    //Code
+event<PlayerJoinEvent> {
+    //Player Join
+}.unregister()
+```
+
+### Custom Event
+Creating a custom event using this API you extend the `UndefinedEvent` class (See below)
+
+```kotlin
+class AsyncCustomEvent: UndefinedEvent(true) {
+    //Async event
+}
+
+class SyncCustomEvent: UndefinedEvent() {
+    //Sync event
 }
 ```
 
