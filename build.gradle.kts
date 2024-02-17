@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.reflections:reflections:0.9.11")
 }
 
@@ -48,4 +48,8 @@ tasks {
     runServer {
         minecraftVersion("1.20.4")
     }
+}
+
+kotlin{
+    jvmToolchain(17)
 }
