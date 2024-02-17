@@ -1,7 +1,7 @@
 > [!WARNING]
 > This API is still in pre-release there might be bugs. If you find any please create an issue
 
-# **UndefinedAPI**
+# **UndefinedAPI** [![](https://jitpack.io/v/TheRedMagic/UndefinedAPI.svg)](https://jitpack.io/#TheRedMagic/UndefinedAPI)
 
 UndefinedAPI is a papermc api to make the life of developers easier. This is a multi use library from small util classes to a GUI manager.
 
