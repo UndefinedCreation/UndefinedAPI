@@ -1,5 +1,7 @@
 package com.redmagic.undefinedapi.menu
 
+import com.redmagic.undefinedapi.menu.button.ClickData
+import com.redmagic.undefinedapi.menu.button.MenuButton
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -116,6 +118,9 @@ object MenuManager : Listener {
             button.consumer.invoke(
                 ClickData(e.rawSlot, e.whoClicked as Player, e.currentItem, e.click, e.action, e.clickedInventory)
             )
+            if (button is MenuButton)
+                player.openMenu(button.undefinedMenu)
+
             return
         }
 

@@ -1,5 +1,6 @@
 package com.redmagic.undefinedapi.menu
 
+import com.redmagic.undefinedapi.menu.button.Button
 import org.bukkit.Bukkit
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack

@@ -1,9 +1,8 @@
-package com.redmagic.undefinedapi.menu
+package com.redmagic.undefinedapi.menu.button
 
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
-import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
@@ -13,7 +12,7 @@ import org.bukkit.inventory.ItemStack
  * @param slot the slot number where the button should be placed.
  * @param consumer a lambda expression that takes a [ClickData] object as an argument and performs actions based on the click event.
  */
-class Button(val slot: Int, val consumer: ClickData.() -> Unit)
+open class Button(open val slot: Int, open val consumer: ClickData.() -> Unit)
 
 /**
  * Represents data related to a click event.
