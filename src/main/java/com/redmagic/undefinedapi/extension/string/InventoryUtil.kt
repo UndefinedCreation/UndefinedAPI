@@ -79,3 +79,12 @@ fun String.asInventory(): Inventory{
     return inv
 }
 
+/**
+ * Calculates the number of empty slots in the inventory.
+ *
+ * @return The number of empty slots in the inventory.
+ */
+fun Inventory.emptySlots(): Int{
+    return this.contents.count { it == null }
+}
+

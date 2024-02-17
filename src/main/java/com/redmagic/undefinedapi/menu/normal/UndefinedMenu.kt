@@ -1,6 +1,7 @@
-package com.redmagic.undefinedapi.menu
+package com.redmagic.undefinedapi.menu.normal
 
-import com.redmagic.undefinedapi.menu.button.Button
+import com.redmagic.undefinedapi.menu.MenuSize
+import com.redmagic.undefinedapi.menu.normal.button.Button
 import org.bukkit.Bukkit
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -105,7 +106,7 @@ abstract class UndefinedMenu(private val title: String, private val size: Int) {
      *                It takes an instance of [Inventory] as the receiver and does not return a value.
      * @return the created [Inventory] object.
      */
-    fun createInventory(display: Inventory.() -> Unit) : Inventory {
+    open fun createInventory(display: Inventory.() -> Unit) : Inventory {
         buttons.clear()
         movables.clear()
         val inventory = Bukkit.createInventory(null, size, title).apply(display)

@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.menu.utils
+package com.redmagic.undefinedapi.menu
 
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack

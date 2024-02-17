@@ -1,5 +1,6 @@
 package com.redmagic.undefinedapi.menu
 
+import com.redmagic.undefinedapi.menu.normal.UndefinedMenu
 import org.bukkit.entity.Player
 
 /**

@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.menu.button
+package com.redmagic.undefinedapi.menu.normal.button
 
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType

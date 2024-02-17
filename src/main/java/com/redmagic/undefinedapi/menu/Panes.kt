@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.menu.utils
+package com.redmagic.undefinedapi.menu
 
 import com.redmagic.undefinedapi.builders.ItemBuilder
 import org.bukkit.Material

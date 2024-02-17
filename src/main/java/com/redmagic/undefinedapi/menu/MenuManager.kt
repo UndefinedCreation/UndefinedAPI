@@ -1,7 +1,10 @@
 package com.redmagic.undefinedapi.menu
 
-import com.redmagic.undefinedapi.menu.button.ClickData
-import com.redmagic.undefinedapi.menu.button.MenuButton
+import com.redmagic.undefinedapi.menu.MenuManager.openMenu
+import com.redmagic.undefinedapi.menu.normal.button.ClickData
+import com.redmagic.undefinedapi.menu.normal.button.MenuButton
+import com.redmagic.undefinedapi.menu.normal.UndefinedMenu
+import com.redmagic.undefinedapi.menu.page.UndefinedPageMenu
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -113,6 +116,35 @@ object MenuManager : Listener {
         val player = e.whoClicked as Player
         if (!player.hasMenuOpen()) return
         val menu = player.getMenu()!!
+        if (menu is UndefinedPageMenu){
+            runPageMenu(menu, e)
+        }else{
+            runDefaultMenu(menu, e)
+        }
+
+    }
+
+    private fun runPageMenu(menu: UndefinedPageMenu, e: InventoryClickEvent){
+        val player = e.whoClicked as Player
+        if (e.currentItem == null) return
+        if (e.currentItem!!.type.isAir) return
+        e.isCancelled = true
+        if (menu.itemsMap.containsKey(e.rawSlot)) return
+        when(e.rawSlot){
+            menu.bButton!!.slot ->{
+                menu.previousPage()
+                return
+            }
+            menu.nButton!!.slot ->{
+                menu.nextPage()
+                return
+            }
+        }
+    }
+
+    private fun runDefaultMenu(menu: UndefinedMenu, e: InventoryClickEvent){
+        val player = e.whoClicked as Player
+
         menu.buttons.filter { it.slot == e.slot }.forEach { button ->
             e.isCancelled = true
             button.consumer.invoke(
