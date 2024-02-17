@@ -4,8 +4,10 @@ import com.google.gson.annotations.Until
 import com.redmagic.undefinedapi.extension.string.emptySlots
 import com.redmagic.undefinedapi.menu.MenuSize
 import com.redmagic.undefinedapi.menu.normal.UndefinedMenu
+import com.redmagic.undefinedapi.menu.normal.button.ClickData
 import com.redmagic.undefinedapi.menu.page.button.PageButton
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.jetbrains.annotations.MustBeInvokedByOverriders
@@ -17,6 +19,8 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
     var nButton: PageButton? = null
     var itemsMap = HashMap<Int, ItemStack>()
     private var pageList: PageList<ItemStack>? = null
+
+    abstract var clickData: ClickData.() -> Unit
 
     private var page = 1
     private var totalPages = 0
@@ -59,33 +63,30 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
         setItems(items)
     }
 
-    fun createPageInventory(display: Inventory.() -> Unit): Inventory?{
+    fun createPageInventory(display: Inventory.() -> Unit): Inventory{
 
-        if (bButton == null || nButton == null){
-            Bukkit.getLogger().warning("Back or next button is not set in $title page menu.")
-            return null
-        }
 
-        val inventory = Bukkit.createInventory(null, size, title).apply(display)
+        inventory = Bukkit.createInventory(null, size, title).apply(display)
 
-        inventory.contents.forEach {
+        inventory!!.contents.forEach {
             if (it != null)
-                itemsMap[inventory.contents.indexOf(it)] = it
+                itemsMap[inventory!!.contents.indexOf(it)] = it
         }
 
-        inventory.setItem(bButton!!.slot, bButton!!.activeButton)
-        inventory.setItem(nButton!!.slot, nButton!!.activeButton)
+        inventory!!.setItem(bButton!!.slot, bButton!!.activeButton)
+        inventory!!.setItem(nButton!!.slot, nButton!!.activeButton)
 
-        pageList = PageList(list, inventory.emptySlots())
+        pageList = PageList(list, inventory!!.emptySlots())
         totalPages = pageList!!.pageCount()
 
         setButtons()
 
         setItems(pageList!!.getPage(1)!!)
 
-        return inventory
+        return inventory!!
     }
 
+    fun onPress(clickData: ClickData.() -> Unit){}
 
     private fun setItems(items: List<ItemStack>){
 
@@ -95,7 +96,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
     }
 
     private fun setButtons(){
-        if (page + 1 >= totalPages){
+        if (page + 1 > totalPages){
             inventory!!.setItem(nButton!!.slot, nButton!!.emptyButton)
         }else {
             inventory!!.setItem(nButton!!.slot, nButton!!.activeButton)
@@ -110,14 +111,18 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
 
     fun setBackButton(slot: Int, backButton: ItemStack, emptyButton: ItemStack){
         bButton = PageButton(slot, backButton, emptyButton)
+        this.itemsMap[slot] = ItemStack(Material.AIR)
     }
     fun setBackButton(pageButton: PageButton) {
         bButton = pageButton
+        this.itemsMap[pageButton.slot] = ItemStack(Material.AIR)
     }
     fun setNextButton(slot: Int, nextButton: ItemStack, emptyButton: ItemStack){
         nButton = PageButton(slot, nextButton, emptyButton)
+        this.itemsMap[slot] = ItemStack(Material.AIR)
     }
     fun setNextButton(pageButton: PageButton) {
         nButton = pageButton
+        this.itemsMap[pageButton.slot] = ItemStack(Material.AIR)
     }
 }

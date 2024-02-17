@@ -124,12 +124,17 @@ object MenuManager : Listener {
 
     }
 
+    /**
+     * Runs the page menu logic based on the inventory click event.
+     *
+     * @param menu The undefined page menu.
+     * @param e The inventory click event.
+     */
     private fun runPageMenu(menu: UndefinedPageMenu, e: InventoryClickEvent){
         val player = e.whoClicked as Player
         if (e.currentItem == null) return
         if (e.currentItem!!.type.isAir) return
         e.isCancelled = true
-        if (menu.itemsMap.containsKey(e.rawSlot)) return
         when(e.rawSlot){
             menu.bButton!!.slot ->{
                 menu.previousPage()
@@ -140,8 +145,16 @@ object MenuManager : Listener {
                 return
             }
         }
+        if (menu.itemsMap.containsKey(e.rawSlot)) return
+        menu.clickData.invoke(ClickData(e.rawSlot, player, e.currentItem, e.click, e.action, e.clickedInventory))
     }
 
+    /**
+     * Runs the default menu behavior when a button is clicked in the inventory.
+     *
+     * @param menu The undefined menu that the button belongs to.
+     * @param e The InventoryClickEvent triggered by the button click.
+     */
     private fun runDefaultMenu(menu: UndefinedMenu, e: InventoryClickEvent){
         val player = e.whoClicked as Player
 

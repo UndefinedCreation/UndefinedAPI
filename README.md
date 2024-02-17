@@ -222,7 +222,6 @@ class MinionGUI: UndefinedMenu("Minion") {
 }
 ```
 
-
 #### Per Player
 A per player GUI is an GUI that is that the gui can be different for every player. You can do this by creating a new instance of the Menu class when opening it (See below)
 
@@ -237,6 +236,37 @@ class SettingsGUI: UndefinedMenu("Settings") {
     override fun generateInventory() = createInventory {
         //Creates GUI
     }
+}
+```
+
+### Paged Menu
+
+> [!CAUTION]
+> KOTLIN ONLY
+
+To be able to create a custom paged Menu you will need to extend the `UndefinedPageMenu`. Its never the same as a normal Menu but you will need to pase a `List` of itemStacks witch will be sorted into pages. When the same as the normal Menu you will to extend the `generateInventory` method with **`createPageInventory`** method.
+After that put in your back button and next button using the `setBackButton` and `setNextButton`. You are able to shape the inventory to your liking. (See below)
+
+> [!NOTE]
+> You need to have the `setBackButton` and `setNextButton` for the gui to work.
+
+```kotlin
+class FunGui(list: List<ItemStack>): UndefinedPageMenu("Fun", MenuSize.LARGE, list) {
+    override fun generateInventory(): Inventory = createPageInventory {
+
+        setBackButton(PageButton(45, ItemStack(Material.RED_STAINED_GLASS_PANE), ItemStack(Material.GRAY_STAINED_GLASS_PANE)))
+        setNextButton(PageButton(53, ItemStack(Material.LIME_STAINED_GLASS_PANE), ItemStack(Material.GRAY_STAINED_GLASS_PANE)))
+
+        setColumn(6, ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName(" ").build())
+    }
+}
+```
+
+When lastly extend the `clickData: ClickData.()` witch will run then the gui is pressed. (See below)
+
+```kotlin
+override var clickData: ClickData.() -> Unit = {
+    println("DIAMONDS")
 }
 ```
 
