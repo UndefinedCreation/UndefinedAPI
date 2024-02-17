@@ -9,13 +9,14 @@ plugins {
 
 apply(plugin = "maven-publish")
 
-afterEvaluate{
-    publishing{
-        publications{
-            register("mavenJava", MavenPublication::class){
-                from(components["java"])
-                artifactId = "UndefinedAPI"
-            }
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.redmagic"
+            artifactId = "UndefinedAPI"
+            version = "1.0.0"
+
+            from(components["java"])
         }
     }
 }
