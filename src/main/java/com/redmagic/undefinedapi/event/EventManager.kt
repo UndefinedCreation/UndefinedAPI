@@ -13,9 +13,13 @@ class EventManager : Listener {
 
         UndefinedAPI.plugin.findMethods(EventHandler::class.java).forEach{
 
+            println("Method Test")
+
             val eventHandler = it.getAnnotation(EventHandler::class.java)
 
             val type = it.parameters[0].type as Class<out Event>
+
+            println(type)
 
             Bukkit.getPluginManager().registerEvent(type, this, eventHandler.priority, {
                     _, event -> it.invoke(event)
