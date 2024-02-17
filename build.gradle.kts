@@ -9,17 +9,17 @@ plugins {
 
 apply(plugin = "maven-publish")
 
-//publishing {
-//    publications {
-//        create<MavenPublication>("maven") {
-//            groupId = "com.redmagic"
-//            artifactId = "UndefinedAPI"
-//            version = "1.0.0"
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.github.TheRedMagic"
+            artifactId = "UndefinedAPI"
+            version = "1.0.0"
 
-//            from(components["java"])
-//        }
-//    }
-//}
+            from(components["java"])
+        }
+    }
+}
 
 group = "com.redmagic"
 version = "1.0.1"
