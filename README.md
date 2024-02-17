@@ -159,18 +159,43 @@ This is the title of the GUI
 
 This is an enum to be able to choose the size of the GUI
 
-To be able to create a GUI you have to extend the `generateInventory` method where you need to return a `Inventory`. There is a method for this called create Inventory.
-After you have created the Inventory you will be able to add buttons using the method `Inventory.addButton(Button)`. The button class needs to parameters `slot` and `consumer`
-The `consumer` will run then the button is pressed. (See below)
+To be able to create a GUI you have to extend the `generateInventory` method where you need to return a `Inventory`. There is a method for this called `createInventory`. (See below)
 
 ```kotlin
 class FunMenu: UndefinedMenu("FUN") {
     override fun generateInventory() = createInventory {
+        
+    }
+}
+```
+
+#### Buttons
+After you have created the Inventory you will be able to add buttons using the method `Inventory.addButton(Button)`. The button class needs to parameters `slot` and `consumer`
+The `consumer` will run then the button is pressed. (See below)
+
+```kotlin
+class FunGUI: UndefinedMenu("Fun") {
+    override fun generateInventory() = createInventory {
 
         addButton(Button(10){
-            player?.sendMessage("Button clicked!")
+            Bukkit.broadcastMessage("Button yeeeeee")
         })
-        
+
+    }
+}
+```
+
+##### Menu Button
+An menu button is a button when press it will change menus. (See below)
+
+```kotlin
+class FunGUI: UndefinedMenu("Fun") {
+    override fun generateInventory() = createInventory {
+
+        addButton(MenuButton(10, DifferntMenu()){
+            Bukkit.broadcastMessage("Menu button")
+        })
+
     }
 }
 ```
