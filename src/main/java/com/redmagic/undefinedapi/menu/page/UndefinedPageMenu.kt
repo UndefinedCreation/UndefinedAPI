@@ -147,8 +147,11 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
         inventory = Bukkit.createInventory(null, size, title).apply(display)
 
         inventory!!.contents.forEach {
-            if (it != null)
+            println("ITems")
+            if (it != null) {
+                println("Not null")
                 itemsMap[inventory!!.contents.indexOf(it)] = it
+            }
         }
 
         inventory!!.setItem(bButton!!.slot, bButton!!.activeButton)
