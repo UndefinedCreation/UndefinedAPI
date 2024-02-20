@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryCloseEvent.Reason
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
@@ -200,7 +201,7 @@ object MenuManager : Listener {
      */
     @EventHandler
     fun onClose(e: InventoryCloseEvent) {
-        if (e.player is Player)
+        if (e.player is Player && e.reason != Reason.OPEN_NEW)
             (e.player as Player).closeMenu()
     }
 
