@@ -25,7 +25,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.redmagic"
             artifactId = "UndefinedAPI"
-            version = "0.3.5"
+            version = "0.3.51"
 
             from(components["java"])
         }
@@ -33,7 +33,7 @@ publishing {
 }
 
 group = "com.redmagic"
-version = "0.3.5"
+version = "0.3.51"
 
 repositories {
     mavenCentral()
