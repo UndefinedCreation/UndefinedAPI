@@ -13,7 +13,7 @@ publishing {
     repositories {
         maven {
             name = "repo.undefinedcreation.com"
-            url = uri("https://repo.undefinedcreation.com/releases")
+            url = uri("https://repo.undefinedcreation.com/repo")
             credentials(PasswordCredentials::class) {
                 username = System.getenv("MAVEN_NAME")
                 password = System.getenv("MAVEN_SECRET")
@@ -25,7 +25,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.redmagic"
             artifactId = "UndefinedAPI"
-            version = "0.3.4"
+            version = "0.3.5"
 
             from(components["java"])
         }
@@ -33,7 +33,7 @@ publishing {
 }
 
 group = "com.redmagic"
-version = "0.3.4"
+version = "0.3.5"
 
 repositories {
     mavenCentral()
