@@ -2,6 +2,7 @@ package com.redmagic.undefinedapi.menu.normal
 
 import com.redmagic.undefinedapi.menu.MenuSize
 import com.redmagic.undefinedapi.menu.normal.button.Button
+import com.redmagic.undefinedapi.menu.normal.button.ClickData
 import org.bukkit.Bukkit
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -84,6 +85,10 @@ abstract class UndefinedMenu(private val title: String, private val size: Int) {
      */
     fun Inventory.addButton(button: Button){
         buttons.add(button)
+    }
+
+    fun Inventory.addButtons(slot: List<Int>, consumer: ClickData.() -> Unit){
+        slot.forEach { addButton(Button(it, consumer)) }
     }
 
     /**
