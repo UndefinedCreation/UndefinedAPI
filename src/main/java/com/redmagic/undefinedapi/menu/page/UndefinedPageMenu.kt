@@ -149,9 +149,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
         var index = 0
 
         inventory!!.contents.forEach {
-            println(index)
             if (it != null) {
-                println("Not null")
                 itemsMap[index] = it
             }
             index++

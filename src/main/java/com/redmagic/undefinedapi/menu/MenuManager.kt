@@ -151,10 +151,7 @@ object MenuManager : Listener {
                 return
             }
         }
-        println(e.rawSlot)
-        println(Arrays.toString(menu.itemsMap.keys.stream().toArray()))
         if (menu.itemsMap.containsKey(e.rawSlot)) return
-        println("Running")
         menu.clickData.invoke(ClickData(e.rawSlot, player, e.currentItem, e.click, e.action, e.clickedInventory))
     }
 
