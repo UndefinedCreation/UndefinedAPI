@@ -1,5 +1,10 @@
 package com.redmagic.undefinedapi.extension.string
 
+/**
+ * Converts the given string to small text.
+ *
+ * @return The converted string in small text.
+ */
 fun String.toSmallText(): String {
     return uppercase()
         .replace("Q", "ꞯ")

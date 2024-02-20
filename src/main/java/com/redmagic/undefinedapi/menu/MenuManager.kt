@@ -14,7 +14,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.UUID
+import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Manages the functionality of menus in a plugin.
@@ -134,7 +135,8 @@ object MenuManager : Listener {
     private fun runPageMenu(menu: UndefinedPageMenu, e: InventoryClickEvent){
         val player = e.whoClicked as Player
 
-        managerButtons(menu, e)
+        if (managerButtons(menu, e))
+            return
 
         if (e.currentItem == null) return
         if (e.currentItem!!.type.isAir) return
@@ -149,7 +151,10 @@ object MenuManager : Listener {
                 return
             }
         }
+        println(e.rawSlot)
+        println(Arrays.toString(menu.itemsMap.keys.stream().toArray()))
         if (menu.itemsMap.containsKey(e.rawSlot)) return
+        println("Running")
         menu.clickData.invoke(ClickData(e.rawSlot, player, e.currentItem, e.click, e.action, e.clickedInventory))
     }
 
@@ -159,7 +164,7 @@ object MenuManager : Listener {
      * @param menu The undefined menu.
      * @param e The inventory click event.
      */
-    private fun managerButtons(menu: UndefinedMenu, e: InventoryClickEvent){
+    private fun managerButtons(menu: UndefinedMenu, e: InventoryClickEvent): Boolean{
         val player = e.whoClicked as Player
 
         menu.buttons.filter { it.slot == e.slot }.forEach { button ->
@@ -170,8 +175,9 @@ object MenuManager : Listener {
             if (button is MenuButton)
                 player.openMenu(button.undefinedMenu)
 
-            return
+            return true
         }
+        return false
     }
 
     /**
