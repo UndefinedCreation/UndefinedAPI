@@ -10,9 +10,20 @@ plugins {
 apply(plugin = "maven-publish")
 
 publishing {
+    repositories {
+        maven {
+            name = "repo.undefinedcreation.com"
+            url = uri("https://repo.undefinedcreation.com/releases")
+            credentials(PasswordCredentials::class)
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
+
     publications {
         create<MavenPublication>("maven") {
-            groupId = "com.github.TheRedMagic"
+            groupId = "com.redmagic"
             artifactId = "UndefinedAPI"
             version = "1.0.0"
 
@@ -22,7 +33,7 @@ publishing {
 }
 
 group = "com.redmagic"
-version = "1.0.2"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
