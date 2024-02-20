@@ -9,13 +9,6 @@ UndefinedAPI is a papermc api to make the life of developers easier. This is a m
 
 Maven:
 ```<repositories>
-<repository>
-    <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-```
-```<repositories>
 <dependency>
     <groupId>com.github.TheRedMagic</groupId>
     <artifactId>UndefinedAPI</artifactId>
