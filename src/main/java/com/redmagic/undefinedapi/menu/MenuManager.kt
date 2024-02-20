@@ -5,6 +5,7 @@ import com.redmagic.undefinedapi.menu.normal.button.ClickData
 import com.redmagic.undefinedapi.menu.normal.button.MenuButton
 import com.redmagic.undefinedapi.menu.normal.UndefinedMenu
 import com.redmagic.undefinedapi.menu.page.UndefinedPageMenu
+import com.redmagic.undefinedapi.scheduler.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -72,11 +73,11 @@ object MenuManager : Listener {
      * @param undefinedMenu the undefined menu to be opened
      */
     fun Player.openMenu(undefinedMenu: UndefinedMenu) {
-        Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+        delay(1) {
             if (undefinedMenu.inventory == null) undefinedMenu.inventory = undefinedMenu.generateInventory()
             openMenus[player!!.uniqueId] = undefinedMenu
             openInventory(undefinedMenu.inventory!!)
-        }, 1)
+        }
     }
 
     /**
@@ -132,6 +133,9 @@ object MenuManager : Listener {
      */
     private fun runPageMenu(menu: UndefinedPageMenu, e: InventoryClickEvent){
         val player = e.whoClicked as Player
+
+        managerButtons(menu, e)
+
         if (e.currentItem == null) return
         if (e.currentItem!!.type.isAir) return
         e.isCancelled = true
@@ -150,12 +154,12 @@ object MenuManager : Listener {
     }
 
     /**
-     * Runs the default menu behavior when a button is clicked in the inventory.
+     * Manages button clicks in a menu.
      *
-     * @param menu The undefined menu that the button belongs to.
-     * @param e The InventoryClickEvent triggered by the button click.
+     * @param menu The undefined menu.
+     * @param e The inventory click event.
      */
-    private fun runDefaultMenu(menu: UndefinedMenu, e: InventoryClickEvent){
+    private fun managerButtons(menu: UndefinedMenu, e: InventoryClickEvent){
         val player = e.whoClicked as Player
 
         menu.buttons.filter { it.slot == e.slot }.forEach { button ->
@@ -168,6 +172,16 @@ object MenuManager : Listener {
 
             return
         }
+    }
+
+    /**
+     * Runs the default menu behavior when a button is clicked in the inventory.
+     *
+     * @param menu The undefined menu that the button belongs to.
+     * @param e The InventoryClickEvent triggered by the button click.
+     */
+    private fun runDefaultMenu(menu: UndefinedMenu, e: InventoryClickEvent){
+        managerButtons(menu, e)
 
         if (!menu.movables.contains(e.rawSlot)){
             e.isCancelled = true
