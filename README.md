@@ -9,24 +9,32 @@ UndefinedAPI is a papermc api to make the life of developers easier. This is a m
 
 Maven:
 ```<repositories>
+<repository>
+  <id>undefinedapi-repo</id>
+  <name>UndefinedAPI</name>
+  <url>https://repo.undefinedcreation.com/repo</url>
+</repository>
+```
+
+```<repositories>
 <dependency>
-    <groupId>com.github.TheRedMagic</groupId>
-    <artifactId>UndefinedAPI</artifactId>
-    <version>Version+</version>
+  <groupId>com.redmagic</groupId>
+  <artifactId>UndefinedAPI</artifactId>
+  <version>0.3.55</version>
 </dependency>
 ```
 
 Gradle:
 ```<repositories>
-repositories {
-    maven { url 'https://jitpack.io' }
+maven {
+    name = "undefinedapiRepo"
+    url = uri("https://repo.undefinedcreation.com/repo")
 }
+
 ```
 
 ```<repositories>
-dependencies {
-    implementation 'com.github.TheRedMagic:UndefinedAPI:Version'
-}
+implementation("com.redmagic:UndefinedAPI:0.3.55")
 ```
 
 ## Setup
