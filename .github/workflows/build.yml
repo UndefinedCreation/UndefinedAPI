@@ -2,8 +2,8 @@ name: Publish project to Maven repository
 # Publish manually
 # OR, publish per each commit
 on:
-  push:
-    branches: [ master ]
+  release:
+    types: [ created ]
 jobs:
   publish:
     runs-on: ubuntu-latest
