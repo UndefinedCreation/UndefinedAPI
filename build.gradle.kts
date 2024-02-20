@@ -14,9 +14,9 @@ publishing {
         maven {
             name = "repo.undefinedcreation.com"
             url = uri("https://repo.undefinedcreation.com/releases")
-            credentials(PasswordCredentials::class)
-            authentication {
-                create<BasicAuthentication>("basic")
+            credentials(PasswordCredentials::class) {
+                username = System.getenv("MAVEN_NAME")
+                password = System.getenv("MAVEN_SECRET")
             }
         }
     }
