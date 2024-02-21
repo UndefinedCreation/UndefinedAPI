@@ -22,9 +22,10 @@ fun World.randomLocation(xRange: Double, zRange: Double): Location{
                 break
             }
         }
-        else ->{
-            startLoc.y = this.getHighestBlockAt(x.toInt(), z.toInt()).y.toDouble() + 1
+        World.Environment.THE_END ->{
+            startLoc.y = this.getHighestBlockAt(x.toInt(), z.toInt()).y.toDouble()
         }
+        else -> startLoc.y = this.getHighestBlockAt(x.toInt(), z.toInt()).y.toDouble()
     }
     return startLoc
 }
