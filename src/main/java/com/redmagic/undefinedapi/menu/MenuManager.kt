@@ -99,6 +99,7 @@ object MenuManager : Listener {
             menu.inventory = null
         }
         openMenus.remove(uniqueId)
+        closeInventory()
     }
 
     /**

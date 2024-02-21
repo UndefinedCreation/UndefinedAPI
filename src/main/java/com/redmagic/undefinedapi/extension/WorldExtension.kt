@@ -18,7 +18,7 @@ fun World.randomLocation(xRange: Double, zRange: Double): Location{
         World.Environment.NETHER -> {
             for (y in 0..127){
                 if (!getBlockAt(x.toInt(), y, z.toInt()).type.isAir) continue
-                startLoc.y = y.toDouble() + 1
+                startLoc.y = y.toDouble()
                 break
             }
         }
