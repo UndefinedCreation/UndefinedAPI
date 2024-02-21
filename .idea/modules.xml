@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/UndefinedAPI.main.iml" filepath="$PROJECT_DIR$/.idea/modules/UndefinedAPI.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/UndefinedAPI.test.iml" filepath="$PROJECT_DIR$/.idea/modules/UndefinedAPI.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.test.iml" />
     </modules>
   </component>
 </project>

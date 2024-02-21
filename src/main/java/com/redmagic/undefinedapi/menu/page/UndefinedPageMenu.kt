@@ -161,7 +161,9 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
         pageList = PageList(list, inventory!!.emptySlots())
         totalPages = pageList!!.pageCount()
 
-        setItems(pageList!!.getPage(1)!!)
+        val list = pageList!!.getPage(1)
+        if (list != null)
+            setItems(list)
 
         setButtons()
 

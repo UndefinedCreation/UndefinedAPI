@@ -29,6 +29,7 @@ class PageList<ItemStack>(collection: Collection<ItemStack>, val maxElement: Int
      */
     fun getPage(page: Int): List<ItemStack>?{
         if (page < 1 || page > pageCount()) return null;
+        if (isEmpty()) return null
         val startIndex = (page - 1) * maxElement
         val endIndex = min(startIndex + maxElement, size)
         return subList(startIndex, endIndex)

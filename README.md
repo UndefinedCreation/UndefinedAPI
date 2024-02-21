@@ -7,7 +7,9 @@ UndefinedAPI is a papermc api to make the life of developers easier. This is a m
 
 ## Imports
 
-Maven:
+Here are the import if you want to use the API your self. You will have to add them to your `pom.xml` or `build.gradle.kts`
+
+### Maven:
 ```<repositories>
 <repository>
   <id>undefinedapi-repo</id>
@@ -24,13 +26,12 @@ Maven:
 </dependency>
 ```
 
-Gradle:
+### Gradle:
 ```<repositories>
 maven {
     name = "undefinedapiRepo"
     url = uri("https://repo.undefinedcreation.com/repo")
 }
-
 ```
 
 ```<repositories>
@@ -44,6 +45,97 @@ UndefinedAPI(this)
 ```
 After that you are ready to go.
 
+## ItemBuilder
+An ItemBuilder is a very powerful class create to make the creation of items easy and fast instead of using `ItemMeta`. You can use this by creating a new instance of the class and defining a `Material` or even a `ItemStack` to edit. (See below)
+
+### Kotlin
+```kotlin
+val itemStack = ItemBuilder(Material.DIAMOND)
+                .setName("Diamonds")
+                .setName(Component.text("Diamonds"))
+                .setLore(mutableListOf(Component.text("DIAMONDS")))
+                .addLine(Component.text("NEW LINE"))
+                .setAmount(32)
+                .addEnchant(Enchantment.LUCK, 1)
+                .setCustomModelData(32)
+                .setUnbreakable(false)
+                .setLocalizedName("DIAMONDS")
+                .setSkullOwner(UUID.randomUUID())
+                .build()
+```
+### Java
+
+```java
+import java.util.List;
+
+ItemStack itemStack = new ItemBuilder(Material.DIAMOND)
+        .setName("Diamonds")
+        .setName(Component.text("Diamonds"))
+        .setLore(List.of(Component.text("DIAMONDS")))
+        .addLine(Component.text("NEW LINE"))
+        .setAmount(32)
+        .addEnchant(Enchantment.LUCK, 1)
+        .setCustomModelData(32)
+        .setUnbreakable(false)
+        .setLocalizedName("DIAMONDS")
+        .setSkullOwner(UUID.randomUUID())
+        .build();
+```
+
+## Encoding
+This API allows you to easily change objects to a string and back to be able to be saved.
+
+### ItemStack
+To change a `ItemStack` to a string you can do `asString`. Then if you what the `ItemStack` back you can do `asItemStack`. This will use `Base64` to encode it into a string and back (See below)
+
+#### Kotlin
+```kotlin
+val encodedString = itemStack.asString()
+
+val itemStack = encodedString.asItemStack()
+```
+
+#### Java
+```java
+String encodedString = itemStack.asString();
+
+ItemStack itemStack = InventoryUtilKt.asItemStack(encodedString);
+```
+
+### Inventory
+`Inventory` are the same as a `ItemStack` with the `asString` method and the `asInvenory` method. (See below)
+
+#### Kotlin
+```kotlin
+val encodedInventory = inventory.asString()
+        
+val inventory = encodedInventory.asInventory()
+```
+
+#### Java
+```java
+String encodedInventory = inventory.asString();
+
+Inventory inventory = InventoryUtilKt.asInventory(encodedInventory);
+```
+
+### Location
+`Location` is not different from the rest. (See below)
+
+#### Kotlin
+```kotlin
+val encodedLocation = location.asString()
+        
+val location = encodedLocation.asLocation()
+```
+
+#### Java
+
+```java
+String encodedLocation = location.asString();
+
+Location location = InventoryUtilKt.asLocation(encodedLocation);
+```
 ## Commands
 To be able to create a command with UndefinedAPI you will need to extend the UndefinedCommand Class (See below)
 The UndefinedCommand class has 5 parameter.
@@ -248,8 +340,11 @@ class SettingsGUI: UndefinedMenu("Settings") {
 To be able to create a custom paged Menu you will need to extend the `UndefinedPageMenu`. Its never the same as a normal Menu but you will need to pase a `List` of itemStacks witch will be sorted into pages. When the same as the normal Menu you will to extend the `generateInventory` method with **`createPageInventory`** method.
 After that put in your back button and next button using the `setBackButton` and `setNextButton`. You are able to shape the inventory to your liking. (See below)
 
-> [!NOTE]
+> [!WARNING]
 > You need to have the `setBackButton` and `setNextButton` for the gui to work.
+
+> [!NOTE]
+> Menu buttons still work with paged menus
 
 ```kotlin
 class FunGui(list: List<ItemStack>): UndefinedPageMenu("Fun", MenuSize.LARGE, list) {
