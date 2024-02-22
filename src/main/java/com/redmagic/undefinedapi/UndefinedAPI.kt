@@ -7,6 +7,7 @@ import com.redmagic.undefinedapi.menu.MenuManager
 import com.redmagic.undefinedapi.scheduler.TimeUnit
 import com.redmagic.undefinedapi.scheduler.delay
 import com.redmagic.undefinedapi.scheduler.repeatingTask
+import com.redmagic.undefinedapi.scoreboard.UndefinedScoreboard
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.java.JavaPlugin
 
