@@ -4,6 +4,7 @@ import com.redmagic.undefinedapi.extension.createDummy
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.Scoreboard
 import org.bukkit.scoreboard.Team
 
@@ -15,7 +16,7 @@ class UndefinedScoreboard(private val title: Component, private val  scoreboard:
 
     constructor(title: String, scoreboard: Scoreboard): this(Component.text(title), scoreboard)
 
-    private val objective = scoreboard.createDummy(title.toString())
+    private val objective = scoreboard.registerNewObjective(title.examinableName(), "dummy")
 
     private var index: Int = 0
     private var spaces: Int = 0
@@ -23,6 +24,7 @@ class UndefinedScoreboard(private val title: Component, private val  scoreboard:
 
     init {
         objective.displayName(title)
+        objective.displaySlot = DisplaySlot.SIDEBAR
     }
 
     fun addEmptyLine(): UndefinedScoreboard{
