@@ -479,3 +479,51 @@ repeatingTask(1, TimeUnit.SECONDS, 5, true){
     //This will run every second 5 times async
 }
 ```
+
+## Scoreboard
+We have made it easy to create scoreboards when using this API. Instead of have to create teams and score in the spigot api. You can just create a `UndefinedScoreboard` class. After that you can create line with `addEmptyLine()`, `addLine(String)` and `addValueLine(Int, String, String)`. (See below)
+
+### Kotlin
+```kotlin
+player.scoreboard = Bukkit.getScoreboardManager().newScoreboard
+
+UndefinedScoreboard("Test", player.scoreboard)
+    .addLine("IDK")
+    .addEmptyLine()
+    .addEmptyLine()
+    .addValueLine(0, "Prefix ", " Suffix")
+```
+
+### Java
+```java
+ScoreboardManager manager = Bukkit.getScoreboardManager();
+player.setScoreboard(manager.getNewScoreboard());
+
+UndefinedScoreboard board = new UndefinedScoreboard("Test", player.getScoreboard());
+board.addLine("IDK");
+board.addEmptyLine();
+board.addEmptyLine();
+board.addValueLine(0, "Prefix ", " Suffix");
+```
+
+### Changing value line
+To be able to change a value line you can use the `setValueLine(Int, String, String)`. The `Int` is the id of the line. (See below)
+
+#### Kotlin
+```kotlin
+board.setValueLine(0, "Prefix2 ", " Suffix2")
+
+board.setValueLine(0, prefix = "Prefix2 ")
+
+board.setValueLine(0, suffix = " Suffix")
+```
+
+#### Java
+```java
+board.setValueLine(0, "Prefix2 ", " Suffix2");
+
+board.setValueLine(0, "Prefix2 ", null);
+
+board.setValueLine(0, null, " Suffix");
+```
+

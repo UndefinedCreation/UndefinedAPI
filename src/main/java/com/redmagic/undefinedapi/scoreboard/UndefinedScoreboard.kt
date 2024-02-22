@@ -1,6 +1,5 @@
 package com.redmagic.undefinedapi.scoreboard
 
-import com.redmagic.undefinedapi.extension.createDummy
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -57,11 +56,11 @@ class UndefinedScoreboard(private val title: Component, private val  scoreboard:
         val order = order(index)
         val team = scoreboard.registerNewTeam(id.toString())
 
-        team.addEntry(order + id.toString())
+        team.addEntry(order)
         team.prefix(prefix)
         team.suffix(suffix)
 
-        objective.getScore(order + id.toString()).score = 0
+        objective.getScore(order).score = 0
 
         teamMap[id] = team
         index++
