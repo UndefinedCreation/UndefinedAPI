@@ -43,7 +43,7 @@ object MenuManager : Listener {
      *
      * @property openMenus The map of open menus.
      */
-    val openMenus = HashMap<UUID, UndefinedMenu>()
+    private val openMenus = HashMap<UUID, UndefinedMenu>()
 
     /**
      * Sets up the plugin by assigning the provided `JavaPlugin` instance to the `plugin` variable
@@ -119,6 +119,7 @@ object MenuManager : Listener {
     fun onClick(e: InventoryClickEvent) {
         val player = e.whoClicked as Player
         if (!player.hasMenuOpen()) return
+        if (e.clickedInventory == null) return
         val menu = player.getMenu()!!
         if (menu is UndefinedPageMenu){
             runPageMenu(menu, e)
@@ -154,7 +155,7 @@ object MenuManager : Listener {
             }
         }
         if (menu.itemsMap.containsKey(e.rawSlot)) return
-        menu.clickData.invoke(ClickData(e.rawSlot, player, e.currentItem, e.click, e.action, e.clickedInventory))
+        menu.clickData.invoke(ClickData(e.rawSlot, player, e.currentItem, e.click, e.action, e.clickedInventory!!))
     }
 
     /**
@@ -169,7 +170,7 @@ object MenuManager : Listener {
         menu.buttons.filter { it.slot == e.slot }.forEach { button ->
             e.isCancelled = true
             button.consumer.invoke(
-                ClickData(e.rawSlot, e.whoClicked as Player, e.currentItem, e.click, e.action, e.clickedInventory)
+                ClickData(e.rawSlot, e.whoClicked as Player, e.currentItem, e.click, e.action, e.clickedInventory!!)
             )
             if (button is MenuButton)
                 player.openMenu(button.undefinedMenu)

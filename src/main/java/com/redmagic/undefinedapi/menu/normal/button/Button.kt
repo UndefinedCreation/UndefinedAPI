@@ -24,4 +24,4 @@ open class Button(open val slot: Int, open val consumer: ClickData.() -> Unit)
  * @property action The action performed on the inventory.
  * @property inventory The inventory where the click event occurred.
  */
-class ClickData(val slot: Int, val player: Player?, val item:ItemStack?, val click:ClickType, val action:InventoryAction, val inventory: Inventory?)
+class ClickData(val slot: Int, val player: Player, val item:ItemStack?, val click:ClickType, val action:InventoryAction, val inventory: Inventory)
