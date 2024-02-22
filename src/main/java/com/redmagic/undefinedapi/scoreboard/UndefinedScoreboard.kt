@@ -79,7 +79,7 @@ class UndefinedScoreboard(private val title: Component, private val  scoreboard:
         return this
     }
 
-    fun setValueLine(id: Int, prefix: String? = null, suffix: String? = null): UndefinedScoreboard = setValueLine(id, prefix, suffix)
+    fun setValueLine(id: Int, prefix: String? = null, suffix: String? = null): UndefinedScoreboard = setValueLine(id, Component.text(prefix!!), Component.text(suffix!!))
 
 
     private fun order(time: Int): String {
