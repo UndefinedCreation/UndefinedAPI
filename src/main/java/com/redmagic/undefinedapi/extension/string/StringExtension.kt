@@ -1,5 +1,10 @@
 package com.redmagic.undefinedapi.extension.string
 
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.MiniMessage
+
+private val miniMessage = MiniMessage.miniMessage()
+
 /**
  * Converts the given string to small text.
  *
@@ -34,3 +39,5 @@ fun String.toSmallText(): String {
         .replace("N", "ɴ")
         .replace("M", "ᴍ")
 }
+
+fun String.toComponent(): Component = miniMessage.deserialize(this)
