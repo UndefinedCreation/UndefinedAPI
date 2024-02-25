@@ -58,11 +58,17 @@ class PlayerHitByPlayerManager(){
 
         }
 
-        event<PlayerInteractEntityEvent>(EventPriority.LOWEST) {
-            if (rightClicked is EnderCrystal) {
-                enderCrystalMap[rightClicked as EnderCrystal] = player.uniqueId
-                delay(10) { enderCrystalMap.remove(rightClicked)  }
+        event<EntityDamageByEntityEvent> {
+            val player = damager as? Player ?: return@event
+
+            if (entity is EnderCrystal){
+
+                enderCrystalMap[entity as EnderCrystal] = player.uniqueId
+
+                delay(2) { enderCrystalMap.remove(entity as EnderCrystal) }
+
             }
+
         }
 
 
