@@ -10,6 +10,7 @@ import org.bukkit.entity.EnderCrystal
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
 import org.bukkit.entity.TNTPrimed
+import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -57,10 +58,10 @@ class PlayerHitByPlayerManager(){
 
         }
 
-        event<PlayerInteractEntityEvent> {
+        event<PlayerInteractEntityEvent>(EventPriority.LOWEST) {
             if (rightClicked is EnderCrystal) {
                 enderCrystalMap[rightClicked as EnderCrystal] = player.uniqueId
-                delay(2) { enderCrystalMap.remove(rightClicked)  }
+                delay(10) { enderCrystalMap.remove(rightClicked)  }
             }
         }
 
