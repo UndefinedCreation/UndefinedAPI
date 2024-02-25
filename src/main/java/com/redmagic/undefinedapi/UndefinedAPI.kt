@@ -1,5 +1,6 @@
 package com.redmagic.undefinedapi
 
+import com.redmagic.undefinedapi.customEvents.PlayerHitByPlayerManager
 import com.redmagic.undefinedapi.customEvents.PlayerMoveEvent
 import com.redmagic.undefinedapi.customEvents.PlayerMoveManager
 import com.redmagic.undefinedapi.event.event
@@ -23,6 +24,7 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
         plugin = javaPlugin
         MenuManager.setup(plugin)
         PlayerMoveManager()
+        PlayerHitByPlayerManager()
     }
 
     /**
