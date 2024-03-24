@@ -27,6 +27,7 @@ class PlayerHitByPlayerManager(){
             val player = entity as? Player ?: return@event
             val damagerPlayer = damager as? Player
             if (damagerPlayer != null){
+                if (damagerPlayer == player) return@event
                 Bukkit.getPluginManager().callEvent(PlayerHitByPlayerEvent(player, damagerPlayer, HitCause.HAND))
                 return@event
             }
@@ -34,12 +35,14 @@ class PlayerHitByPlayerManager(){
             val projectile = damager as? Projectile
             if (projectile != null){
                 if (projectile.shooter is Player)
+                    if (projectile.shooter as Player == player) return@event
                     Bukkit.getPluginManager().callEvent(PlayerHitByPlayerEvent(player, projectile.shooter as Player, HitCause.PROJECTILE))
             }
 
             val tnt = damager as? TNTPrimed
             if (tnt != null){
                 if (tnt.source is Player)
+                    if (tnt.source == player) return@event
                     Bukkit.getPluginManager().callEvent(PlayerHitByPlayerEvent(player, tnt.source as Player, HitCause.EXPLOSIVE))
             }
 
@@ -50,6 +53,7 @@ class PlayerHitByPlayerManager(){
                 if (uuid != null) {
                     val crystalOwner: Player? = Bukkit.getPlayer(uuid)
                     if (crystalOwner != null) {
+                        if (crystalOwner == player) return@event
                         Bukkit.getPluginManager().callEvent(PlayerHitByPlayerEvent(player, crystalOwner, HitCause.END_CRYSTAL))
                     }
                 }
