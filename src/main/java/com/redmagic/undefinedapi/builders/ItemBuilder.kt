@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
@@ -26,6 +27,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
     var enchants: HashMap<Enchantment, Int> = HashMap()
     var unbreakable: Boolean = false
     var skullowner: UUID? = null
+    var flags: MutableList<ItemFlag> = mutableListOf()
 
     /**
      * Constructs a new instance of an item using the specified material.
@@ -60,6 +62,11 @@ class ItemBuilder(private var itemStack: ItemStack) {
      */
     fun setName(name: String):ItemBuilder{
         this.name = Component.text(name)
+        return this
+    }
+
+    fun addFlags(flag: ItemFlag): ItemBuilder{
+        flags.add(flag)
         return this
     }
 
@@ -184,6 +191,10 @@ class ItemBuilder(private var itemStack: ItemStack) {
                 meta.setOwningPlayer(Bukkit.getOfflinePlayer(skullowner!!))
                 itemMeta = meta
             }
+
+        flags.forEach {
+            itemMeta.addItemFlags(it)
+        }
 
         itemStack.itemMeta = itemMeta
 
