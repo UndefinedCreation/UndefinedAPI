@@ -19,8 +19,8 @@ import kotlin.collections.HashMap
  */
 class ItemBuilder(private var itemStack: ItemStack) {
 
-    var name: Component? = null
-    var lore: MutableList<Component> = mutableListOf()
+    var name: String? = null
+    var lore: MutableList<String> = mutableListOf()
     var amount: Int = 1
     var customModelData: Int = 0
     var localizedName: String = ""
@@ -45,23 +45,13 @@ class ItemBuilder(private var itemStack: ItemStack) {
 
 
     /**
-     * Sets the display name of the item.
-     *
-     * @param name The name to set as the display name of the item. This should be a Component object.
-     * @return This ItemBuilder instance.
-     */
-    fun setName(name: Component):ItemBuilder{
-        this.name = name
-        return this
-    }
-    /**
      * Sets the name of the ItemStack.
      *
      * @param name the name to set for the ItemStack
      * @return the ItemBuilder instance
      */
     fun setName(name: String):ItemBuilder{
-        this.name = Component.text(name)
+        this.name = name
         return this
     }
 
@@ -121,12 +111,12 @@ class ItemBuilder(private var itemStack: ItemStack) {
      * @param lore The list of components representing the lore of the item.
      * @return The ItemBuilder instance.
      */
-    fun setLore(lore: MutableList<Component>):ItemBuilder{
+    fun setLore(lore: MutableList<String>):ItemBuilder{
         this.lore = lore
         return this
     }
 
-    fun addLine(line: Component): ItemBuilder{
+    fun addLine(line: String): ItemBuilder{
         this.lore.add(line)
         return this
     }
@@ -171,11 +161,11 @@ class ItemBuilder(private var itemStack: ItemStack) {
      */
     fun build(): ItemStack {
         itemStack.amount = amount
-        var itemMeta = itemStack.itemMeta
+        var itemMeta = itemStack.itemMeta ?: return itemStack
 
-        if (name != null) itemMeta.displayName(name)
+        if (name != null) itemMeta.setDisplayName(name!!)
 
-        itemMeta.lore(lore)
+        itemMeta.lore = lore
         itemMeta.setCustomModelData(customModelData)
         itemMeta.setLocalizedName(localizedName)
 

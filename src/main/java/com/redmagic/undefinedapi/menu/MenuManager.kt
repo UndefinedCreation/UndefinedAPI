@@ -1,6 +1,5 @@
 package com.redmagic.undefinedapi.menu
 
-import com.redmagic.undefinedapi.menu.MenuManager.openMenu
 import com.redmagic.undefinedapi.menu.normal.button.ClickData
 import com.redmagic.undefinedapi.menu.normal.button.MenuButton
 import com.redmagic.undefinedapi.menu.normal.UndefinedMenu
@@ -12,7 +11,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.event.inventory.InventoryCloseEvent.Reason
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
@@ -203,8 +201,15 @@ object MenuManager : Listener {
      */
     @EventHandler
     fun onClose(e: InventoryCloseEvent) {
-        if (e.player is Player && e.reason != Reason.OPEN_NEW)
-            (e.player as Player).closeMenu()
+        if (e.player is Player) {
+            val player = e.player as Player
+            if (!player.hasMenuOpen()) return
+            val menu = player.getMenu()!!
+            if (menu.inventory?.viewers?.size!! >= 0) {
+                menu.inventory = null
+            }
+            openMenus.remove(player.uniqueId)
+        }
     }
 
     /**

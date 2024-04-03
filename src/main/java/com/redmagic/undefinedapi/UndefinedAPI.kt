@@ -1,16 +1,13 @@
 package com.redmagic.undefinedapi
 
 import com.redmagic.undefinedapi.customEvents.PlayerHitByPlayerManager
-import com.redmagic.undefinedapi.customEvents.PlayerMoveEvent
 import com.redmagic.undefinedapi.customEvents.PlayerMoveManager
-import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.menu.MenuManager
-import com.redmagic.undefinedapi.scheduler.TimeUnit
-import com.redmagic.undefinedapi.scheduler.delay
-import com.redmagic.undefinedapi.scheduler.repeatingTask
-import com.redmagic.undefinedapi.scoreboard.UndefinedScoreboard
-import org.bukkit.event.player.PlayerJoinEvent
+import net.kyori.adventure.platform.bukkit.BukkitAudiences
+import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.*
 
 
 /**
@@ -20,11 +17,15 @@ import org.bukkit.plugin.java.JavaPlugin
  */
 class UndefinedAPI(javaPlugin: JavaPlugin) {
 
+    private var adventure: BukkitAudiences
+
     init {
         plugin = javaPlugin
+        adventure = BukkitAudiences.create(javaPlugin)
         MenuManager.setup(plugin)
         PlayerMoveManager()
         PlayerHitByPlayerManager()
+
     }
 
     /**
@@ -34,7 +35,14 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
      */
     companion object{
         lateinit var plugin: JavaPlugin
+
+        fun adventure(): BukkitAudiences {
+            checkNotNull(this.adventure()) { "Tried to access Adventure when the plugin was disabled!" }
+            return this.adventure()
+        }
     }
+
+
 }
 
 

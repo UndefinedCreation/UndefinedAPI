@@ -17,7 +17,7 @@ fun Location.asString(format:String = "0.##"):String{
 
     val df = DecimalFormat(format)
 
-    val uuid = this.world.uid
+    val uuid = this.world!!.uid
     val x = df.format(this.x)
     val y = df.format(this.y)
     val z = df.format(this.z)

@@ -1,6 +1,5 @@
 package com.redmagic.undefinedapi.scoreboard
 
-import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.scoreboard.DisplaySlot
@@ -31,29 +30,15 @@ import org.bukkit.scoreboard.Team
  * @param title The title of the scoreboard.
  * @param scoreboard The scoreboard instance.
  */
-class UndefinedScoreboard(private val title: Component, private val  scoreboard: Scoreboard) {
+class UndefinedScoreboard(private val title: String, private val  scoreboard: Scoreboard) {
 
     /**
      * Creates a new object of type "Scoreboard" with the given title.
      *
      * @param title the title of the scoreboard
      */
-    constructor(title: String): this(Component.text(title), Bukkit.getScoreboardManager().newScoreboard)
+    constructor(title: String): this(title, Bukkit.getScoreboardManager()!!.newScoreboard)
 
-    /**
-     * Creates a new instance of the class with the specified title and a new scoreboard.
-     *
-     * @param title the title of the component
-     */
-    constructor(title: Component): this(title, Bukkit.getScoreboardManager().newScoreboard)
-
-    /**
-     * Constructs a new instance of the class with the given title and scoreboard.
-     *
-     * @param title The title for the component.
-     * @param scoreboard The scoreboard instance to use.
-     */
-    constructor(title: String, scoreboard: Scoreboard): this(Component.text(title), scoreboard)
 
     /**
      * Represents the objective for a scoreboard.
@@ -63,7 +48,7 @@ class UndefinedScoreboard(private val title: Component, private val  scoreboard:
      * @param title The title of the objective.
      * @param type The type of the objective.
      */
-    private val objective = scoreboard.registerNewObjective(title.examinableName(), "dummy")
+    private val objective = scoreboard.registerNewObjective(title, "dummy")
 
     /**
      * The index variable represents an integer value used for indexing purposes.
@@ -89,7 +74,7 @@ class UndefinedScoreboard(private val title: Component, private val  scoreboard:
     private val teamMap: HashMap<Int, Team> = HashMap()
 
     init {
-        objective.displayName(title)
+        objective.displayName = title
         objective.displaySlot = DisplaySlot.SIDEBAR
     }
 
@@ -126,29 +111,12 @@ class UndefinedScoreboard(private val title: Component, private val  scoreboard:
      * Sets the title of the scoreboard.
      *
      * @param title the title component to set
-     * @return the updated UndefinedScoreboard instance
-     */
-    fun setTitle(title: Component): UndefinedScoreboard {
-        objective.displayName(title)
+     * @return the updated UndefinedScore*/
+    fun setTitle(title: String): UndefinedScoreboard {
+        objective.displayName = title
         return this
     }
-    /**
-     * Sets the title of the UndefinedScoreboard.
-     *
-     * @param string the title text to be set
-     * @return the UndefinedScoreboard with the updated title
-     */
-    fun setTitle(string: String): UndefinedScoreboard  = setTitle(Component.text(string))
 
-    /**
-     * Adds a value line to the undefined scoreboard with the specified parameters.
-     *
-     * @param id the ID of the value line
-     * @param prefix the prefix text for the value line
-     * @param suffix the suffix text for the value line
-     * @return the modified undefined scoreboard
-     */
-    fun addValueLine(id: Int, prefix: String, suffix: String): UndefinedScoreboard = addValueLine(id, Component.text(prefix), Component.text(suffix))
     /**
      * Adds a new value line to the scoreboard.
      *
@@ -157,14 +125,14 @@ class UndefinedScoreboard(private val title: Component, private val  scoreboard:
      * @param suffix The suffix component to be displayed after the value.
      * @return The UndefinedScoreboard instance after adding the value line.
      */
-    fun addValueLine(id: Int, prefix: Component, suffix: Component): UndefinedScoreboard{
+    fun addValueLine(id: Int, prefix: String, suffix: String): UndefinedScoreboard{
 
         val order = order(index)
         val team = scoreboard.registerNewTeam(id.toString())
 
         team.addEntry(order)
-        team.prefix(prefix)
-        team.suffix(suffix)
+        team.prefix = prefix
+        team.suffix = suffix
 
         objective.getScore(order).score = 0
 
@@ -181,28 +149,18 @@ class UndefinedScoreboard(private val title: Component, private val  scoreboard:
      * @param suffix The suffix component to be displayed after the value.
      * @return The undefined scoreboard object with the updated value line.
      */
-    fun setValueLine(id: Int, prefix: Component? = null, suffix: Component? = null): UndefinedScoreboard {
+    fun setValueLine(id: Int, prefix: String? = null, suffix: String? = null): UndefinedScoreboard {
 
         val team = teamMap[id] ?: return this
 
         if (prefix != null)
-            team.prefix(prefix)
+            team.prefix = prefix
 
         if (suffix != null)
-            team.suffix(suffix)
+            team.suffix = suffix
 
         return this
     }
-
-    /**
-     * Sets the value line of the scoreboard with the specified ID, prefix, and suffix.
-     *
-     * @param id The ID of the scoreboard to set the value line for.
-     * @param prefix The optional prefix text to display before the value line.
-     * @param suffix The optional suffix text to display after the value line.
-     * @return An instance of UndefinedScoreboard with the updated value line.
-     */
-    fun setValueLine(id: Int, prefix: String? = null, suffix: String? = null): UndefinedScoreboard = setValueLine(id, Component.text(prefix!!), Component.text(suffix!!))
 
 
     /**
