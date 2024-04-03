@@ -206,11 +206,9 @@ object MenuManager : Listener {
         delay(5) {
             if (e.player is Player){
                 val player = e.player as Player
-
-                if (player.openInventory == null){
+                if (player.openInventory.topInventory.type != InventoryType.CHEST){
                     player.closeMenu()
                 }
-
             }
         }
     }
