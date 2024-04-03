@@ -1,6 +1,7 @@
 package com.redmagic.undefinedapi.extension.string
 
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.io.BukkitObjectInputStream
@@ -87,4 +88,12 @@ fun String.asInventory(): Inventory{
 fun Inventory.emptySlots(): Int{
     return this.contents.count { it == null }
 }
+
+/**
+ * Returns the total amount of a specific material present in the inventory.
+ *
+ * @param material The material to be counted.
+ * @return The total amount of the given material in the inventory.
+ */
+fun Inventory.getAmountOf(material: Material): Int = filter { it?.type == material }.sumBy { it?.amount ?: 0 }
 

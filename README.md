@@ -22,7 +22,7 @@ Here are the import if you want to use the API your self. You will have to add t
 <dependency>
   <groupId>com.redmagic</groupId>
   <artifactId>UndefinedAPI</artifactId>
-  <version>0.4.00</version>
+  <version>0.4.06</version>
 </dependency>
 ```
 
@@ -35,7 +35,7 @@ maven {
 ```
 
 ```<repositories>
-implementation("com.redmagic:UndefinedAPI:0.4.00")
+implementation("com.redmagic:UndefinedAPI:0.4.06")
 ```
 
 ## Setup
