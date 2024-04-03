@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
@@ -201,14 +202,16 @@ object MenuManager : Listener {
      */
     @EventHandler
     fun onClose(e: InventoryCloseEvent) {
-        if (e.player is Player) {
-            val player = e.player as Player
-            if (!player.hasMenuOpen()) return
-            val menu = player.getMenu()!!
-            if (menu.inventory?.viewers?.size!! >= 0) {
-                menu.inventory = null
+        if (e.inventory.type != InventoryType.CHEST) return
+        delay(5) {
+            if (e.player is Player){
+                val player = e.player as Player
+
+                if (player.openInventory == null){
+                    player.closeMenu()
+                }
+
             }
-            openMenus.remove(player.uniqueId)
         }
     }
 
