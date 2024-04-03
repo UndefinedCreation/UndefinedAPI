@@ -22,7 +22,7 @@ Here are the import if you want to use the API your self. You will have to add t
 <dependency>
   <groupId>com.redmagic</groupId>
   <artifactId>UndefinedAPI</artifactId>
-  <version>0.4.06</version>
+  <version>0.4.10</version>
 </dependency>
 ```
 
@@ -35,7 +35,7 @@ maven {
 ```
 
 ```<repositories>
-implementation("com.redmagic:UndefinedAPI:0.4.06")
+implementation("com.redmagic:UndefinedAPI:0.4.10")
 ```
 
 ## Setup
@@ -52,9 +52,8 @@ An ItemBuilder is a very powerful class create to make the creation of items eas
 ```kotlin
 val itemStack = ItemBuilder(Material.DIAMOND)
                 .setName("Diamonds")
-                .setName(Component.text("Diamonds"))
-                .setLore(mutableListOf(Component.text("DIAMONDS")))
-                .addLine(Component.text("NEW LINE"))
+                .setLore(mutableListOf("DIAMONDS"))
+                .addLine("NEW LINE")
                 .setAmount(32)
                 .addEnchant(Enchantment.LUCK, 1)
                 .setCustomModelData(32)
@@ -70,9 +69,9 @@ import java.util.List;
 
 ItemStack itemStack = new ItemBuilder(Material.DIAMOND)
         .setName("Diamonds")
-        .setName(Component.text("Diamonds"))
-        .setLore(List.of(Component.text("DIAMONDS")))
-        .addLine(Component.text("NEW LINE"))
+        .setName("Diamonds")
+        .setLore(List.of("DIAMONDS"))
+        .addLine("NEW LINE")
         .setAmount(32)
         .addEnchant(Enchantment.LUCK, 1)
         .setCustomModelData(32)
