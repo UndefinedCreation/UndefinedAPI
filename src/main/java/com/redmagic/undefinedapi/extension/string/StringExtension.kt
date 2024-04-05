@@ -71,26 +71,20 @@ private val replacements = mapOf(
     "<reset>" to ChatColor.RESET.toString()
 )
 
-private val hexPattern: Regex = """<#([A-Fa-f0-9]{6})>""".toRegex()
-private val rgbPattern: Regex = """<rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)>""".toRegex()
-fun String.translateColor(): String =
-    replacements.entries.fold(this) { acc, (old, new) -> acc.replace(old, new, ignoreCase = true) }
-        .let { originalString ->
-            rgbPattern.findAll(originalString).fold(originalString) { str, matchResult ->
-                val (r, g, b) = matchResult.destructured.toList().map { it.toInt() }
-                val replacement = "<#${RGBUtil.rgbToHex(r, g, b)}>"
-                str.replace(matchResult.value, replacement)
-            }
-        }
-        .let { newString ->
-            hexPattern.findAll(newString).fold(StringBuilder(newString)) { builder, matchResult ->
-                val (hex) = matchResult.destructured
-                val replacement = buildString {
-                    append(ChatColor.COLOR_CHAR, "x")
-                    hex.chunked(2) { append(ChatColor.COLOR_CHAR, it) }
-                }
-                val range = matchResult.range
-                builder.replace(range.first, range.last + 1, replacement)
-            }.toString()
-        }
+private val hexPattern: Pattern = Pattern.compile("<#[A-Fa-f0-9]{6}>")
+fun String.translateColor(): String {
+
+
+    var string = replacements.entries.fold(this) { acc, (old, new) -> acc.replace(old, new, ignoreCase = true) }
+
+    val matcher: Matcher = hexPattern.matcher(string)
+    while (matcher.find()) {
+        val color: String = matcher.group()
+        string = string.replace(color, ChatColor.of(color.substring(1,7))!!.toString())
+    }
+
+
+    return string
+}
+
 
