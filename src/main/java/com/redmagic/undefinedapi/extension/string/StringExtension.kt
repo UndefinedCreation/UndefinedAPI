@@ -80,7 +80,7 @@ fun String.translateColor(): String {
     val matcher: Matcher = hexPattern.matcher(string)
     while (matcher.find()) {
         val color: String = matcher.group()
-        string = string.replace(color, ChatColor.of(color.substring(1,7))!!.toString())
+        string = string.replace(color, ChatColor.of(color.substring(1,8))!!.toString())
     }
 
 
