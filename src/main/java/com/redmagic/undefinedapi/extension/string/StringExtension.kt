@@ -74,7 +74,6 @@ private val replacements = mapOf(
 private val hexPattern: Pattern = Pattern.compile("<#[A-Fa-f0-9]{6}>")
 fun String.translateColor(): String {
 
-
     var string = replacements.entries.fold(this) { acc, (old, new) -> acc.replace(old, new, ignoreCase = true) }
 
     val matcher: Matcher = hexPattern.matcher(string)

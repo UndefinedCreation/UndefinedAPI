@@ -203,12 +203,13 @@ object MenuManager : Listener {
      */
     @EventHandler
     fun onClose(e: InventoryCloseEvent) {
-        if (e.inventory.type != InventoryType.CHEST) return
-        delay(5) {
-            if (e.player is Player){
-                val player = e.player as Player
-                if (player.openInventory.topInventory.type != InventoryType.CHEST){
-                    player.closeMenu()
+        if (e.inventory.type == InventoryType.CHEST || e.inventory.type == InventoryType.ANVIL) {
+            delay(5) {
+                if (e.player is Player) {
+                    val player = e.player as Player
+                    if (player.openInventory.topInventory.type != InventoryType.CHEST && player.openInventory.topInventory.type != InventoryType.ANVIL) {
+                        player.closeMenu()
+                    }
                 }
             }
         }
