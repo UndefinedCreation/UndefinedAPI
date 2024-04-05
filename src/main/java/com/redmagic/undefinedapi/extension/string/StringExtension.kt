@@ -1,5 +1,6 @@
 package com.redmagic.undefinedapi.extension.string
 
+import com.redmagic.undefinedapi.utils.RGBUtil
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.md_5.bungee.api.ChatColor
@@ -45,24 +46,51 @@ fun String.toSmallText(): String {
 
 fun String.toComponent(): Component = miniMessage.deserialize(this)
 
-fun String.translateColor(): String  {
+private val replacements = mapOf(
+    "<BLACK>" to ChatColor.BLACK.toString(),
+    "<dark_blue>" to ChatColor.DARK_BLUE.toString(),
+    "<dark_green>" to ChatColor.DARK_GREEN.toString(),
+    "<dark_aqua>" to ChatColor.DARK_AQUA.toString(),
+    "<dark_red>" to ChatColor.DARK_RED.toString(),
+    "<dark_purple>" to ChatColor.DARK_PURPLE.toString(),
+    "<gold>" to ChatColor.GOLD.toString(),
+    "<gray>" to ChatColor.GRAY.toString(),
+    "<dark_gray>" to ChatColor.DARK_GRAY.toString(),
+    "<blue>" to ChatColor.BLUE.toString(),
+    "<green>" to ChatColor.GREEN.toString(),
+    "<aqua>" to ChatColor.AQUA.toString(),
+    "<red>" to ChatColor.RED.toString(),
+    "<light_purple>" to ChatColor.LIGHT_PURPLE.toString(),
+    "<yellow>" to ChatColor.YELLOW.toString(),
+    "<white>" to ChatColor.WHITE.toString(),
+    "<magic>" to ChatColor.MAGIC.toString(),
+    "<bold>" to ChatColor.BOLD.toString(),
+    "<strikethrough>" to ChatColor.STRIKETHROUGH.toString(),
+    "<underline>" to ChatColor.UNDERLINE.toString(),
+    "<italic>" to ChatColor.ITALIC.toString(),
+    "<reset>" to ChatColor.RESET.toString()
+)
 
-    var string = this
+private val hexPattern: Regex = """<#([A-Fa-f0-9]{6})>""".toRegex()
+private val rgbPattern: Regex = """<rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)>""".toRegex()
+fun String.translateColor(): String =
+    replacements.entries.fold(this) { acc, (old, new) -> acc.replace(old, new, ignoreCase = true) }
+        .let { originalString ->
+            rgbPattern.findAll(originalString).fold(originalString) { str, matchResult ->
+                val (r, g, b) = matchResult.destructured.toList().map { it.toInt() }
+                val replacement = "<#${RGBUtil.rgbToHex(r, g, b)}>"
+                str.replace(matchResult.value, replacement)
+            }
+        }
+        .let { newString ->
+            hexPattern.findAll(newString).fold(StringBuilder(newString)) { builder, matchResult ->
+                val (hex) = matchResult.destructured
+                val replacement = buildString {
+                    append(ChatColor.COLOR_CHAR, "x")
+                    hex.chunked(2) { append(ChatColor.COLOR_CHAR, it) }
+                }
+                val range = matchResult.range
+                builder.replace(range.first, range.last + 1, replacement)
+            }.toString()
+        }
 
-    string = ChatColor.translateAlternateColorCodes('&', string)
-
-    val hexPattern: Pattern = Pattern.compile("#([A-Fa-f0-9]{6})")
-    val matcher: Matcher = hexPattern.matcher(string)
-    val buffer: StringBuilder = StringBuilder(string.length + 4 * 8)
-    while (matcher.find()) {
-        val group: String = matcher.group(1)
-        matcher.appendReplacement(
-            buffer, ChatColor.COLOR_CHAR + "x"
-                    + ChatColor.COLOR_CHAR + group[0] + ChatColor.COLOR_CHAR + group[1]
-                    + ChatColor.COLOR_CHAR + group[2] + ChatColor.COLOR_CHAR + group[3]
-                    + ChatColor.COLOR_CHAR + group[4] + ChatColor.COLOR_CHAR + group[5]
-        )
-    }
-
-    return matcher.appendTail(buffer).toString()
-}

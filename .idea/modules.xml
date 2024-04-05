@@ -2,10 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/UndefinedAPI.iml" filepath="$PROJECT_DIR$/.idea/modules/UndefinedAPI.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/UndefinedAPI.main.iml" filepath="$PROJECT_DIR$/.idea/modules/UndefinedAPI.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/UndefinedAPI.test.iml" filepath="$PROJECT_DIR$/.idea/modules/UndefinedAPI.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.main~1.iml" filepath="$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.main~1.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.test~1.iml" filepath="$PROJECT_DIR$/.idea/modules/com.redmagic.UndefinedAPI.test~1.iml" />
     </modules>
   </component>
 </project>
