@@ -4,6 +4,7 @@ plugins {
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("xyz.jpenilla.run-paper") version "2.2.2"
+    id("org.jetbrains.dokka") version "1.9.20"
 }
 
 apply(plugin = "maven-publish")
