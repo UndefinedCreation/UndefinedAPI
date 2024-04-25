@@ -7,5 +7,6 @@ UndefinedAPI is a spigot wrapper to make the life of developers easier. This is 
 
 # Links
 
-[Wiki](https://github.com/UndefinedCreation/UndefinedAPI/wiki)
-[Documentation](https://documation.undefinedcreation.com/api/index.html)
+* [Wiki](https://github.com/UndefinedCreation/UndefinedAPI/wiki)
+
+* [Documentation](https://documation.undefinedcreation.com/api/index.html)
