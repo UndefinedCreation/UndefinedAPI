@@ -10,6 +10,11 @@ on:
     types: [published]
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+  actions: write
+
 concurrency:
   group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
   cancel-in-progress: true
