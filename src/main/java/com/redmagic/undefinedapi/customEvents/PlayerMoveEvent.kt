@@ -9,6 +9,8 @@ import java.util.UUID
 
 
 /**
+ * @hidden
+ *
  * Manages player movement and triggers a PlayerMoveEvent when a player moves.
  */
 class PlayerMoveManager{

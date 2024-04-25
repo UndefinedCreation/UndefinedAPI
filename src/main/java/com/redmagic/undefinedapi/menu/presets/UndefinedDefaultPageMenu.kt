@@ -11,9 +11,22 @@ import org.bukkit.Material
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
+/**
+ * Represents a menu with undefined default page behavior.
+ *
+ * @property name The name of the menu.
+ * @property list The list of items in the menu.
+ * @property createInventoryCon The lambda function used to customize the inventory.
+ * @property clickData The lambda function used to handle click events.
+ */
 class UndefinedDefaultPageMenu(name: String, list: MutableList<ItemStack>, private val createInventoryCon: Inventory.() -> Unit,
                                override var clickData: ClickData.() -> Unit
 ): UndefinedPageMenu(name, MenuSize.LARGE, list) {
+    /**
+     * Generates an inventory for the menu.
+     *
+     * @return The generated inventory.
+     */
     override fun generateInventory(): Inventory = createPageInventory {
 
 

@@ -4,31 +4,34 @@ import org.bukkit.Location
 import org.bukkit.World
 import java.util.Random
 
-fun World.randomLocation(xRange: Double, zRange: Double): Location{
-
-    val startLoc = Location(this, 0.0, 0.0, 0.0)
-
-    val x = Random().nextDouble(xRange * -1, xRange)
-    val z = Random().nextDouble(zRange * -1, zRange)
-
-    startLoc.x = x
-    startLoc.z = z
-
-    when(environment){
+/**
+ * Generates a random location within the specified range in the world.
+ *
+ * @param xRange The range of x coordinates (positive and negative) within which the location should be generated.
+ * @param zRange The range of z coordinates (positive and negative) within which the location should be generated.
+ * @return A randomly generated Location object.
+ */
+fun World.randomLocation(xRange: Double, zRange: Double): Location = Location(this, 0.0, 0.0, 0.0).apply {
+    x = Random().nextDouble(xRange * -1, xRange)
+    z = Random().nextDouble(zRange * -1, zRange)
+    y = when(environment){
         World.Environment.NETHER -> {
-            for (y in 0..127){
-                if (!getBlockAt(x.toInt(), y, z.toInt()).type.isAir) continue
-                startLoc.y = y.toDouble()
-                break
-            }
+            (0..127).firstOrNull { getBlockAt(x.toInt(), it, z.toInt()).type.isAir }?.toDouble() ?: 0.0
         }
-        World.Environment.THE_END ->{
-            startLoc.y = this.getHighestBlockAt(x.toInt(), z.toInt()).y.toDouble()
-        }
-        else -> startLoc.y = this.getHighestBlockAt(x.toInt(), z.toInt()).y.toDouble()
+        else -> getHighestBlockAt(x.toInt(), z.toInt()).y.toDouble()
     }
-    return startLoc
 }
 
+/**
+ * Generates a random location within the specified range in the world.
+ *
+ * @param range The range of x and z coordinates (positive and negative) within which the location should be generated.
+ * @return A randomly generated Location object.
+ */
 fun World.randomLocation(range: Double): Location = randomLocation(range, range)
+/**
+ * Generates a random location within the world.
+ *
+ * @return A randomly generated [Location] object.
+ */
 fun World.randomLocation(): Location = randomLocation(worldBorder.size / 2, worldBorder.size / 2)

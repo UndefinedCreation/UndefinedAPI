@@ -8,6 +8,13 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
 
+/**
+ * The EventManager class is responsible for registering event listeners and handling events
+ * in the application.
+ *
+ * @deprecated This class is deprecated because the old system didn't work. Please use [Event]
+ * @constructor Creates an instance of the EventManager class.
+ */
 @Deprecated("Old system didn't work")
 class EventManager : Listener {
     init {

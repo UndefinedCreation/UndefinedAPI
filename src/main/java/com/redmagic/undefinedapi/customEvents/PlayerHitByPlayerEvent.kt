@@ -18,6 +18,9 @@ import org.bukkit.event.player.PlayerJoinEvent
 import java.util.UUID
 
 
+/**
+ * @hidden
+ */
 class PlayerHitByPlayerManager(){
     init {
 
@@ -80,8 +83,19 @@ class PlayerHitByPlayerManager(){
 
 }
 
+/**
+ * Represents an event that occurs when a player is hit by another player.
+ *
+ * @param hitPlayer The player who was hit.
+ * @param damager The player who caused the hit.
+ * @param hitCause The cause of the hit.
+ */
 class PlayerHitByPlayerEvent(val hitPlayer: Player, val damager: Player, val hitCause: HitCause): UndefinedEvent()
 
+/**
+ * Enum class representing the cause of a hit.
+ *
+ */
 enum class HitCause(){
     HAND,
     PROJECTILE,

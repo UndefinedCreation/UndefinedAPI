@@ -55,6 +55,11 @@ class ItemBuilder(private var itemStack: ItemStack) {
         return this
     }
 
+    /**
+     * Adds an item flag to the ItemBuilder.
+     *
+     * @param flag
+     */
     fun addFlags(flag: ItemFlag): ItemBuilder{
         flags.add(flag)
         return this

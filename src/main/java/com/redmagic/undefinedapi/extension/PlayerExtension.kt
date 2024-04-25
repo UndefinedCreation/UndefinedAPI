@@ -109,6 +109,16 @@ fun Player.removeActivePotionEffects() {
     activePotionEffects.forEach { removePotionEffect(it.type) }
 }
 
+/**
+ * Sends a message to the player.
+ *
+ * @param component the message component to send
+ */
 fun Player.sendMessage(component: Component) = UndefinedAPI.adventure().player(this).sendMessage(component)
 
+/**
+ * Sends an action bar message to the player.
+ *
+ * @param component The message to be displayed as the action bar, represented as a [Component].
+ */
 fun Player.sendActionBar(component: Component) = UndefinedAPI.adventure().player(this).sendActionBar(component)
