@@ -9,4 +9,4 @@ UndefinedAPI is a spigot wrapper to make the life of developers easier. This is 
 
 * [Wiki](https://github.com/UndefinedCreation/UndefinedAPI/wiki)
 
-* [Documentation](https://documation.undefinedcreation.com/api/index.html)
+* [Documentation](https://documentation.undefinedcreation.com/api/)
