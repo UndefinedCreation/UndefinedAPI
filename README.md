@@ -5,4 +5,7 @@
 
 UndefinedAPI is a spigot wrapper to make the life of developers easier. This is a multi use library from small util classes to bigger link an GUI manager.
 
-All the documentation is do in the [wiki](https://github.com/UndefinedCreation/UndefinedAPI/wiki)
+# Links
+
+[Wiki](https://github.com/UndefinedCreation/UndefinedAPI/wiki)
+[Documentation](https://documation.undefinedcreation.com/api/index.html)
