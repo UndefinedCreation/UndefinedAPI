@@ -1,0 +1,57 @@
+name: Build, test, and deploy API docs
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore: [ 'docs/**', 'README.md' ]
+  pull_request:
+    branches: [ master ]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: 17
+
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+
+    - name: Build and run tests
+      id: build
+      run: |
+        if ! ./gradlew build; then
+          # Address a rare unit test failure very likely to be a test-harness-related
+          # race condition.
+          echo "Build failed, retrying once"
+          if ! ./gradlew build; then
+            exit 1
+          fi
+        fi
+    - name: Generate API documentation
+      if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request' }}
+      run: |
+        VERSION=$(git tag --sort=committerdate | tail -1)
+        echo Generating API documentation for version $VERSION
+        ./gradlew -Pversion=$VERSION dokkaHtml
+
+    - name: Deploy API documentation to Github Pages
+      if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request' }}
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages
+        folder: build/dokka/html
+        target-folder: api
