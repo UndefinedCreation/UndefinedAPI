@@ -2,7 +2,7 @@ package com.redmagic.undefinedapi.nms.minecraftVersion.v1_20_4
 
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
-import com.mojang.datafixers.util.Pair;
+import com.mojang.datafixers.util.Pair
 import com.redmagic.undefinedapi.nms.extension.getConnection
 import com.redmagic.undefinedapi.nms.extension.getSkinTexture
 import com.redmagic.undefinedapi.nms.extension.toDeltaValue
@@ -11,25 +11,15 @@ import com.redmagic.undefinedapi.nms.interfaces.entity.ItemSlot
 import com.redmagic.undefinedapi.nms.interfaces.entity.ItemSlotObject
 import com.redmagic.undefinedapi.nms.interfaces.entity.NMSPlayer
 import com.redmagic.undefinedapi.scheduler.delay
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
-import net.minecraft.network.protocol.game.ClientboundAnimatePacket
-import net.minecraft.network.protocol.game.ClientboundEntityEventPacket
-import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket
-import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
-import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
-import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket
-import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
+import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ClientInformation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.CommonListenerCookie
 import net.minecraft.server.network.ServerGamePacketListenerImpl
+import net.minecraft.world.entity.Pose
 import net.minecraft.world.phys.Vec3
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -37,10 +27,8 @@ import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_20_R3.CraftServer
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
 import org.bukkit.entity.Player
-import net.minecraft.world.entity.Pose
 import org.bukkit.inventory.ItemStack
 import java.util.*
-import kotlin.collections.HashMap
 
 
 /**
@@ -110,7 +98,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
             isOnGround
         )
 
-        viewers.forEach(){
+        viewers.forEach {
             it.getConnection().send(packet)
         }
 
@@ -159,7 +147,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
      *
      * @param string the new name to set
      */
-    override fun setName(string: String) {
+    override fun setDisplayName(string: String) {
 
         val player = serverPlayer ?: return
 
@@ -316,7 +304,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     /**
      * Sets the player on fire and sends the necessary packets to all viewers.
      */
-    override fun onFire() {
+    override fun ignite() {
 
         if (onFire) return
 
@@ -445,7 +433,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     }
 
     /**
-     * Moves the player's off hand.
+     * Moves the player's offhand.
      */
     override fun moveOffHand() {
         val player = serverPlayer ?: return
@@ -466,13 +454,13 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override fun kill() {
         val serverPlayer = serverPlayer ?: return
 
-        val animatePacket_1 = ClientboundEntityEventPacket(serverPlayer, 3)
-        val animatePacket_2 = ClientboundEntityEventPacket(serverPlayer, 60)
+        val animatepacket1 = ClientboundEntityEventPacket(serverPlayer, 3)
+        val animatePacket2 = ClientboundEntityEventPacket(serverPlayer, 60)
 
         viewers.forEach { viewer ->
             viewer.getConnection().let { connection ->
-                connection.send(animatePacket_1)
-                connection.send(animatePacket_2)
+                connection.send(animatepacket1)
+                connection.send(animatePacket2)
                 removeBasePackets(viewer)
             }
         }

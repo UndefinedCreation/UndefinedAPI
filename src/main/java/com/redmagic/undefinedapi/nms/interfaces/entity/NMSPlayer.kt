@@ -55,7 +55,7 @@ interface NMSPlayer: NMSEntity {
      *
      * @param string the new name of the entity
      */
-    fun setName(string: String)
+    fun setDisplayName(string: String)
     /**
      * Sets the skin of the player to the specified name.
      *
@@ -142,7 +142,7 @@ interface NMSPlayer: NMSEntity {
      *
      * This method does not return any value.
      */
-    fun onFire()
+    fun ignite()
     /**
      * This method is used to extinguish the player if they are on fire.
      * It removes the fire effect from the player.
