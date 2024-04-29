@@ -151,54 +151,6 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     }
 
     /**
-     * Sets the name of the player.
-     *
-     * @param string the new name to set
-     */
-    override fun setDisplayName(string: String) {
-
-        val player = serverPlayer ?: return
-
-        val gameProfile = player.gameProfile
-
-        val field = gameProfile.javaClass.getDeclaredField("name")
-        field.isAccessible = true
-        field.set(gameProfile, string)
-
-        updateMetaDataPacket()
-
-        name = string
-    }
-
-    /**
-     * Sets the skin of the player based on the given skin name.
-     *
-     * @param name the name of the skin to set
-     */
-    override fun setSkin(name: String) {
-        val skinString = getSkinTexture(name)
-        setSkin(skinString[1], skinString[0])
-    }
-
-    /**
-     * Sets the skin of the player based on the given skin name.
-     *
-     * @param signature the signature of the skin texture
-     * @param texture the texture of the skin
-     */
-    override fun setSkin(signature: String, texture: String) {
-
-        val player = serverPlayer ?: return
-
-        val gameProfile = player.gameProfile
-        gameProfile.properties.put("textures", Property("textures", texture, signature))
-
-        this.texture = texture
-        this.signature = signature
-
-        updateMetaDataPacket()
-    }
-    /**
      * Clears all items in the item slots of the player.
      */
     override fun clearItems() = ItemSlot.entries.forEach{ setItem(it, ItemStack(Material.AIR)) }
