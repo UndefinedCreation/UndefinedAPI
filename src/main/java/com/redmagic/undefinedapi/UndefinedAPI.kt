@@ -13,13 +13,15 @@ import org.bukkit.plugin.java.JavaPlugin
  *
  * @param javaPlugin The `JavaPlugin` instance of the plugin.
  */
-class UndefinedAPI(javaPlugin: JavaPlugin) {
+class UndefinedAPI(): JavaPlugin() {
 
-    private var adventure: BukkitAudiences
+    private lateinit var adventure: BukkitAudiences
 
-    init {
-        plugin = javaPlugin
-        adventure = BukkitAudiences.create(javaPlugin)
+
+
+    override fun onEnable() {
+        plugin = this
+        adventure = BukkitAudiences.create(this)
         MenuManager.setup(plugin)
         PlayerMoveManager()
         PlayerHitByPlayerManager()

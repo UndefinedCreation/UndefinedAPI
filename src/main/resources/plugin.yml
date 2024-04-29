@@ -1,0 +1,4 @@
+name: UndefinedAPI
+version: '${version}'
+main: com.redmagic.undefinedapi.UndefinedAPI
+api-version: '1.20'
