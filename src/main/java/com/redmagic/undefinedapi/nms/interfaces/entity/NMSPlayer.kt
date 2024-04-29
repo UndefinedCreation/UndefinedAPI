@@ -7,6 +7,7 @@ import org.bukkit.Server
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.lang.reflect.Method
 
 /**
  * Represents an NMS player.
@@ -162,6 +163,16 @@ interface NMSPlayer: NMSEntity {
     fun useOffHand()
 
     /**
+     * Stops using the currently equipped item.
+     *
+     * This method is used to stop using the currently equipped item by switching to the empty hand.
+     * The item will no longer be considered "in use" by the player.
+     *
+     * This method does not return any value.
+     */
+    fun stopUsingItem()
+
+    /**
      * Moves the player's main hand for item interactions.
      *
      * This method sets the player's main hand for item interactions. Any item interactions performed by the player
@@ -231,5 +242,7 @@ interface NMSPlayer: NMSEntity {
      * @param pose the desired pose of the entity
      */
     fun setPose(pose: Pose)
+
+    fun getLivingEntityFlagMethod(): Method
 
 }

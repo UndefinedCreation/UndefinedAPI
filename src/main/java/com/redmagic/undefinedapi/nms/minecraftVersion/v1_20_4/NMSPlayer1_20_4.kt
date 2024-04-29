@@ -19,7 +19,11 @@ import net.minecraft.server.level.ClientInformation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.CommonListenerCookie
 import net.minecraft.server.network.ServerGamePacketListenerImpl
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.ItemSteerable
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Pose
+import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.Vec3
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -28,6 +32,7 @@ import org.bukkit.craftbukkit.v1_20_R3.CraftServer
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.lang.reflect.Method
 import java.util.*
 
 
@@ -50,14 +55,22 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override val viewers: MutableList<Player> = mutableListOf()
     override var serverPlayer: ServerPlayer? = null
     override var location: Location? = null
+        set(value) = value?.let { teleport(it) }!!
     override var name: String = "Steve"
-    override var signature: String
-    override var texture: String
+        set(value) = setDisplayName(value)
+    override var signature: String = ""
+        set(value) = setSkin(value, texture)
+    override var texture: String = ""
+        set(value) = setSkin(signature, value)
     override val equipped: HashMap<Int, ItemStack?> = HashMap()
     override var isCrouching: Boolean = false
+        set(value) = if (value) crouch() else uncrouch()
     override var isSwimming: Boolean = false
+        set(value) = if (value) swim() else unswim()
     override var isGliding: Boolean = false
+        set(value) = if (value) glide() else unglide()
     override var onFire: Boolean = false
+        set(value) = if (value) ignite() else extinguish()
 
     init {
         this.name = name
@@ -350,13 +363,82 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         }
     }
 
+    /**
+     * Uses the main hand of the player.
+     *
+     * This method starts the player using the item in their main hand.
+     * It then invokes the private method "c" in the LivingEntity class
+     * with the parameters 1 and true, and then with the parameters 2 and false.
+     * After that, it updates the metadata packet for the player.
+     */
     override fun useMainHand() {
-        TODO("Not yet implemented")
+        val player = serverPlayer ?: return
+
+        val itemStack = if (equipped.containsKey(ItemSlot.MAIN_HAND.slot)) CraftItemStack.asNMSCopy(equipped[ItemSlot.MAIN_HAND.slot]) else net.minecraft.world.item.ItemStack.EMPTY
+
+        val itemField = LivingEntity::class.java.getDeclaredField("bw")
+        itemField.isAccessible = true
+        itemField.set(player, itemStack)
+
+        player.useItemRemaining = itemStack.useDuration
+
+        val method = getLivingEntityFlagMethod()
+
+        method.invoke(player,1, true)
+        method.invoke(player, 2, false)
+
+        player.gameEvent(GameEvent.ITEM_INTERACT_START)
+
+        updateMetaDataPacket()
     }
 
+    /**
+     * Uses the off-hand of the player.
+     *
+     * This method starts the player using the item in their off-hand.
+     * It then invokes the private method "c" in the LivingEntity class
+     * with the parameters 1 and true, and then with the parameters 2 and true.
+     * After that, it updates the metadata packet for the player.
+     */
     override fun useOffHand() {
-        TODO("Not yet implemented")
+        val player = serverPlayer ?: return
+
+        val itemStack = if (equipped.containsKey(ItemSlot.OFF_HAND.slot)) CraftItemStack.asNMSCopy(equipped[ItemSlot.OFF_HAND.slot]) else net.minecraft.world.item.ItemStack.EMPTY
+
+        val itemField = LivingEntity::class.java.getDeclaredField("bw")
+        itemField.isAccessible = true
+        itemField.set(player, itemStack)
+
+        player.useItemRemaining = itemStack.useDuration
+
+        val method = getLivingEntityFlagMethod()
+
+        method.invoke(player,1, true)
+        method.invoke(player, 2, true)
+
+        player.gameEvent(GameEvent.ITEM_INTERACT_START)
+
+        updateMetaDataPacket()
+
     }
+
+    override fun stopUsingItem() {
+        val player = serverPlayer ?: return
+
+        val method = getLivingEntityFlagMethod()
+        method.invoke(player,1, false)
+
+        player.gameEvent(GameEvent.ITEM_INTERACT_FINISH)
+
+        val itemField = LivingEntity::class.java.getDeclaredField("bw")
+        itemField.isAccessible = true
+        itemField.set(player, net.minecraft.world.item.ItemStack.EMPTY)
+
+        player.useItemRemaining = 0
+
+        updateMetaDataPacket()
+    }
+
 
     /**
      * Spawns the player at the specified location and performs the specified action when done.
@@ -578,4 +660,6 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
             it.getConnection().send(dataPacket)
         }
     }
+
+    override fun getLivingEntityFlagMethod(): Method = LivingEntity::class.java.getDeclaredMethod("c", Int::class.java, Boolean::class.java)
 }

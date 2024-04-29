@@ -3,6 +3,7 @@ package com.redmagic.undefinedapi
 import com.redmagic.undefinedapi.customEvents.PlayerHitByPlayerManager
 import com.redmagic.undefinedapi.customEvents.PlayerMoveManager
 import com.redmagic.undefinedapi.menu.MenuManager
+import com.redmagic.undefinedapi.nms.extension.createFakePlayer
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -22,9 +23,6 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
         MenuManager.setup(plugin)
         PlayerMoveManager()
         PlayerHitByPlayerManager()
-
-
-
     }
 
     /**
