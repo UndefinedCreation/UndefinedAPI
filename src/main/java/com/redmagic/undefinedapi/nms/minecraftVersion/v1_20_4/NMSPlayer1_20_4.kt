@@ -407,7 +407,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
 
         setItem(ItemSlot.MAIN_HAND, ItemStack(Material.AIR))
 
-        setItem(ItemSlot.MAIN_HAND, item!!)
+        delay(1) { setItem(ItemSlot.MAIN_HAND, item!!) }
     }
 
     override fun stopUsingOffHandItem() {
