@@ -422,7 +422,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
 
         setItem(ItemSlot.OFF_HAND, ItemStack(Material.AIR))
 
-        setItem(ItemSlot.OFF_HAND, item!!)
+        delay(1) { setItem(ItemSlot.OFF_HAND, item!!) }
     }
 
     /**
