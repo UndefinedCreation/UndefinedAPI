@@ -282,7 +282,6 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         setPose(Pose.STANDING)
     }
 
-
     /**
      * Glides the player.
      */
@@ -363,7 +362,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
 
         val itemStack = if (equipped.containsKey(ItemSlot.MAIN_HAND.slot)) CraftItemStack.asNMSCopy(equipped[ItemSlot.MAIN_HAND.slot]) else net.minecraft.world.item.ItemStack.EMPTY
 
-        val itemField = LivingEntity::class.java.getDeclaredField("bw")
+        val itemField = LivingEntity::class.java.getDeclaredField("bv")
         itemField.isAccessible = true
         itemField.set(player, itemStack)
 
@@ -392,7 +391,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
 
         val itemStack = if (equipped.containsKey(ItemSlot.OFF_HAND.slot)) CraftItemStack.asNMSCopy(equipped[ItemSlot.OFF_HAND.slot]) else net.minecraft.world.item.ItemStack.EMPTY
 
-        val itemField = LivingEntity::class.java.getDeclaredField("bw")
+        val itemField = LivingEntity::class.java.getDeclaredField("bv")
         itemField.isAccessible = true
         itemField.set(player, itemStack)
 
@@ -417,7 +416,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
 
         player.gameEvent(GameEvent.ITEM_INTERACT_FINISH)
 
-        val itemField = LivingEntity::class.java.getDeclaredField("bw")
+        val itemField = LivingEntity::class.java.getDeclaredField("bv")
         itemField.isAccessible = true
         itemField.set(player, net.minecraft.world.item.ItemStack.EMPTY)
 
