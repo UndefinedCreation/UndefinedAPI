@@ -55,20 +55,16 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override val viewers: MutableList<Player> = mutableListOf()
     override var serverPlayer: ServerPlayer? = null
     override var location: Location? = null
-        set(value) = value?.let { teleport(it) }!!
     override var name: String = "Steve"
     override var signature: String = ""
     override var texture: String = ""
 
     override val equipped: HashMap<Int, ItemStack?> = HashMap()
     override var isCrouching: Boolean = false
-        set(value) = if (value) crouch() else uncrouch()
     override var isSwimming: Boolean = false
-        set(value) = if (value) swim() else unswim()
     override var isGliding: Boolean = false
-        set(value) = if (value) glide() else unglide()
     override var onFire: Boolean = false
-        set(value) = if (value) ignite() else extinguish()
+
 
     init {
         this.name = name
