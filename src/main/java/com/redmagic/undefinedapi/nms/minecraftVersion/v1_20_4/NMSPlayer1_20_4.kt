@@ -369,6 +369,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         player.useItemRemaining = itemStack.useDuration
 
         val method = getLivingEntityFlagMethod()
+        method.isAccessible = true
 
         method.invoke(player,1, true)
         method.invoke(player, 2, false)
@@ -398,6 +399,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         player.useItemRemaining = itemStack.useDuration
 
         val method = getLivingEntityFlagMethod()
+        method.isAccessible = true
 
         method.invoke(player,1, true)
         method.invoke(player, 2, true)
@@ -412,6 +414,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         val player = serverPlayer ?: return
 
         val method = getLivingEntityFlagMethod()
+        method.isAccessible = true
         method.invoke(player,1, false)
 
         player.gameEvent(GameEvent.ITEM_INTERACT_FINISH)
