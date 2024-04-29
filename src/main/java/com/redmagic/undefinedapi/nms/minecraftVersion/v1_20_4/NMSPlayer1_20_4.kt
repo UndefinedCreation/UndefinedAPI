@@ -30,6 +30,7 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_20_R3.CraftServer
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
+import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.lang.reflect.Method
@@ -360,21 +361,13 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override fun useMainHand() {
         val player = serverPlayer ?: return
 
-        val itemStack = if (equipped.containsKey(ItemSlot.MAIN_HAND.slot)) CraftItemStack.asNMSCopy(equipped[ItemSlot.MAIN_HAND.slot]) else net.minecraft.world.item.ItemStack.EMPTY
-
-        val itemField = LivingEntity::class.java.getDeclaredField("bv")
-        itemField.isAccessible = true
-        itemField.set(player, itemStack)
-
-        player.useItemRemaining = itemStack.useDuration
+        if (!equipped.containsKey(ItemSlot.MAIN_HAND.slot)) return
 
         val method = getLivingEntityFlagMethod()
         method.isAccessible = true
 
         method.invoke(player,1, true)
         method.invoke(player, 2, false)
-
-        player.gameEvent(GameEvent.ITEM_INTERACT_START)
 
         updateMetaDataPacket()
     }
@@ -390,13 +383,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override fun useOffHand() {
         val player = serverPlayer ?: return
 
-        val itemStack = if (equipped.containsKey(ItemSlot.OFF_HAND.slot)) CraftItemStack.asNMSCopy(equipped[ItemSlot.OFF_HAND.slot]) else net.minecraft.world.item.ItemStack.EMPTY
-
-        val itemField = LivingEntity::class.java.getDeclaredField("bv")
-        itemField.isAccessible = true
-        itemField.set(player, itemStack)
-
-        player.useItemRemaining = itemStack.useDuration
+        if (!equipped.containsKey(ItemSlot.OFF_HAND.slot)) return
 
         val method = getLivingEntityFlagMethod()
         method.isAccessible = true
@@ -404,30 +391,39 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         method.invoke(player,1, true)
         method.invoke(player, 2, true)
 
-        player.gameEvent(GameEvent.ITEM_INTERACT_START)
-
         updateMetaDataPacket()
 
     }
 
-    override fun stopUsingItem() {
+    override fun stopUsingMainHandItem() {
         val player = serverPlayer ?: return
+
+        val item = if (equipped.containsKey(ItemSlot.MAIN_HAND.slot)) equipped[ItemSlot.MAIN_HAND.slot] else return
 
         val method = getLivingEntityFlagMethod()
         method.isAccessible = true
         method.invoke(player,1, false)
-
-        player.gameEvent(GameEvent.ITEM_INTERACT_FINISH)
-
-        val itemField = LivingEntity::class.java.getDeclaredField("bv")
-        itemField.isAccessible = true
-        itemField.set(player, net.minecraft.world.item.ItemStack.EMPTY)
-
-        player.useItemRemaining = 0
-
         updateMetaDataPacket()
+
+        setItem(ItemSlot.MAIN_HAND, ItemStack(Material.AIR))
+
+        setItem(ItemSlot.MAIN_HAND, item!!)
     }
 
+    override fun stopUsingOffHandItem() {
+        val player = serverPlayer ?: return
+
+        val item = if (equipped.containsKey(ItemSlot.OFF_HAND.slot)) equipped[ItemSlot.OFF_HAND.slot] else return
+
+        val method = getLivingEntityFlagMethod()
+        method.isAccessible = true
+        method.invoke(player,1, false)
+        updateMetaDataPacket()
+
+        setItem(ItemSlot.OFF_HAND, ItemStack(Material.AIR))
+
+        setItem(ItemSlot.OFF_HAND, item!!)
+    }
 
     /**
      * Spawns the player at the specified location and performs the specified action when done.

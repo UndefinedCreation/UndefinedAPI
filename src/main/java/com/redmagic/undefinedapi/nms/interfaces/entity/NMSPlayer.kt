@@ -163,14 +163,23 @@ interface NMSPlayer: NMSEntity {
     fun useOffHand()
 
     /**
-     * Stops using the currently equipped item.
+     * Stops using the currently equipped item in the main hand slot.
      *
-     * This method is used to stop using the currently equipped item by switching to the empty hand.
+     * This method is used to stop using the currently equipped item by switching to the empty main hand.
      * The item will no longer be considered "in use" by the player.
      *
-     * This method does not return any value.
+     * Note: This method does not return any value.
      */
-    fun stopUsingItem()
+    fun stopUsingMainHandItem()
+
+    /**
+     * Stops using the currently equipped item in the off-hand slot.
+     *
+     * This method is used to stop using the currently equipped item by switching to the empty off-hand.
+     * The item will no longer be considered "in use" by the player.
+     * Note: This method does not return any value.
+     */
+    fun stopUsingOffHandItem()
 
     /**
      * Moves the player's main hand for item interactions.
