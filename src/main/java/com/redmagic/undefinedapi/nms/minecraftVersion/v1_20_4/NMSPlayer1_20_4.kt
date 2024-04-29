@@ -57,11 +57,9 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override var location: Location? = null
         set(value) = value?.let { teleport(it) }!!
     override var name: String = "Steve"
-        set(value) = setDisplayName(value)
     override var signature: String = ""
-        set(value) = setSkin(value, texture)
     override var texture: String = ""
-        set(value) = setSkin(signature, value)
+
     override val equipped: HashMap<Int, ItemStack?> = HashMap()
     override var isCrouching: Boolean = false
         set(value) = if (value) crouch() else uncrouch()
@@ -203,12 +201,10 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
 
         updateMetaDataPacket()
     }
-
     /**
      * Clears all items in the item slots of the player.
      */
     override fun clearItems() = ItemSlot.entries.forEach{ setItem(it, ItemStack(Material.AIR)) }
-
     /**
      * Sets the item in the specified slot for the player.
      *
@@ -236,8 +232,6 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         
         equipped[slot] = itemStack
     }
-
-
     /**
      * Sets the item in the specified slot for the player.
      *
@@ -245,7 +239,6 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
      * @param itemStack The ItemStack to be set in the slot.
      */
     override fun setItem(itemSlot: ItemSlot, itemStack: ItemStack) = setItem(itemSlot.slot, itemStack)
-
     /**
      * Crouches the player.
      *
@@ -257,7 +250,6 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         isCrouching = !isCrouching
         setPose(Pose.CROUCHING)
     }
-
     /**
      * Uncrouches the player.
      *
@@ -269,7 +261,6 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         isCrouching = !isCrouching
         setPose(Pose.STANDING)
     }
-
 
     /**
      * Sets the swimming state for the player.
