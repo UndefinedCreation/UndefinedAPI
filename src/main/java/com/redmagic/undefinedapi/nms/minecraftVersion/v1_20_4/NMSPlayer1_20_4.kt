@@ -38,19 +38,10 @@ import java.util.*
 
 
 /**
- * Represents a custom player object for Minecraft version 1.20.4.
+ * Represents a player in NMS version 1.20.4.
  *
- * @property viewers The list of players who can see this player.
- * @property serverPlayer The server-side player object associated with this custom player.
- * @property location The current location of the player.
- * @property name The name of the player.
- * @property signature The signature data for the player's skin.
- * @property texture The texture data for the player's skin.
- * @property equipped The map of equipped items for the player.
- * @property isCrouching A flag indicating whether the player is crouching.
- * @property isSwimming A flag indicating whether the player is swimming.
- * @property isGliding A flag indicating whether the player is gliding.
- * @property onFire A flag indicating whether the player is on fire.
+ * This class provides methods to manipulate and interact with a player,
+ * such as moving, teleporting, setting items, changing pose, and more.
  */
 class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override val viewers: MutableList<Player> = mutableListOf()
@@ -151,6 +142,50 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     }
 
     /**
+     * Sets the display name of the player.
+     *
+     * This method sets the display name of the player to the specified string. It also performs additional actions such as updating the player's name and
+     * respawning the player at their current location.
+     *
+     * @param string the new display name for the player
+     */
+    override fun setDisplayName(string: String) {
+        serverPlayer ?: return
+        name = string
+        val tempLocation = location!!.clone()
+        kill()
+        spawn(tempLocation){}
+    }
+
+    /**
+     * Sets the skin of the object based on the provided string.
+     *
+     * @param string the string representing the desired skin
+     */
+    override fun setSkin(string: String) {
+        val stringArray = getSkinTexture(string)
+        val tempLocation = location!!.clone()
+        texture = stringArray[0]
+        signature = stringArray[1]
+        kill()
+        spawn(tempLocation){}
+    }
+
+    /**
+     * Sets the skin of an entity with the given texture and signature.
+     *
+     * @param texture the texture of the skin
+     * @param sign the signature associated with the skin
+     */
+    override fun setSkin(texture: String, sign: String) {
+        this.texture = texture
+        this.signature = sign
+        val tempLocation = location!!.clone()
+        kill()
+        spawn(tempLocation){}
+    }
+
+    /**
      * Clears all items in the item slots of the player.
      */
     override fun clearItems() = ItemSlot.entries.forEach{ setItem(it, ItemStack(Material.AIR)) }
@@ -197,6 +232,8 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override fun crouch() {
         if (isCrouching) return
         isCrouching = !isCrouching
+        isSwimming = false
+        isGliding = false
         setPose(Pose.CROUCHING)
     }
     /**
@@ -220,6 +257,8 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override fun swim() {
         if (isSwimming) return
         isSwimming = !isSwimming
+        isCrouching = false
+        isGliding = false
         setPose(Pose.SWIMMING)
     }
 
@@ -241,6 +280,8 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override fun glide() {
         if (isGliding) return
         isGliding = !isGliding
+        isSwimming = false
+        isCrouching = false
         setPose(Pose.FALL_FLYING)
     }
 
@@ -347,6 +388,18 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
 
     }
 
+    /**
+     * Stops the player from using the item in their main hand.
+     * This method starts by checking if the player is currently holding an item in their main hand.
+     * If not, the method returns without performing any actions.
+     * Otherwise, it proceeds with the following steps:
+     * 1. Retrieves the current server player instance. If it is null, the method returns.
+     * 2. Checks if the main hand slot is equipped with an item. If not, the method returns.
+     * 3. Invokes the private method "c" in the LivingEntity class with the parameters 1 and false to stop using the main hand item.
+     * 4. Updates the metadata packet to reflect any changes in the player's entity data.
+     * 5. Sets the main hand slot to an empty ItemStack.
+     * 6. Delays for 1 tick and sets the main hand slot back to the original item.
+     */
     override fun stopUsingMainHandItem() {
         val player = serverPlayer ?: return
 
@@ -362,6 +415,22 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         delay(1) { setItem(ItemSlot.MAIN_HAND, item!!) }
     }
 
+    /**
+     * Stops the player from using the item in their off-hand slot.
+     * If the player is not currently holding an item in their off-hand, the method does nothing.
+     *
+     * The method starts by checking if the player is online. If not, it returns without performing any actions.
+     *
+     * Next, it retrieves the item in the off-hand slot, if it exists. If the off-hand slot is empty, the method returns without performing any actions.
+     *
+     * The method then uses reflection to access and invoke the private method "c" in the LivingEntity class.
+     * It passes the parameters 1 and false to the method to stop the player from using their off-hand item.
+     *
+     * After that, it updates the metadata packet for the player to reflect any changes in their entity data.
+     *
+     * Finally, it sets the off-hand slot to an empty ItemStack (air) and schedules a delay of 1 tick.
+     * During the delay, the off-hand slot is set back to the original item to complete the stop using off-hand item process.
+     */
     override fun stopUsingOffHandItem() {
         val player = serverPlayer ?: return
 
@@ -598,5 +667,10 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         }
     }
 
+    /**
+     * Returns the method "c" from the LivingEntity class with the specified parameter types.
+     *
+     * @return the Method object representing the "c" method in the LivingEntity class
+     */
     override fun getLivingEntityFlagMethod(): Method = LivingEntity::class.java.getDeclaredMethod("c", Int::class.java, Boolean::class.java)
 }

@@ -52,6 +52,33 @@ interface NMSPlayer: NMSEntity {
     fun moveOrTeleport(location: Location)
 
     /**
+     * Sets the display name of the entity.
+     *
+     * This method sets the display name of the entity to the specified string.
+     * The display name is the name that is shown above the entity's head in-game.
+     *
+     * @param string The display name to set for the entity.
+     */
+    fun setDisplayName(string: String)
+
+    /**
+     * Sets the skin of the player character.
+     *
+     * This method is used to set the skin of the player character to a specified texture.
+     *
+     * @param string The texture value representing the skin of the player character.
+     */
+    fun setSkin(string: String)
+
+    /**
+     * Sets the skin of the NMSPlayer using the provided texture and sign.
+     *
+     * @param texture The texture value of the skin.
+     * @param sign The sign value of the skin.
+     */
+    fun setSkin(texture: String, sign: String)
+
+    /**
      * Clears all items from the inventory of the NMSPlayer.
      */
     fun clearItems()
