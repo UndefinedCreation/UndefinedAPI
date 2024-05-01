@@ -41,11 +41,11 @@ jobs:
     - name: Build and run tests
       id: build
       run: |
-        if ! ./gradlew reobfJar; then
+        if ! ./gradlew build; then
           # Address a rare unit test failure very likely to be a test-harness-related
           # race condition.
           echo "Build failed, retrying once"
-          if ! ./gradlew reobfJar; then
+          if ! ./gradlew build; then
             exit 1
           fi
         fi
