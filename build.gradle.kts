@@ -33,7 +33,7 @@ publishing {
             version = versionVar
             from(components["java"])
             artifact(tasks.reobfJar) {
-                classifier = null
+                classifier = "spigotMapped"
             }
         }
     }

@@ -209,7 +209,7 @@ interface NMSPlayer: NMSEntity {
      * @param location the location where the server player should be spawned
      * @param done a lambda function that will be executed after the server player is spawned
      */
-    fun spawn(location: Location, done : ServerPlayer.() -> Unit)
+    fun spawn(location: Location, done : NMSPlayer.() -> Unit = {})
     /**
      * Kills the entity.
      */

@@ -168,7 +168,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         texture = stringArray[0]
         signature = stringArray[1]
         kill()
-        spawn(tempLocation){}
+        spawn(tempLocation)
     }
 
     /**
@@ -182,7 +182,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         this.signature = sign
         val tempLocation = location!!.clone()
         kill()
-        spawn(tempLocation){}
+        spawn(tempLocation)
     }
 
     /**
@@ -452,7 +452,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
      * @param location the location at which to spawn the player
      * @param done the action to be performed by the player after spawning
      */
-    override fun spawn(location: Location, done: ServerPlayer.() -> Unit) {
+    override fun spawn(location: Location, done: NMSPlayer.() -> Unit) {
 
         if (viewers.isEmpty()) {
             return
@@ -488,7 +488,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
             sendBasePackets(it)
         }
 
-        done.invoke(fakeServerPlayer)
+        done.invoke(this)
 
     }
 
