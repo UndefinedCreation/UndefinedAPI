@@ -1,3 +1,4 @@
+
 plugins {
     java
     kotlin("jvm") version "1.9.22"
@@ -9,6 +10,9 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
+val versionVar = "0.4.33"
+val groupIdVar = "com.redmagic"
+val artifactIdVar = "UndefinedAPI"
 
 publishing {
     repositories {
@@ -23,18 +27,20 @@ publishing {
     }
 
     publications {
-        create<MavenPublication>("maven") {
-            groupId = "com.redmagic"
-            artifactId = "UndefinedAPI"
-            version = "0.4.32"
-
+        register<MavenPublication>("maven") {
+            groupId = groupIdVar
+            artifactId = artifactIdVar
+            version = versionVar
             from(components["java"])
+            artifact(tasks.reobfJar) {
+                classifier = "reobf"
+            }
         }
     }
 }
 
-group = "com.redmagic"
-version = "0.4.32"
+group = groupIdVar
+version = versionVar
 
 repositories {
     mavenCentral()
@@ -80,6 +86,9 @@ tasks {
         minecraftVersion("1.20.4")
     }
 }
+
+
+
 
 kotlin{
     jvmToolchain(17)
