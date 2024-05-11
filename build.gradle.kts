@@ -10,7 +10,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.4.34"
+val versionVar = "0.4.35"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
@@ -33,7 +33,7 @@ publishing {
             version = versionVar
             from(components["java"])
             artifact(tasks.reobfJar) {
-                classifier = ""
+                classifier = null
             }
         }
     }
