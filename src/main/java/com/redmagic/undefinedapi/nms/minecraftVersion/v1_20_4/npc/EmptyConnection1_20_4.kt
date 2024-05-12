@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.nms.minecraftVersion.v1_20_4
+package com.redmagic.undefinedapi.nms.minecraftVersion.v1_20_4.npc
 
 
 import net.minecraft.network.Connection;
@@ -17,9 +17,9 @@ import java.net.SocketAddress;
  *
  * @param flag the packet flow flag for the connection
  */
-class EmptyConnection(flag: PacketFlow? = null): Connection(flag) {
+class EmptyConnection1_20_4(flag: PacketFlow? = null): Connection(flag) {
     init {
-        channel = EmptyChannel(null)
+        channel = EmptyChannel1_20_4(null)
         address = object : SocketAddress() {
             private val serialVersionUID = 8207338859896320185L
         }

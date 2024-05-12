@@ -1,5 +1,6 @@
 package com.redmagic.undefinedapi.nms.extension
 
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
 import org.bukkit.Bukkit
 
 fun getNMSVersion(): String {
@@ -9,3 +10,5 @@ fun getNMSVersion(): String {
         else -> "-1_20_3"
     }
 }
+
+fun isRemapped(): Boolean = ClientboundTeleportEntityPacket::class.simpleName != "ClientboundTeleportEntityPacket"

@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.nms.minecraftVersion.v1_20_4
+package com.redmagic.undefinedapi.nms.minecraftVersion.v1_20_4.npc
 
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
@@ -19,18 +19,14 @@ import net.minecraft.server.level.ClientInformation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.CommonListenerCookie
 import net.minecraft.server.network.ServerGamePacketListenerImpl
-import net.minecraft.world.InteractionHand
-import net.minecraft.world.entity.ItemSteerable
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Pose
-import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.Vec3
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_20_R3.CraftServer
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
-import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.lang.reflect.Method
@@ -475,7 +471,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
 
         val connection = ServerGamePacketListenerImpl(
             server,
-            EmptyConnection(),
+            EmptyConnection1_20_4(),
             fakeServerPlayer,
             CommonListenerCookie.createInitial(gameProfile)
         )

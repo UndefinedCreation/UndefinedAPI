@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.nms.minecraftVersion.v1_20_4
+package com.redmagic.undefinedapi.nms.minecraftVersion.v1_20_4.npc
 
 import io.netty.channel.*
 import java.net.SocketAddress
@@ -11,7 +11,7 @@ import java.net.SocketAddress
  *
  * @param channel the underlying channel object
  */
-class EmptyChannel(channel: Channel?): AbstractChannel(channel) {
+class EmptyChannel1_20_4(channel: Channel?): AbstractChannel(channel) {
     private val config: ChannelConfig = DefaultChannelConfig(this)
 
     override fun config(): ChannelConfig {
