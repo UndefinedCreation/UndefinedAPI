@@ -30,6 +30,8 @@ import org.bukkit.scoreboard.Team
  * @param title The title of the scoreboard.
  * @param scoreboard The scoreboard instance.
  */
+
+@Deprecated("Old and outdated")
 class UndefinedScoreboard(private val title: String, private val  scoreboard: Scoreboard) {
 
     /**

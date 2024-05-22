@@ -55,7 +55,6 @@ abstract class UndefinedCommand
      * @param args The command arguments (optional).
      * @return Returns true if the command was executed successfully, false otherwise.
      */
-
     override fun execute(sender: CommandSender, commandName: String, args: Array<out String>?): Boolean {
         val isCorrectType = when (commandType) {
             CommandType.ALL -> true
