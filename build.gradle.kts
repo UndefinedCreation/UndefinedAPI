@@ -1,4 +1,3 @@
-
 plugins {
     java
     kotlin("jvm") version "1.9.22"
@@ -10,7 +9,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.4.38"
+val versionVar = "0.4.39"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
