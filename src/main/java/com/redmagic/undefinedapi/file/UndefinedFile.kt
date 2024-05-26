@@ -47,7 +47,7 @@ open class UndefinedFile(val file: File, private val fromResources: Boolean = fa
      */
     private fun createIfDoesntExist(){
         if (file.exists()){
-            file.mkdir()
+            file.createNewFile()
         }
     }
     /**
