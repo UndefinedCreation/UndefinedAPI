@@ -12,7 +12,7 @@ import java.nio.file.Path
  * @property file The file object representing the YAML file.
  * @property fromResources Flag indicating whether the file should be copied from a resource.
  */
-class UndefinedYAML(override val file: File, fromResources: Boolean = false): UndefinedFile(file, fromResources) {
+class UndefinedYAML(file: File, fromResources: Boolean = false): UndefinedFile(file, fromResources) {
 
     /**
      * Constructs an instance of the UndefinedYAML class.

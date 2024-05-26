@@ -12,14 +12,14 @@ import java.nio.file.Path
  * @param file The file object representing the file.
  * @param fromResources Flag indicating whether the file should be copied from a resource.
  */
-open class UndefinedFile(open val file: File, private val fromResources: Boolean = false) {
+open class UndefinedFile(val file: File, private val fromResources: Boolean = false) {
     /**
      * Constructs an instance of the UndefinedFile class.
      *
      * @param path The path of the file.
      * @param fromResources Flag indicating whether the file should be copied from a resource.
      */
-    constructor(path: String, fromResources: Boolean = false): this(File(UndefinedAPI.plugin.dataFolder ,path), fromResources)
+    constructor(path: String, fromResources: Boolean = false): this(File(UndefinedAPI.plugin.dataFolder, path), fromResources)
     /**
      * Constructs a new `UndefinedFile` object with the specified `path` and `fromResources` flag.
      *
