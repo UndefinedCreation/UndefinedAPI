@@ -46,7 +46,7 @@ open class UndefinedFile(val file: File, private val fromResources: Boolean = fa
      * Creates the file if it doesn't exist.
      */
     private fun createIfDoesntExist(){
-        if (file.exists()){
+        if (!file.exists()){
             file.createNewFile()
         }
     }
