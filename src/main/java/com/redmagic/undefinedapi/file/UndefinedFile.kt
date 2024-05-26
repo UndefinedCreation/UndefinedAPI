@@ -19,7 +19,7 @@ open class UndefinedFile(open val file: File, private val fromResources: Boolean
      * @param path The path of the file.
      * @param fromResources Flag indicating whether the file should be copied from a resource.
      */
-    constructor(path: String, fromResources: Boolean = false): this(File(path), fromResources)
+    constructor(path: String, fromResources: Boolean = false): this(File(UndefinedAPI.plugin.dataFolder ,path), fromResources)
     /**
      * Constructs a new `UndefinedFile` object with the specified `path` and `fromResources` flag.
      *
