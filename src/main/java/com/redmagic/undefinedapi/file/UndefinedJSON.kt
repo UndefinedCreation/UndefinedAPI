@@ -12,7 +12,7 @@ import java.nio.file.Path
  * @param file The file object representing the JSON file.
  * @param fromResources Flag indicating whether the JSON file should be copied from a resource.
  */
-class UndefinedJSON(override val file: File, fromResources: Boolean = false): UndefinedFile(file, fromResources) {
+class UndefinedJSON(file: File, fromResources: Boolean = false): UndefinedFile(file, fromResources) {
     /**
      * The constructor for the `UndefinedJSON` class.
      *
