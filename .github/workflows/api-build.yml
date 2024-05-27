@@ -41,11 +41,11 @@ jobs:
     - name: Build and run tests
       id: build
       run: |
-        if ! ./gradlew build; then
+        if ! ./gradlew shadowJar; then
           # Address a rare unit test failure very likely to be a test-harness-related
           # race condition.
           echo "Build failed, retrying once"
-          if ! ./gradlew build; then
+          if ! ./gradlew shadowJar; then
             exit 1
           fi
         fi
@@ -54,12 +54,12 @@ jobs:
       run: |
         VERSION=$(git tag --sort=committerdate | tail -1)
         echo Generating API documentation for version $VERSION
-        ./gradlew -Pversion=$VERSION dokkaHtml
+        ./gradlew -Pversion=$VERSION dokkaHtmlMultiModule
 
     - name: Deploy API documentation to Github Pages
       if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'pull_request' }}
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
-        folder: build/dokka/html
-
+        folder: /build/dokka/htmlMultiModule
+        target-folder: api

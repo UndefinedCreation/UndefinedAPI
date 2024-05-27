@@ -8,6 +8,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/api" />
+            <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/v1_20_4" />
           </set>
         </option>
       </GradleProjectSettings>
