@@ -11,7 +11,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.4.45"
+val versionVar = "0.4.46"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
@@ -63,6 +63,9 @@ allprojects {
     }
 
     dependencies {
+
+        compileOnly("org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT")
+
         implementation("org.jetbrains.kotlin:kotlin-stdlib")
         implementation("org.reflections:reflections:0.9.11")
         implementation("net.kyori:adventure-platform-bukkit:4.3.2")
@@ -78,6 +81,7 @@ allprojects {
 dependencies {
     implementation(project(":common"))
     implementation(project(":v1_20_4:", "reobf"))
+    implementation(project(":v1_20_5:", "reobf"))
     implementation(project(":api"))
 }
 

@@ -1,5 +1,5 @@
 rootProject.name = "UndefinedAPI"
-include("common", "v1_20_4", "api")
+include("common", "v1_20_4", "api", "v1_20_5")
 pluginManagement {
     repositories {
         gradlePluginPortal()
