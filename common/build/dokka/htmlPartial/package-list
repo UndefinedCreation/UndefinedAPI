@@ -4,10 +4,9 @@ $dokka.linkExtension:html
 com.redmagic.undefinedapi
 com.redmagic.undefinedapi.builders
 com.redmagic.undefinedapi.command
-com.redmagic.undefinedapi.customEvents
-com.redmagic.undefinedapi.event
 com.redmagic.undefinedapi.extension
 com.redmagic.undefinedapi.extension.string
+com.redmagic.undefinedapi.file
 com.redmagic.undefinedapi.menu
 com.redmagic.undefinedapi.menu.normal
 com.redmagic.undefinedapi.menu.normal.button
@@ -15,8 +14,6 @@ com.redmagic.undefinedapi.menu.page
 com.redmagic.undefinedapi.menu.page.button
 com.redmagic.undefinedapi.menu.presets
 com.redmagic.undefinedapi.nms
-com.redmagic.undefinedapi.nms.interfaces.entity
-com.redmagic.undefinedapi.scheduler
 com.redmagic.undefinedapi.scoreboard
 com.redmagic.undefinedapi.utils
 
