@@ -66,6 +66,7 @@ allprojects {
         implementation("net.kyori:adventure-platform-bukkit:4.3.2")
         implementation("net.kyori:adventure-text-minimessage:4.16.0")
         implementation("org.json:json:20171018")
+        implementation("com.googlecode.json-simple:json-simple:1.1.1")
     }
 
 }
@@ -82,7 +83,7 @@ tasks {
 
 
     shadowJar {
-        archiveFileName.set("UndefinedAPI-shadow-${versionVar}.jar")
+        archiveFileName.set("UndefinedAPI-${versionVar}.jar")
     }
 
     compileKotlin {
