@@ -9,7 +9,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.4.43"
+val versionVar = "0.4.44"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
@@ -48,7 +48,7 @@ allprojects {
     apply(plugin = "maven-publish")
 
     group = "com.redmagic"
-    version = "0.4.36"
+    version = versionVar
 
     repositories {
         mavenCentral()
