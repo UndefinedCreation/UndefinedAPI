@@ -1,7 +1,0 @@
-$dokka.format:html-v1
-$dokka.linkExtension:html
-
-com.redmagic.undefinedapi
-com.redmagic.undefinedapi.event
-com.redmagic.undefinedapi.npc
-
