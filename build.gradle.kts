@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     `java-library`
     java
@@ -9,7 +11,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.4.44"
+val versionVar = "0.4.45"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
@@ -75,22 +77,29 @@ allprojects {
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":v1_20_4"))
+    implementation(project(":v1_20_4:", "reobf"))
     implementation(project(":api"))
 }
 
 tasks {
 
+    assemble{
+        dependsOn("shadowJar")
+    }
 
-    shadowJar {
-        archiveFileName.set("UndefinedAPI-${versionVar}.jar")
+    jar.configure {
+        dependsOn("shadowJar")
+        archiveClassifier.set("dev")
+    }
+
+    withType<ShadowJar> {
+        archiveClassifier.set("")
+        archiveFileName.set("${project.name}-${project.version}.jar")
     }
 
     compileKotlin {
         kotlinOptions.jvmTarget = "17"
     }
-
-
 }
 
 
