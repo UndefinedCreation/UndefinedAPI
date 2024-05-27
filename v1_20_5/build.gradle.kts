@@ -1,5 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 plugins {
     kotlin("jvm") version "1.9.22"
     id("io.papermc.paperweight.userdev") version "1.7.1"
@@ -15,7 +13,9 @@ repositories {
 }
 
 
+
 dependencies {
+
 
     paperweight.paperDevBundle("1.20.5-R0.1-SNAPSHOT")
 
@@ -26,15 +26,17 @@ dependencies {
 
 tasks {
 
-    assemble {
-        dependsOn(reobfJar)
-    }
-
     compileKotlin {
         kotlinOptions.jvmTarget = "17"
     }
 
 }
+
+java {
+    disableAutoTargetJvm()
+}
+
 kotlin{
+
     jvmToolchain(17)
 }

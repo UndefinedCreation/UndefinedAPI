@@ -1,5 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 plugins {
     kotlin("jvm") version "1.9.22"
     id("io.papermc.paperweight.userdev") version "1.7.1"

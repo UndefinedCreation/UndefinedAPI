@@ -4,3 +4,8 @@
 /common/build/
 /api/build/
 /v1_20_4/build/
+/v1_20_5/build/
+/common/.gradle/
+/api/.gradle/
+/v1_20_4/.gradle/
+/v1_20_5/.gradle/
