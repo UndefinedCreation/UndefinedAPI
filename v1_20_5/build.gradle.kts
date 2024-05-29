@@ -27,7 +27,7 @@ dependencies {
 tasks {
 
     compileKotlin {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = "21"
     }
 
 }
@@ -38,5 +38,5 @@ java {
 
 kotlin{
 
-    jvmToolchain(17)
+    jvmToolchain(21)
 }

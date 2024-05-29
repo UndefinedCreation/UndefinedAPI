@@ -9,3 +9,6 @@
 /api/.gradle/
 /v1_20_4/.gradle/
 /v1_20_5/.gradle/
+/server/.gradle/
+/server/run/
+/server/build/

@@ -23,13 +23,14 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
 
     init {
         plugin = javaPlugin
+        API(plugin)
         adventure = BukkitAudiences.create(javaPlugin)
         MenuManager.setup(plugin)
         PlayerMoveManager()
         PlayerHitByPlayerManager()
         NMSManager()
 
-        API(plugin)
+
 
     }
 
