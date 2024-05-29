@@ -11,7 +11,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.4.46"
+val versionVar = "0.4.47"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
