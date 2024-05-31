@@ -37,16 +37,142 @@ import java.util.*
 class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override val viewers: MutableList<Player> = mutableListOf()
     private var serverPlayer: ServerPlayer? = null
+    /**
+     * Represents the location of an entity.
+     *
+     * This variable stores the current location of the entity. It can be set to a new location,
+     * and the necessary updates are sent to all the viewers of the entity.
+     */
     override var location: Location? = null
+        set(value) {
+            val newLoc = value ?: return
+            serverPlayer?.let { player ->
+                player.setPos(Vec3(newLoc.x, newLoc.y, newLoc.z))
+                player.moveTo(newLoc.x, newLoc.y, newLoc.z, newLoc.yaw, newLoc.pitch)
+
+                viewers.forEach { viewer ->
+                    viewer.getConnection().send(ClientboundTeleportEntityPacket(player))
+                }
+
+            }
+            field = value
+        }
+    /**
+     * The name property represents the name of the player. It is a mutable property of type String.
+     * When the value of name is set, it performs some additional actions. If the serverPlayer is null, the method returns.
+     * Otherwise, it clones the current location and stores it in tempLocation. Then, it calls the kill() method and passes the tempLocation as a parameter.
+     * After that, it spawns the player at the tempLocation by invoking the spawn() method with an empty lambda.
+     */
     override var name: String = "Steve"
+        set(value) {
+            field = value
+            serverPlayer ?: return
+            val tempLocation = location!!.clone()
+            kill()
+            spawn(tempLocation){}
+        }
     override var signature: String = ""
     override var texture: String = ""
 
     override val equipped: HashMap<Int, ItemStack?> = HashMap()
+    /**
+     * Represents whether the player is currently crouching or not.
+     * When the value of this variable is set, it updates the player's pose accordingly.
+     * When the value of this variable is retrieved, it checks if the player's pose is crouching and returns the result.
+     */
     override var isCrouching: Boolean = false
+        set(value) {
+            if (value){
+                setPose(Pose.CROUCHING)
+            }else{
+                setPose(Pose.STANDING)
+            }
+            field = value
+        }
+        get() {
+            val player = serverPlayer ?: return false
+            return player.pose.equals(net.minecraft.world.entity.Pose.CROUCHING)
+        }
+    /**
+     * Gets or sets the swimming status of the player.
+     * When setting to true, the player's pose is set to SWIMMING.
+     * When setting to false, the player's pose is set to STANDING.
+     *
+     * @property isSwimming true if the player is swimming, false otherwise.
+     */
     override var isSwimming: Boolean = false
+        set(value){
+            if (value){
+                setPose(Pose.SWIMMING)
+            }else{
+                setPose(Pose.STANDING)
+            }
+            field = value
+        }
+        get() {
+            val player = serverPlayer ?: return false
+            return player.pose.equals(net.minecraft.world.entity.Pose.SWIMMING)
+        }
+    /**
+     * Determines whether the player is gliding or not.
+     *
+     * @return true if the player is gliding, false otherwise
+     */
     override var isGliding: Boolean = false
+        set(value){
+            if (value){
+                setPose(Pose.FALL_FLYING)
+            }else{
+                setPose(Pose.STANDING)
+            }
+            field = value
+        }
+        get() {
+            val player = serverPlayer ?: return false
+            return player.pose.equals(net.minecraft.world.entity.Pose.FALL_FLYING)
+        }
+    /**
+     * Boolean variable indicating if the player is on fire.
+     *
+     * When this variable is set to true, the player will be set on fire and the corresponding packets will be sent to all viewers.
+     * Setting this variable to false will extinguish the fire on the player and update the viewers accordingly.
+     * The variable is overridden from the superclass.
+     *
+     * @property onFire true if the player is on fire, false otherwise
+     */
     override var onFire: Boolean = false
+        set(value){
+
+            val serverPlayer = serverPlayer ?: return
+            field = value
+            if (value){
+
+                serverPlayer.remainingFireTicks = 2000000
+
+                val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
+                    SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0x01)
+                )
+
+                val dataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, dataList)
+
+                viewers.forEach{
+                    it.getConnection().send(dataPacket)
+                }
+            }else{
+                serverPlayer.remainingFireTicks = 0
+
+                val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
+                    SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0)
+                )
+
+                val dataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, dataList)
+
+                viewers.forEach{
+                    it.getConnection().send(dataPacket)
+                }
+            }
+
+        }
 
 
     init {
@@ -59,7 +185,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     /**
      * Moves the player to a new location.
      *
-     * If distance is bigger than it will cancel. Instead, you should use [NMSPlayer.teleport]
+     * If distance is bigger than it will cancel. Instead, you should use [NMSPlayer.location]
      *
      * @param newLocation the new location to move to
      */
@@ -97,24 +223,6 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     }
 
     /**
-     * Moves the player to a new location by teleporting them.
-     *
-     * @param newLocation the new location to move to
-     */
-    override fun teleport(newLocation: Location): Unit = with(newLocation) {
-        serverPlayer?.let { player ->
-            player.setPos(Vec3(x, y, z))
-            player.moveTo(x, y, z, yaw, pitch)
-
-            viewers.forEach { viewer ->
-                viewer.getConnection().send(ClientboundTeleportEntityPacket(player))
-            }
-
-            location = this
-        }
-    }
-
-    /**
      * Moves the player to a new location if the distance between the current location and the new location is less than or equal to 8.0,
      * otherwise teleports the player to the new location.
      *
@@ -124,7 +232,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         serverPlayer?.let {
             location?.let {
                 if (it.distance(newLocation) > 8.0) {
-                    teleport(newLocation)
+                    location = newLocation
                 } else {
                     moveTo(newLocation)
                 }
@@ -132,21 +240,6 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         }
     }
 
-    /**
-     * Sets the display name of the player.
-     *
-     * This method sets the display name of the player to the specified string. It also performs additional actions such as updating the player's name and
-     * respawning the player at their current location.
-     *
-     * @param string the new display name for the player
-     */
-    override fun setDisplayName(string: String) {
-        serverPlayer ?: return
-        name = string
-        val tempLocation = location!!.clone()
-        kill()
-        spawn(tempLocation){}
-    }
 
     /**
      * Sets the skin of the object based on the provided string.
@@ -204,7 +297,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         }
 
         updateMetaDataPacket()
-        
+
         equipped[slot] = itemStack
     }
     /**
@@ -214,125 +307,6 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
      * @param itemStack The ItemStack to be set in the slot.
      */
     override fun setItem(itemSlot: ItemSlot, itemStack: ItemStack) = setItem(itemSlot.slot, itemStack)
-    /**
-     * Crouches the player.
-     *
-     * This method checks if the player is already crouching. If so, the method returns without performing any actions.
-     * Otherwise, it sets the isCrouching flag to true, sets the player's pose to CROUCHING, and sends the updated pose to all viewers of the player.
-     */
-    override fun crouch() {
-        if (isCrouching) return
-        isCrouching = !isCrouching
-        isSwimming = false
-        isGliding = false
-        setPose(Pose.CROUCHING)
-    }
-    /**
-     * Uncrouches the player.
-     *
-     * If the player is already standing, this method returns without performing any actions.
-     * Otherwise, it changes the player's pose to standing and updates the metadata packets for all viewers.
-     */
-    override fun uncrouch() {
-        if (!isCrouching) return
-        isCrouching = !isCrouching
-        setPose(Pose.STANDING)
-    }
-
-    /**
-     * Sets the swimming state for the player.
-     *
-     * If the player is already swimming, the method returns immediately.
-     * Otherwise, it sets the player's swimming state to true and updates their pose to swimming.
-     */
-    override fun swim() {
-        if (isSwimming) return
-        isSwimming = !isSwimming
-        isCrouching = false
-        isGliding = false
-        setPose(Pose.SWIMMING)
-    }
-
-    /**
-     * Unswims the player.
-     *
-     * This method checks if the player is currently swimming. If not, it returns without performing any actions.
-     * Otherwise, it sets the player's swimming state to false and changes the player's pose to standing.
-     */
-    override fun unswim() {
-        if (!isSwimming) return
-        isSwimming = !isSwimming
-        setPose(Pose.STANDING)
-    }
-
-    /**
-     * Glides the player.
-     */
-    override fun glide() {
-        if (isGliding) return
-        isGliding = !isGliding
-        isSwimming = false
-        isCrouching = false
-        setPose(Pose.FALL_FLYING)
-    }
-
-    /**
-     * Disables gliding for the player.
-     */
-    override fun unglide() {
-        if (!isGliding) return
-        isGliding = !isGliding
-        setPose(Pose.STANDING)
-    }
-
-    /**
-     * Sets the player on fire and sends the necessary packets to all viewers.
-     */
-    override fun ignite() {
-
-        if (onFire) return
-
-        onFire = !onFire
-
-        val serverPlayer = serverPlayer ?: return
-
-        serverPlayer.remainingFireTicks = 2000000
-
-        val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
-            SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0x01)
-        )
-
-        val dataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, dataList)
-
-        viewers.forEach{
-            it.getConnection().send(dataPacket)
-        }
-    }
-
-    /**
-     * Extinguishes the player if they are on fire.
-     *
-     * If the player is on fire, this method extinguishes the fire and sends update packets to all viewers to reflect the change.
-     */
-    override fun extinguish() {
-        if (!onFire) return
-
-        onFire = !onFire
-
-        val serverPlayer = serverPlayer ?: return
-
-        serverPlayer.remainingFireTicks = 0
-
-        val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
-            SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0)
-        )
-
-        val dataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, dataList)
-
-        viewers.forEach{
-            it.getConnection().send(dataPacket)
-        }
-    }
 
     /**
      * Uses the main hand of the player.
@@ -663,6 +637,8 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
 
     /**
      * Returns the method "c" from the LivingEntity class with the specified parameter types.
+     *
+     * setLivingEntityFlag Map
      *
      * @return the Method object representing the "c" method in the LivingEntity class
      */

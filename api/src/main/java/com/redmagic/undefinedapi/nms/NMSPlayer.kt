@@ -30,31 +30,16 @@ interface NMSPlayer: NMSEntity {
     /**
      * Moves the entity to the specified location.
      *
-     * @param location The destination location to move the entity to.
+     * @param newLocation The destination location to move the entity to.
      */
-    fun moveTo(location: Location)
-    /**
-     * Teleports the entity to the specified location.
-     *
-     * @param location The destination location to move the entity to.
-     */
-    fun teleport(location: Location)
+    fun moveTo(newLocation: Location)
     /**
      * Moves or teleports the entity to the specified location.
      *
-     * @param location the destination location to move or teleport the entity to
+     * @param newLocation the destination location to move or teleport the entity to
      */
-    fun moveOrTeleport(location: Location)
+    fun moveOrTeleport(newLocation: Location)
 
-    /**
-     * Sets the display name of the entity.
-     *
-     * This method sets the display name of the entity to the specified string.
-     * The display name is the name that is shown above the entity's head in-game.
-     *
-     * @param string The display name to set for the entity.
-     */
-    fun setDisplayName(string: String)
 
     /**
      * Sets the skin of the player character.
@@ -88,68 +73,6 @@ interface NMSPlayer: NMSEntity {
      *
      */
     fun setItem(itemSlot: ItemSlot, itemStack: ItemStack)
-
-    /**
-     * Makes the player character crouch.
-     *
-     * This method is called to make the player character crouch. It adjusts the player's position
-     * to simulate the crouching behavior. When the player character is crouching, their hitbox becomes
-     * smaller, allowing them to fit into tighter spaces.
-     *
-     * Note: This method does not return any value.
-     */
-    fun crouch()
-    /**
-     * Uncrouches the NMSPlayer.
-     *
-     * This method changes the crouching state of the NMSPlayer,
-     * causing them to stand up if they were crouching.
-     *
-     * The NMSPlayer must be alive for this method to have any effect.
-     */
-    fun uncrouch()
-
-    /**
-     * Makes the player start swimming.
-     *
-     * This method is used to make the player start swimming.
-     * After calling this method, the player will enter the swimming state and will be able to move through water,
-     * swim upwards, and dive downwards.
-     * The player will also be able to perform swimming animations.
-     */
-    fun swim()
-    /**
-     * Unswims the player.
-     *
-     * This method is used to make the player stop swimming.
-     * It changes the player's state from swimming to standing.
-     * After calling this method, the player will be able to walk on land normally.
-     */
-    fun unswim()
-
-    /**
-     * Makes the entity start gliding.
-     */
-    fun glide()
-    /**
-     * Disables gliding for the player.
-     */
-    fun unglide()
-
-    /**
-     * Sets the player on fire.
-     *
-     * This method sets the player on fire, causing them to take damage over time.
-     * The player will continue to be on fire until the fire is extinguished using the `extinguish` method.
-     *
-     * This method does not return any value.
-     */
-    fun ignite()
-    /**
-     * This method is used to extinguish the player if they are on fire.
-     * It removes the fire effect from the player.
-     */
-    fun extinguish()
 
     /**
      * Sets the player's main hand for item interactions.
