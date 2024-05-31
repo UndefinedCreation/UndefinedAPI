@@ -44,8 +44,7 @@ class PacketListenerManager1_20_5 {
                 }
             }
 
-
-            val field = ServerCommonPacketListenerImpl::class.java.getDeclaredField("c")
+            val field = ServerCommonPacketListenerImpl::class.java.getDeclaredField("e")
             field.isAccessible = true
             val fakeConnection = field.get(player.getConnection()) as Connection
 
@@ -56,7 +55,7 @@ class PacketListenerManager1_20_5 {
         }
 
         event<PlayerQuitEvent> {
-            val field = ServerCommonPacketListenerImpl::class.java.getDeclaredField("c")
+            val field = ServerCommonPacketListenerImpl::class.java.getDeclaredField("e")
             field.isAccessible = true
             val connection = field.get(player.getConnection()) as Connection
             val channel = connection.channel

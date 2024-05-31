@@ -132,6 +132,7 @@ interface NMSPlayer: NMSEntity {
      * Kills the entity.
      */
     fun kill()
+    fun deathAnimation()
 
     /**
      * Triggers a damage animation for the entity.

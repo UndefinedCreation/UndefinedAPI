@@ -319,7 +319,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override fun useMainHand() {
         val player = serverPlayer ?: return
 
-        if (!equipped.containsKey(ItemSlot.MAIN_HAND.slot)) return
+        if (!equipped.containsKey(ItemSlot.MAINHAND.slot)) return
 
         val method = getLivingEntityFlagMethod()
         method.isAccessible = true
@@ -341,7 +341,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override fun useOffHand() {
         val player = serverPlayer ?: return
 
-        if (!equipped.containsKey(ItemSlot.OFF_HAND.slot)) return
+        if (!equipped.containsKey(ItemSlot.OFFHAND.slot)) return
 
         val method = getLivingEntityFlagMethod()
         method.isAccessible = true
@@ -368,16 +368,16 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override fun stopUsingMainHandItem() {
         val player = serverPlayer ?: return
 
-        val item = if (equipped.containsKey(ItemSlot.MAIN_HAND.slot)) equipped[ItemSlot.MAIN_HAND.slot] else return
+        val item = if (equipped.containsKey(ItemSlot.MAINHAND.slot)) equipped[ItemSlot.MAINHAND.slot] else return
 
         val method = getLivingEntityFlagMethod()
         method.isAccessible = true
         method.invoke(player,1, false)
         updateMetaDataPacket()
 
-        setItem(ItemSlot.MAIN_HAND, ItemStack(Material.AIR))
+        setItem(ItemSlot.MAINHAND, ItemStack(Material.AIR))
 
-        delay(1) { setItem(ItemSlot.MAIN_HAND, item!!) }
+        delay(1) { setItem(ItemSlot.MAINHAND, item!!) }
     }
 
     /**
@@ -399,16 +399,16 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     override fun stopUsingOffHandItem() {
         val player = serverPlayer ?: return
 
-        val item = if (equipped.containsKey(ItemSlot.OFF_HAND.slot)) equipped[ItemSlot.OFF_HAND.slot] else return
+        val item = if (equipped.containsKey(ItemSlot.OFFHAND.slot)) equipped[ItemSlot.OFFHAND.slot] else return
 
         val method = getLivingEntityFlagMethod()
         method.isAccessible = true
         method.invoke(player,1, false)
         updateMetaDataPacket()
 
-        setItem(ItemSlot.OFF_HAND, ItemStack(Material.AIR))
+        setItem(ItemSlot.OFFHAND, ItemStack(Material.AIR))
 
-        delay(1) { setItem(ItemSlot.OFF_HAND, item!!) }
+        delay(1) { setItem(ItemSlot.OFFHAND, item!!) }
     }
 
     /**
@@ -500,11 +500,34 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     }
 
     /**
-     * Kills the player.
-     *
-     * This method sends animation packets to all viewers, removes base packets, and sets the player's serverPlayer and location to null.
+     * Kills the player by performing the death animation and removing them from viewers.
+     * After killing the player, their serverPlayer and location properties are set to null.
      */
     override fun kill() {
+
+        viewers.forEach { viewer ->
+            viewer.getConnection().let { connection ->
+                removeBasePackets(viewer)
+            }
+        }
+
+        this.serverPlayer = null
+        this.location = null
+    }
+
+    /**
+     * Performs the death animation for the player.
+     *
+     * The death animation includes sending two clientbound entity event packets to all the viewers of the player.
+     * The first packet has the event type 3, which triggers the "hurt" animation for the player.
+     * The second packet has the event type 60, which triggers the "death" animation for the player.
+     *
+     * If the serverPlayer property is null, the method returns without performing any actions.
+     *
+     * @see ClientboundEntityEventPacket
+     * @see Player.getConnection
+     */
+    override fun deathAnimation() {
         val serverPlayer = serverPlayer ?: return
 
         val animatepacket1 = ClientboundEntityEventPacket(serverPlayer, 3)
@@ -514,12 +537,9 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
             viewer.getConnection().let { connection ->
                 connection.send(animatepacket1)
                 connection.send(animatePacket2)
-                removeBasePackets(viewer)
             }
         }
 
-        this.serverPlayer = null
-        this.location = null
     }
 
     /**
