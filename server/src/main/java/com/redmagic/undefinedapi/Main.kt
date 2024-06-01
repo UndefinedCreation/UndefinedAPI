@@ -53,7 +53,7 @@ class Main: JavaPlugin() {
         }
 
         event<PlayerArmSwingEvent> {
-            println(interaction)
+            println(hand)
         }
 
     }
