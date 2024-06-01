@@ -12,7 +12,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.4.50"
+val versionVar = "0.4.51"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
@@ -108,7 +108,7 @@ tasks {
     }
 
     withType<ShadowJar> {
-        archiveClassifier.set("")
+        archiveClassifier.set("mapped")
         archiveFileName.set("${project.name}-${project.version}.jar")
     }
 
