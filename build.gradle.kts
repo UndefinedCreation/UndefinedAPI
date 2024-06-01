@@ -11,7 +11,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.4.48"
+val versionVar = "0.4.49"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
@@ -49,8 +49,20 @@ allprojects {
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
 
-    group = "com.redmagic"
+    group = groupIdVar
     version = versionVar
+
+
+    publishing {
+        publications{
+            register<MavenPublication>("maven") {
+                groupId = groupIdVar
+                artifactId = artifactIdVar
+                version = versionVar
+                from(components["java"])
+            }
+        }
+    }
 
     repositories {
         mavenCentral()
