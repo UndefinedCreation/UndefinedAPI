@@ -55,7 +55,7 @@ allprojects {
 
     publishing {
         publications{
-            register<MavenPublication>("maven") {
+            register<MavenPublication>("pubMaven") {
                 groupId = groupIdVar
                 artifactId = artifactIdVar
                 version = versionVar
