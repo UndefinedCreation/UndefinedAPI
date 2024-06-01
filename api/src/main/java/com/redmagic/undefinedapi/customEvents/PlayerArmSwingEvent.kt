@@ -10,4 +10,4 @@ import org.bukkit.inventory.EquipmentSlot
  * @param player The player who triggered the event.
  * @param interaction The equipment slot that was interacted with during the arm swing.
  */
-data class PlayerArmSwingEvent(val player: Player, val interaction: EquipmentSlot): UndefinedEvent(true)
+data class PlayerArmSwingEvent(val player: Player, val hand: EquipmentSlot): UndefinedEvent(true)

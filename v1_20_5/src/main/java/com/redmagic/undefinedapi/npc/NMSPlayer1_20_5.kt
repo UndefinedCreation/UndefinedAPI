@@ -44,19 +44,7 @@ class NMSPlayer1_20_5(name: String, skin: String): NMSPlayer {
      * and the necessary updates are sent to all the viewers of the entity.
      */
     override var location: Location? = null
-        set(value) {
-            val newLoc = value ?: return
-            serverPlayer?.let { player ->
-                player.setPos(Vec3(newLoc.x, newLoc.y, newLoc.z))
-                player.moveTo(newLoc.x, newLoc.y, newLoc.z, newLoc.yaw, newLoc.pitch)
 
-                viewers.forEach { viewer ->
-                    viewer.getConnection().send(ClientboundTeleportEntityPacket(player))
-                }
-
-            }
-            field = value
-        }
     /**
      * The name property represents the name of the player. It is a mutable property of type String.
      * When the value of name is set, it performs some additional actions. If the serverPlayer is null, the method returns.
@@ -223,6 +211,23 @@ class NMSPlayer1_20_5(name: String, skin: String): NMSPlayer {
     }
 
     /**
+     * Teleports the player to a new location.
+     *
+     * @param newLocation the new location to teleport to
+     */
+    override fun teleport(newLocation: Location) {
+        serverPlayer?.let { player ->
+            player.setPos(Vec3(newLocation.x, newLocation.y, newLocation.z))
+            player.moveTo(newLocation.x, newLocation.y, newLocation.z, newLocation.yaw, newLocation.pitch)
+
+            viewers.forEach { viewer ->
+                viewer.getConnection().send(ClientboundTeleportEntityPacket(player))
+            }
+        }
+        location = newLocation
+    }
+
+    /**
      * Moves the player to a new location if the distance between the current location and the new location is less than or equal to 8.0,
      * otherwise teleports the player to the new location.
      *
@@ -232,7 +237,7 @@ class NMSPlayer1_20_5(name: String, skin: String): NMSPlayer {
         serverPlayer?.let {
             location?.let {
                 if (it.distance(newLocation) > 8.0) {
-                    location = newLocation
+                    teleport(newLocation)
                 } else {
                     moveTo(newLocation)
                 }
@@ -506,9 +511,7 @@ class NMSPlayer1_20_5(name: String, skin: String): NMSPlayer {
     override fun kill() {
 
         viewers.forEach { viewer ->
-            viewer.getConnection().let { connection ->
-                removeBasePackets(viewer)
-            }
+            removeBasePackets(viewer)
         }
 
         this.serverPlayer = null

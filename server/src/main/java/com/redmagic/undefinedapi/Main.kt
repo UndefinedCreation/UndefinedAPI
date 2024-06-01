@@ -1,5 +1,6 @@
 package com.redmagic.undefinedapi
 
+import com.redmagic.undefinedapi.customEvents.PlayerArmSwingEvent
 import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.extension.getNMSVersion
 import com.redmagic.undefinedapi.nms.ItemSlot
@@ -40,7 +41,6 @@ class Main: JavaPlugin() {
                                 npc.setItem(ItemSlot.MAINHAND, ItemStack(Material.SHIELD))
 
                                 npc.useMainHand()
-
                                 delay(20) {
                                     npc.kill()
                                 }
@@ -50,6 +50,10 @@ class Main: JavaPlugin() {
                 }
             }
 
+        }
+
+        event<PlayerArmSwingEvent> {
+            println(interaction)
         }
 
     }

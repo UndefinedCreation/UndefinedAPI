@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
 
 plugins {
     `java-library`
@@ -7,11 +8,11 @@ plugins {
     kotlin("jvm") version "1.9.22"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("org.jetbrains.dokka") version "1.9.20"
+
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.4.49"
+val versionVar = "0.4.50"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
@@ -34,14 +35,12 @@ publishing {
             groupId = groupIdVar
             artifactId = artifactIdVar
             version = versionVar
+
             from(components["java"])
         }
     }
 }
 
-subprojects {
-    apply(plugin = "org.jetbrains.dokka")
-}
 
 allprojects {
 
@@ -59,6 +58,7 @@ allprojects {
                 groupId = groupIdVar
                 artifactId = artifactIdVar
                 version = versionVar
+
                 from(components["java"])
             }
         }
@@ -79,7 +79,6 @@ allprojects {
         compileOnly("org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT")
 
         implementation("org.jetbrains.kotlin:kotlin-stdlib")
-        implementation("org.reflections:reflections:0.9.11")
         implementation("net.kyori:adventure-platform-bukkit:4.3.2")
         implementation("net.kyori:adventure-text-minimessage:4.16.0")
         implementation("org.json:json:20171018")
@@ -89,11 +88,11 @@ allprojects {
 }
 
 
-
 dependencies {
     implementation(project(":common"))
     implementation(project(":v1_20_4:", "reobf"))
     implementation(project(":v1_20_5:", "reobf"))
+    implementation(project(":v1_20_6:", "reobf"))
     implementation(project(":api"))
 }
 

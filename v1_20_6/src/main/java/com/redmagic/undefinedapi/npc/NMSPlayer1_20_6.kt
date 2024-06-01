@@ -3,7 +3,7 @@ package com.redmagic.undefinedapi.npc
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import com.mojang.datafixers.util.Pair
-import com.redmagic.undefinedapi.*
+import com.redmagic.undefinedapi.getConnection
 import com.redmagic.undefinedapi.nms.*
 import com.redmagic.undefinedapi.scheduler.delay
 import net.minecraft.network.protocol.game.*
@@ -20,8 +20,8 @@ import net.minecraft.world.phys.Vec3
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_20_R3.CraftServer
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
+import org.bukkit.craftbukkit.CraftServer
+import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.lang.reflect.Method
@@ -29,12 +29,12 @@ import java.util.*
 
 
 /**
- * Represents a player in NMS version 1.20.4.
+ * Represents a player in NMS version 1.20.5.
  *
  * This class provides methods to manipulate and interact with a player,
  * such as moving, teleporting, setting items, changing pose, and more.
  */
-class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
+class NMSPlayer1_20_6(name: String, skin: String): NMSPlayer {
     override val viewers: MutableList<Player> = mutableListOf()
     private var serverPlayer: ServerPlayer? = null
     /**
@@ -44,6 +44,7 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
      * and the necessary updates are sent to all the viewers of the entity.
      */
     override var location: Location? = null
+
     /**
      * The name property represents the name of the player. It is a mutable property of type String.
      * When the value of name is set, it performs some additional actions. If the serverPlayer is null, the method returns.
@@ -210,6 +211,23 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
     }
 
     /**
+     * Teleports the player to a new location.
+     *
+     * @param newLocation the new location to teleport to
+     */
+    override fun teleport(newLocation: Location) {
+        serverPlayer?.let { player ->
+            player.setPos(Vec3(newLocation.x, newLocation.y, newLocation.z))
+            player.moveTo(newLocation.x, newLocation.y, newLocation.z, newLocation.yaw, newLocation.pitch)
+
+            viewers.forEach { viewer ->
+                viewer.getConnection().send(ClientboundTeleportEntityPacket(player))
+            }
+        }
+        location = newLocation
+    }
+
+    /**
      * Moves the player to a new location if the distance between the current location and the new location is less than or equal to 8.0,
      * otherwise teleports the player to the new location.
      *
@@ -225,25 +243,6 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
                 }
             }
         }
-    }
-
-    /**
-     * Teleports the player to a new location.
-     *
-     * @param newLocation the new location to teleport to
-     */
-    override fun teleport(newLocation: Location) {
-        serverPlayer?.let { player ->
-            player.setPos(Vec3(newLocation.x, newLocation.y, newLocation.z))
-            player.moveTo(newLocation.x, newLocation.y, newLocation.z, newLocation.yaw, newLocation.pitch)
-
-            viewers.forEach { viewer ->
-                viewer.getConnection().send(ClientboundTeleportEntityPacket(player))
-            }
-
-        }
-
-        location = newLocation
     }
 
 
@@ -446,9 +445,9 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
 
         val connection = ServerGamePacketListenerImpl(
             server,
-            EmptyConnection1_20_4(),
+            EmptyConnection1_20_6(),
             fakeServerPlayer,
-            CommonListenerCookie.createInitial(gameProfile)
+            CommonListenerCookie.createInitial(gameProfile, false)
         )
 
         fakeServerPlayer.connection = connection

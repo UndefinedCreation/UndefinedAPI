@@ -40,6 +40,12 @@ interface NMSPlayer: NMSEntity {
      */
     fun moveOrTeleport(newLocation: Location)
 
+    /**
+     * Teleports the NMSEntity to the specified location.
+     *
+     * @param newLocation The destination location to teleport the entity to.
+     */
+    fun teleport(newLocation: Location)
 
     /**
      * Sets the skin of the player character.

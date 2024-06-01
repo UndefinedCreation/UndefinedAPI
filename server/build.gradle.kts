@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":api"))
     implementation(project(":v1_20_4:", "reobf"))
     implementation(project(":v1_20_5:", "reobf"))
+    implementation(project(":v1_20_6:", "reobf"))
 }
 
 
