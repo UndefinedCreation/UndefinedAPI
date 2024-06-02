@@ -138,7 +138,25 @@ interface NMSPlayer: NMSEntity {
      * Kills the entity.
      */
     fun kill()
+    /**
+     * Triggers a death animation for the entity.
+     *
+     * This method plays the animation of the entity dying. It does not directly apply any damage or modify the entity's health.
+     * The animation can be used to provide visual feedback to the player or create special effects.
+     *
+     * @receiver The entity to perform the death animation on.
+     */
     fun deathAnimation()
+
+    /**
+     * Resets the pose of the entity.
+     *
+     * This method resets the pose of the entity to the default standing position. It can be used to reset any custom
+     * poses or animations applied to the entity.
+     *
+     * Note: This method does not have any parameters or return values.
+     */
+    fun resetPose()
 
     /**
      * Triggers a damage animation for the entity.

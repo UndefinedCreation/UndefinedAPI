@@ -628,6 +628,12 @@ class NMSPlayer1_20_5(name: String, skin: String): NMSPlayer {
         }
 
     }
+    /**
+     * Resets the pose of the player.
+     */
+    override fun resetPose() {
+        isCrouching = false
+    }
 
     /**
      * Returns whether the player is alive.

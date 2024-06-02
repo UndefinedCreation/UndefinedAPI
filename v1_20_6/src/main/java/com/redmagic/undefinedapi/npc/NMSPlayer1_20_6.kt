@@ -630,6 +630,13 @@ class NMSPlayer1_20_6(name: String, skin: String): NMSPlayer {
     }
 
     /**
+     * Resets the pose of the player.
+     */
+    override fun resetPose() {
+        isCrouching = false
+    }
+
+    /**
      * Returns whether the player is alive.
      *
      * @return true if the player is alive, false otherwise.
@@ -644,6 +651,8 @@ class NMSPlayer1_20_6(name: String, skin: String): NMSPlayer {
         val serverPlayer = serverPlayer ?: return
 
         val nmsPose = net.minecraft.world.entity.Pose.valueOf(pose.name)
+
+        if (serverPlayer.pose == nmsPose) return
 
         serverPlayer.pose = nmsPose
 
