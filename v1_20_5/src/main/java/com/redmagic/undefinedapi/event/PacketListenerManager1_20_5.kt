@@ -1,11 +1,16 @@
 package com.redmagic.undefinedapi.event
 
+import com.redmagic.undefinedapi.NMSManager1_20_5
 import com.redmagic.undefinedapi.customEvents.PlayerArmSwingEvent
 import com.redmagic.undefinedapi.getConnection
+import com.redmagic.undefinedapi.isRemapped
+import com.redmagic.undefinedapi.nms.ClickType
+import com.redmagic.undefinedapi.nms.PlayerInteract
 import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
 import net.minecraft.network.Connection
+import net.minecraft.network.protocol.game.ServerboundInteractPacket
 import net.minecraft.network.protocol.game.ServerboundSwingPacket
 import net.minecraft.server.network.ServerCommonPacketListenerImpl
 import net.minecraft.world.InteractionHand
@@ -34,6 +39,8 @@ class PacketListenerManager1_20_5 {
                         val event = PlayerArmSwingEvent(player, if (msg.hand.equals(InteractionHand.MAIN_HAND)) EquipmentSlot.HAND else EquipmentSlot.OFF_HAND)
                         Bukkit.getPluginManager().callEvent(event)
                         if (event.isCancelled) return
+                    }else if (msg is ServerboundInteractPacket){
+                        handelNPCIntercart(msg)
                     }
 
                     super.channelRead(ctx, msg)
@@ -64,6 +71,41 @@ class PacketListenerManager1_20_5 {
             }
         }
 
+    }
+
+    fun handelNPCIntercart(msg: ServerboundInteractPacket){
+        val actionID = ServerboundInteractPacket::class.java.getDeclaredField("c")
+        actionID.isAccessible = true
+        val ob: Any = actionID.get(msg)
+
+        val firstChar = ob.toString().split("$")[1][0]
+        val attacking = if(isRemapped()) msg.isAttack else firstChar == '1'
+
+
+        if(isRemapped()){
+            if (ob.toString().contains("InteractionAction")) { return }
+        }else{
+            if (firstChar != 'e' && firstChar != '1') { return }
+        }
+
+        if (!attacking){
+
+            val handField = ob.javaClass.getDeclaredField("a")
+            handField.isAccessible = true
+            val string = handField.get(ob).toString()
+            if (string != "MAIN_HAND") { return }
+        }
+
+        val idField = ServerboundInteractPacket::class.java.getDeclaredField("b")
+        idField.isAccessible = true
+        val id = idField.get(msg) as Int
+        val action = if(attacking) ClickType.LEFT_CLICK else ClickType.RIGHT_CLICK
+
+        NMSManager1_20_5.npcInteraction.entries.forEach {
+            if (it.key.getEntityID() == id) {
+                it.value.invoke(PlayerInteract(action, it.key))
+            }
+        }
     }
 
 }

@@ -120,6 +120,7 @@ object MenuManager : Listener {
         if (!player.hasMenuOpen()) return
         if (e.clickedInventory == null) return
         if (e.clickedInventory!!.type != InventoryType.CHEST) return
+        e.view.title
         val menu = player.getMenu()!!
         if (menu is UndefinedPageMenu){
             runPageMenu(menu, e)

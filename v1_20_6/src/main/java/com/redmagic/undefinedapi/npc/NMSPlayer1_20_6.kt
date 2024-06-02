@@ -3,6 +3,7 @@ package com.redmagic.undefinedapi.npc
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import com.mojang.datafixers.util.Pair
+import com.redmagic.undefinedapi.NMSManager1_20_6
 import com.redmagic.undefinedapi.getConnection
 import com.redmagic.undefinedapi.nms.*
 import com.redmagic.undefinedapi.scheduler.delay
@@ -563,6 +564,12 @@ class NMSPlayer1_20_6(name: String, skin: String): NMSPlayer {
         viewers.add(player)
         sendBasePackets(player)
     }
+
+    override fun interact(interact: PlayerInteract.() -> Unit) {
+        NMSManager1_20_6.npcInteraction[this] = interact
+    }
+
+    override fun getEntityID(): Int = if (serverPlayer == null) 0 else serverPlayer!!.id
 
     /**
      * Updates the metadata packet for the player.

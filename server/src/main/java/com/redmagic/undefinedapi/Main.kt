@@ -9,8 +9,11 @@ import com.redmagic.undefinedapi.scheduler.delay
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.PlayerInventory
 import org.bukkit.plugin.java.JavaPlugin
 
 class Main: JavaPlugin() {
@@ -20,6 +23,20 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
+        event<PlayerJoinEvent> {
+            val npc = api.createFakePlayer("the", "the")!!
+            npc.viewers.add(player)
+            npc.spawn(player.location)
+            npc.interact {
+
+                println(actionType)
+
+            }
+        }
+
+    }
+
+    fun test(player : Player){
         event<PlayerJoinEvent> {
 
             val npc = api.createFakePlayer("TheRedMagic", "TheRedMagic")!!
@@ -32,7 +49,6 @@ class Main: JavaPlugin() {
             npc.name = "NewName"
 
             npc.resetPose()
-
 
             delay(20) {
                 npc.teleport(newLoc)
@@ -62,10 +78,5 @@ class Main: JavaPlugin() {
             }
 
         }
-
-        event<PlayerArmSwingEvent> {
-            println(hand)
-        }
-
     }
 }

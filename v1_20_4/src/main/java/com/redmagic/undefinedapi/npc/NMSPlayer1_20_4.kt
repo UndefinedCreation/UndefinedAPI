@@ -630,6 +630,12 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
 
     }
 
+    override fun interact(interact: PlayerInteract.() -> Unit) {
+        NMSManager1_20_4.npcInteraction[this] = interact
+    }
+
+    override fun getEntityID(): Int = if (serverPlayer == null) 0 else serverPlayer!!.id
+
     /**
      * Resets the pose of the player.
      */

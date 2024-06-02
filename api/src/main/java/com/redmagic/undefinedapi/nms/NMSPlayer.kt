@@ -158,6 +158,10 @@ interface NMSPlayer: NMSEntity {
      */
     fun resetPose()
 
+    fun interact(interact: PlayerInteract.() -> Unit)
+
+    fun getEntityID(): Int
+
     /**
      * Triggers a damage animation for the entity.
      *
