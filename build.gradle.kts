@@ -36,10 +36,6 @@ publishing {
             artifactId = artifactIdVar
             version = versionVar
 
-            artifact("dev"){
-                enabled = false
-            }
-
             from(components["java"])
         }
     }
