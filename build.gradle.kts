@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
 
 plugins {
     `java-library`
@@ -12,7 +11,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.5.01"
+val versionVar = "0.5.02"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
@@ -81,7 +80,7 @@ allprojects {
         implementation("org.jetbrains.kotlin:kotlin-stdlib")
         implementation("net.kyori:adventure-platform-bukkit:4.3.2")
         implementation("net.kyori:adventure-text-minimessage:4.16.0")
-        implementation("org.json:json:20171018")
+        implementation("org.json:json:20231013")
         implementation("com.googlecode.json-simple:json-simple:1.1.1")
     }
 

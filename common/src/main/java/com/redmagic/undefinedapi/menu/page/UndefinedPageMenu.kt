@@ -1,6 +1,5 @@
 package com.redmagic.undefinedapi.menu.page
 
-import com.google.gson.annotations.Until
 import com.redmagic.undefinedapi.extension.string.emptySlots
 import com.redmagic.undefinedapi.menu.MenuSize
 import com.redmagic.undefinedapi.menu.normal.UndefinedMenu
@@ -10,7 +9,6 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import org.jetbrains.annotations.MustBeInvokedByOverriders
 
 
 /**
@@ -104,7 +102,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
     fun nextPage(){
 
         val items = pageList?.getPage(page + 1) ?: return
-        page++;
+        page++
         inventory!!.clear()
 
         itemsMap.forEach{
@@ -123,7 +121,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
 
 
         val items: List<ItemStack> = pageList?.getPage(page - 1) ?: return
-        page--;
+        page--
 
         inventory!!.clear()
 
@@ -170,13 +168,6 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
         return inventory!!
     }
 
-    /**
-     * Executes the specified code block when the onPress event occurs.
-     *
-     * @param clickData A lambda expression representing the ClickData associated with the event.
-     *                  It takes an instance of [ClickData] as the receiver and does not return a value.
-     */
-    fun onPress(clickData: ClickData.() -> Unit){}
 
     /**
      * Sets the items in the menu's inventory.

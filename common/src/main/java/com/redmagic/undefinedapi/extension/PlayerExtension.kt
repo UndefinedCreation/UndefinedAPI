@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 
 /**
@@ -36,7 +37,6 @@ fun Player.sendActionBar(string: String){
  *
  * @param string The message to be displayed in the action bar.
  * @param time The duration in ticks for which the message should be displayed.
- * @param timeUnit The time unit for the duration. Defaults to TimeUnit.TICKS.
  */
 fun Player.sendActionBar(string: String, time: Int) = sendActionBar(string, time, TimeUnit.TICKS)
 
@@ -53,10 +53,8 @@ fun Player.feed() { foodLevel = 20 }
  * This method sets the player's health to the maximum health value specified by the "maxHealth" property.
  * After calling this method, the player will be fully healed and have no health deficit.
  *
- * @see Player.health
- * @see Player.maxHealth
  */
-fun Player.heal() { health = maxHealth }
+fun Player.heal() { health = this.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.value }
 
 /**
  * Resets the walk speed of the player to the default value.
@@ -75,7 +73,6 @@ fun Player.resetWalkSpeed() { walkSpeed = 0.2F }
  * Resets the fly speed of the player to the default value.
  * The default fly speed is 0.1F.
  *
- * @see Player.flySpeed
  */
 fun Player.resetFlySpeed() { flySpeed = 0.1F }
 

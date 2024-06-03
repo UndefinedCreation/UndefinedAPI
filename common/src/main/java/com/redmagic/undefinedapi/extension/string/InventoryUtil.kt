@@ -95,5 +95,5 @@ fun Inventory.emptySlots(): Int{
  * @param material The material to be counted.
  * @return The total amount of the given material in the inventory.
  */
-fun Inventory.getAmountOf(material: Material): Int = filter { it?.type == material }.sumBy { it?.amount ?: 0 }
+fun Inventory.getAmountOf(material: Material): Int = filter { it?.type == material }.sumOf { it?.amount ?: 0 }
 
