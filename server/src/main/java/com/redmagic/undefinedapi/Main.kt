@@ -3,6 +3,7 @@ package com.redmagic.undefinedapi
 import com.redmagic.undefinedapi.customEvents.PlayerArmSwingEvent
 import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.extension.getNMSVersion
+import com.redmagic.undefinedapi.nms.ClickType
 import com.redmagic.undefinedapi.nms.ItemSlot
 import com.redmagic.undefinedapi.nms.createFakePlayer
 import com.redmagic.undefinedapi.scheduler.delay
@@ -29,7 +30,10 @@ class Main: JavaPlugin() {
             npc.spawn(player.location)
             npc.interact {
 
-                println(actionType)
+                when(actionType){
+                    ClickType.LEFT_CLICK -> sendLog("Left click")
+                    ClickType.RIGHT_CLICK -> sendLog("Right click")
+                }
 
             }
         }

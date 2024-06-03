@@ -34,7 +34,7 @@ import java.util.*
  * This class provides methods to manipulate and interact with a player,
  * such as moving, teleporting, setting items, changing pose, and more.
  */
-class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
+class NMSPlayer1_20_4: NMSPlayer {
     override val viewers: MutableList<Player> = mutableListOf()
     private var serverPlayer: ServerPlayer? = null
     /**
@@ -162,12 +162,21 @@ class NMSPlayer1_20_4(name: String, skin: String): NMSPlayer {
         }
 
 
-    init {
+    constructor(name: String, texture: String, sign: String) {
+        this.name = name
+        this.texture = texture
+        this.signature = sign
+
+    }
+
+    constructor(name: String, skin: String) {
         this.name = name
         val skinString = getSkinTexture(skin)
         texture = skinString[0]
         signature = skinString[1]
     }
+
+
 
     /**
      * Moves the player to a new location.
