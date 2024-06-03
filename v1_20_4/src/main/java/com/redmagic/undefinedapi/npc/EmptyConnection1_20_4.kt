@@ -16,7 +16,7 @@ import java.net.SocketAddress
  *
  * @param flag the packet flow flag for the connection
  */
-class EmptyConnection1_20_4(flag: PacketFlow? = null): Connection(flag!!) {
+class EmptyConnection1_20_4(flag: PacketFlow? = null): Connection(flag) {
     init {
         channel = EmptyChannel1_20_4(null)
         address = object : SocketAddress() {
