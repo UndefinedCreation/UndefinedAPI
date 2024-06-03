@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 fun Player.getConnection(): ServerGamePacketListenerImpl = (this as CraftPlayer).handle.connection
 
 object PlayerExtension1_20_6 {
-    fun getTextures(player: Player): Array<out String> {
+    fun getTextures(player: Player): Array<String> {
         val cPlayer = player as CraftPlayer
         val sPlayer = cPlayer.handle
         val gameProfile = sPlayer.gameProfile

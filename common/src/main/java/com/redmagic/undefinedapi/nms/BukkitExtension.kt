@@ -30,7 +30,7 @@ fun UndefinedAPI.createFakePlayer(name: String, texture: String, sign: String): 
     }
 }
 
-fun Player.getTexture(): Array<out String> {
+fun Player.getTexture(): Array<String> {
     val version = getNMSVersion()
     return when(version){
         "1.20.4" -> PlayerExtension1_20_4.getTextures(this)
