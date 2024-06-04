@@ -1,6 +1,8 @@
 package com.redmagic.undefinedapi
 
 import com.redmagic.undefinedapi.customEvents.PlayerArmSwingEvent
+import com.redmagic.undefinedapi.customEvents.PlayerExtinguishEvent
+import com.redmagic.undefinedapi.customEvents.PlayerIgniteEvent
 import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.extension.getNMSVersion
 import com.redmagic.undefinedapi.nms.ClickType
@@ -13,6 +15,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 import org.bukkit.plugin.java.JavaPlugin
@@ -36,6 +39,15 @@ class Main: JavaPlugin() {
                 }
 
             }
+        }
+
+
+        event<PlayerIgniteEvent> {
+            sendLog("Ignite event")
+        }
+
+        event<PlayerExtinguishEvent> {
+            sendLog("Extinguish event")
         }
 
     }

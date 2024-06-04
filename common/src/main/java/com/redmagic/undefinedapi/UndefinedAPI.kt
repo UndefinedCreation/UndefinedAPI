@@ -29,9 +29,6 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
         PlayerMoveManager()
         PlayerHitByPlayerManager()
         NMSManager()
-
-
-
     }
 
     /**

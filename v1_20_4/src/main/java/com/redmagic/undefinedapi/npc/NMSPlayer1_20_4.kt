@@ -421,6 +421,8 @@ class NMSPlayer1_20_4: NMSPlayer {
         method.invoke(player,1, false)
         updateMetaDataPacket()
 
+        player.stopUsingItem()
+
         setItem(ItemSlot.OFFHAND, ItemStack(Material.AIR))
 
         delay(1) { setItem(ItemSlot.OFFHAND, item!!) }
