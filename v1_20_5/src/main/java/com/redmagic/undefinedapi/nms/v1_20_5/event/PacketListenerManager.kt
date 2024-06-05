@@ -41,13 +41,6 @@ class PacketListenerManager {
             }
 
 
-            ServerCommonPacketListenerImpl::class.java.declaredFields.forEach {
-
-                it.isAccessible = true
-                println("${it.name} : ${it.type}")
-
-            }
-
             val fakeConnection = player.getConnection().getConnection()
 
             val channel = fakeConnection.channel
