@@ -99,8 +99,10 @@ class PacketListenerManager {
                         player.removeMetaData("onFire")
                     }
                 }else if (it.value == 1.toByte()){
-                    Bukkit.getPluginManager().callEvent(PlayerIgniteEvent(player))
-                    player.setMetaData("onFire", true)
+                    if (player.getMetaDataInfo("onFire") == null) {
+                        Bukkit.getPluginManager().callEvent(PlayerIgniteEvent(player))
+                        player.setMetaData("onFire", true)
+                    }
                 }
             }
 

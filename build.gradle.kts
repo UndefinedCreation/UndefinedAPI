@@ -11,7 +11,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.5.08"
+val versionVar = "0.5.09"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
@@ -91,7 +91,6 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":v1_20_4:", "reobf"))
     implementation(project(":v1_20_5:", "reobf"))
-    implementation(project(":v1_20_6:", "reobf"))
     implementation(project(":api"))
 }
 

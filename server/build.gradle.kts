@@ -22,7 +22,6 @@ dependencies {
     implementation(project(":api"))
     implementation(project(":v1_20_4:", "reobf"))
     implementation(project(":v1_20_5:", "reobf"))
-    implementation(project(":v1_20_6:", "reobf"))
 }
 
 
@@ -44,7 +43,7 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.20.5")
+        minecraftVersion("1.20.6")
     }
 
 }
