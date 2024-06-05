@@ -11,6 +11,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.event.block.BlockDamageEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
@@ -44,6 +45,10 @@ class Main: JavaPlugin() {
 
         event<PlayerExtinguishEvent> {
             sendLog("Extinguish event")
+        }
+
+        event<BlockDamageEvent> {
+            println("Damage")
         }
 
     }

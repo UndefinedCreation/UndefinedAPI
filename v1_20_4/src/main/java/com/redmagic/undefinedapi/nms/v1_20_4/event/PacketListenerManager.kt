@@ -10,14 +10,23 @@ import com.redmagic.undefinedapi.nms.extensions.removeMetaData
 import com.redmagic.undefinedapi.nms.extensions.setMetaData
 import com.redmagic.undefinedapi.nms.ClickType
 import com.redmagic.undefinedapi.nms.PlayerInteract
+import com.redmagic.undefinedapi.nms.extensions.getPrivateField
 import com.redmagic.undefinedapi.nms.v1_20_4.extensions.*
 import com.redmagic.undefinedapi.scheduler.sync
+import io.papermc.paper.event.block.BlockBreakProgressUpdateEvent
+import net.minecraft.network.protocol.game.ClientboundBlockChangedAckPacket
+import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.protocol.game.ServerboundInteractPacket
+import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket
 import net.minecraft.network.protocol.game.ServerboundSwingPacket
 import net.minecraft.world.InteractionHand
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.EquipmentSlot
@@ -46,6 +55,24 @@ class PacketListenerManager {
             pipeline.addBefore("packet_handler", "${player.uniqueId}_UNDEFINEDAPI", UndefinedDuplexHandler(
                 {
 
+                    if (this.javaClass.simpleName.contains("Block") && ! this.javaClass.simpleName.contains("Multi")) {
+                        println(this.javaClass.simpleName)
+                    }
+
+                    if (this is ServerboundPlayerActionPacket){
+                        val activeAction = this.getPrivateField<ServerboundPlayerActionPacket.Action>("c")
+                        println(activeAction)
+                        val actionList = listOf(ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, ServerboundPlayerActionPacket.Action.ABORT_DESTROY_BLOCK)
+                        if (actionList.contains(activeAction)){
+                            println("${this.pos} : ${activeAction.name}")
+                        }
+                    }
+
+                    if (this is ClientboundBlockDestructionPacket){
+                        val progess = this.getPrivateField<Int>("c")
+                        println(progess.toString())
+                    }
+
                     when (this) {
                         is ServerboundSwingPacket -> {
                             val event = PlayerArmSwingEvent(player, if (this.hand.equals(InteractionHand.MAIN_HAND)) EquipmentSlot.HAND else EquipmentSlot.OFF_HAND)
@@ -58,7 +85,14 @@ class PacketListenerManager {
                 return@UndefinedDuplexHandler false
             },{
 
+
                     sync {
+
+                        if (this@UndefinedDuplexHandler is ClientboundBlockDestructionPacket){
+                            val progess = this@UndefinedDuplexHandler.getPrivateField<Int>("c")
+                            println(progess.toString())
+                        }
+
                         when (this@UndefinedDuplexHandler) {
                             is ClientboundSetEntityDataPacket -> handleFire(player, this@UndefinedDuplexHandler)
                         }
@@ -90,7 +124,6 @@ class PacketListenerManager {
         if (player.entityId == id){
 
             val list = msg.getSynchedEntityDataList()
-            println(list)
 
             list.filter { it.id == 0 && it.value is Byte }.forEach {
                 if (it.value == 0.toByte()){
