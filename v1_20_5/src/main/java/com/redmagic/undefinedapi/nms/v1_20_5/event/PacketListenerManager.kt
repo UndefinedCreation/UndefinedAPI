@@ -13,9 +13,11 @@ import com.redmagic.undefinedapi.nms.extensions.setMetaData
 import com.redmagic.undefinedapi.nms.v1_20_5.extensions.*
 import com.redmagic.undefinedapi.scheduler.sync
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
+import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.network.protocol.game.ServerboundInteractPacket
 import net.minecraft.network.protocol.game.ServerboundSwingPacket
 import net.minecraft.server.network.ServerCommonPacketListenerImpl
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -85,6 +87,14 @@ class PacketListenerManager {
 
     }
 
+    /**
+     * Handles the fire event for a player based on a given packet.
+     * If the player is on fire, it triggers the PlayerIgniteEvent. If the player's fire is extinguished,
+     * it triggers the PlayerExtinguishEvent.
+     *
+     * @param player The player affected by the fire event.
+     * @param msg The packet containing the fire event data.
+     */
     private fun handleFire(player: Player, msg: ClientboundSetEntityDataPacket) {
 
         val id = msg.getEntityID()
@@ -92,6 +102,7 @@ class PacketListenerManager {
         if (player.entityId == id){
 
             val list = msg.getSynchedEntityDataList()
+            
 
             list.filter { it.id == 0 && it.value is Byte }.forEach {
                 if (it.value == 0.toByte()){
@@ -112,6 +123,11 @@ class PacketListenerManager {
         return
     }
 
+    /**
+     * Handles the interaction between an NPC and a player.
+     *
+     * @param msg The ServerboundInteractPacket representing the interaction message.
+     */
     private fun handleNPCInteract(msg: ServerboundInteractPacket){
 
         val actionN = msg.getAction()

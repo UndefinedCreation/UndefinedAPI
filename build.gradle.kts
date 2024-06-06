@@ -7,11 +7,12 @@ plugins {
     kotlin("jvm") version "1.9.22"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("org.jetbrains.dokka") version "1.9.20"
 
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.5.09"
+val versionVar = "0.5.10"
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
@@ -46,6 +47,7 @@ allprojects {
     apply(plugin = "java")
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
+    apply(plugin="org.jetbrains.dokka")
 
     group = groupIdVar
     version = versionVar

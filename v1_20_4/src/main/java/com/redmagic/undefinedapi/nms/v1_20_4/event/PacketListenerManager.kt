@@ -117,6 +117,12 @@ class PacketListenerManager {
 
     }
 
+    /**
+     * Handles the interaction between a player and fire.
+     *
+     * @param player The player involved in the interaction.
+     * @param msg The ClientboundSetEntityDataPacket containing the data of the interaction.
+     */
     private fun handleFire(player: Player, msg: ClientboundSetEntityDataPacket) {
 
         val id = msg.getEntityID()
@@ -144,6 +150,11 @@ class PacketListenerManager {
         return
     }
 
+    /**
+     * Handles the interaction between a player and an NPC.
+     *
+     * @param msg The ServerboundInteractPacket containing the interaction data.
+     */
     private fun handleNPCInteract(msg: ServerboundInteractPacket){
 
         val firstChar = msg.getActionFirstChar()

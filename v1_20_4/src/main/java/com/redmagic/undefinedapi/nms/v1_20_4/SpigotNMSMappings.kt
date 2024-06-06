@@ -1,5 +1,8 @@
 package com.redmagic.undefinedapi.nms.v1_20_4
 
+/**
+ * Class that defines the SpigotNMSMappings object.
+ */
 object SpigotNMSMappings {
 
     const val ClientboundSetEntityDataPacketEntityID = "b"
