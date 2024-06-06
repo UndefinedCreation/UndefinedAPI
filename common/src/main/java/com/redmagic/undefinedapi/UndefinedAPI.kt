@@ -1,5 +1,7 @@
 package com.redmagic.undefinedapi
 
+import com.redmagic.undefinedapi.customEvents.BlockProgressManager
+import com.redmagic.undefinedapi.customEvents.BlockProgressUpdateEvent
 import com.redmagic.undefinedapi.customEvents.PlayerHitByPlayerManager
 import com.redmagic.undefinedapi.customEvents.PlayerMoveManager
 import com.redmagic.undefinedapi.menu.MenuManager
@@ -28,6 +30,7 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
         MenuManager.setup(plugin)
         PlayerMoveManager()
         PlayerHitByPlayerManager()
+        BlockProgressManager()
         NMSManager()
     }
 
