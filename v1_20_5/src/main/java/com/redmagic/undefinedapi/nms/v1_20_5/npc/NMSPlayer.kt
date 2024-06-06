@@ -8,6 +8,7 @@ import com.redmagic.undefinedapi.nms.v1_20_5.SpigotNMSMappings
 import com.redmagic.undefinedapi.nms.v1_20_5.extensions.getConnection
 import com.redmagic.undefinedapi.nms.*
 import com.redmagic.undefinedapi.nms.NMSPlayer
+import com.redmagic.undefinedapi.nms.v1_20_5.extensions.sendPacket
 import com.redmagic.undefinedapi.scheduler.delay
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -146,9 +147,7 @@ class NMSPlayer: NMSPlayer {
 
                 val dataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, dataList)
 
-                viewers.forEach{
-                    it.getConnection().send(dataPacket)
-                }
+                viewers.sendPacket(dataPacket)
             }else{
                 serverPlayer.remainingFireTicks = 0
 
@@ -158,9 +157,7 @@ class NMSPlayer: NMSPlayer {
 
                 val dataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, dataList)
 
-                viewers.forEach{
-                    it.getConnection().send(dataPacket)
-                }
+                viewers.sendPacket(dataPacket)
             }
 
         }
@@ -212,9 +209,7 @@ class NMSPlayer: NMSPlayer {
             isOnGround
         )
 
-        viewers.forEach {
-            it.getConnection().send(packet)
-        }
+        viewers.sendPacket(packet)
 
         location = newLocation
 
@@ -230,11 +225,11 @@ class NMSPlayer: NMSPlayer {
             player.setPos(Vec3(newLocation.x, newLocation.y, newLocation.z))
             player.moveTo(newLocation.x, newLocation.y, newLocation.z, newLocation.yaw, newLocation.pitch)
 
-            viewers.forEach { viewer ->
-                viewer.getConnection().send(ClientboundTeleportEntityPacket(player))
-            }
+            val packet = ClientboundTeleportEntityPacket(player)
+
+            viewers.sendPacket(packet)
+            location = newLocation
         }
-        location = newLocation
     }
 
     /**
@@ -307,9 +302,7 @@ class NMSPlayer: NMSPlayer {
             mutableListOf(Pair(EquipmentSlot.valueOf(nmsEquipment.name), nmsItemStack))
         )
 
-        viewers.forEach{
-            it.getConnection().send(equipmentPacket)
-        }
+        viewers.sendPacket(equipmentPacket)
 
         updateMetaDataPacket()
 
@@ -481,9 +474,7 @@ class NMSPlayer: NMSPlayer {
             player.bukkitEntity.entityId,
             0f
         )
-        viewers.forEach{
-            it.getConnection().send(packet)
-        }
+        viewers.sendPacket(packet)
     }
 
     /**
@@ -495,9 +486,7 @@ class NMSPlayer: NMSPlayer {
             player,
             0
         )
-        viewers.forEach{
-            it.getConnection().send(packet)
-        }
+        viewers.sendPacket(packet)
     }
 
     /**
@@ -509,9 +498,7 @@ class NMSPlayer: NMSPlayer {
             player,
             3
         )
-        viewers.forEach{
-            it.getConnection().send(packet)
-        }
+        viewers.sendPacket(packet)
     }
 
     /**
@@ -546,12 +533,7 @@ class NMSPlayer: NMSPlayer {
         val animatepacket1 = ClientboundEntityEventPacket(serverPlayer, 3)
         val animatePacket2 = ClientboundEntityEventPacket(serverPlayer, 60)
 
-        viewers.forEach { viewer ->
-            viewer.getConnection().let { connection ->
-                connection.send(animatepacket1)
-                connection.send(animatePacket2)
-            }
-        }
+        viewers.sendPacket(animatepacket1, animatePacket2)
 
     }
 
@@ -587,11 +569,7 @@ class NMSPlayer: NMSPlayer {
             ClientboundSetEntityDataPacket(player.bukkitEntity.entityId, it)
         }
 
-        packet?.let { validPacket ->
-            viewers.forEach{ viewer ->
-                viewer.getConnection().send(validPacket)
-            }
-        }
+        packet?.also { viewers.sendPacket(it) }
     }
 
     /**
@@ -605,18 +583,16 @@ class NMSPlayer: NMSPlayer {
         val addPlayerPacket = ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, serverPlayer)
         val addEntityPacket = ClientboundAddEntityPacket(serverPlayer)
 
-        player.getConnection().let { connection ->
-            connection.send(addPlayerPacket)
-            connection.send(addEntityPacket)
+        player.sendPacket(addPlayerPacket)
+        player.sendPacket(addEntityPacket)
 
-            delay(2) {
-                val data = serverPlayer.entityData
-                val bitmask: Byte = (0x01 or 0x04 or 0x08 or 0x10 or 0x20 or 0x40 or 127).toByte()
-                data.set(EntityDataAccessor(17, EntityDataSerializers.BYTE), bitmask)
-                val metaDataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, data.packDirty()!!)
+        delay(2) {
+            val data = serverPlayer.entityData
+            val bitmask: Byte = (0x01 or 0x04 or 0x08 or 0x10 or 0x20 or 0x40 or 127).toByte()
+            data.set(EntityDataAccessor(17, EntityDataSerializers.BYTE), bitmask)
+            val metaDataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, data.packDirty()!!)
 
-                connection.send(metaDataPacket)
-            }
+            player.sendPacket(metaDataPacket)
         }
     }
 
@@ -632,10 +608,7 @@ class NMSPlayer: NMSPlayer {
         val infoRemovePacket = ClientboundPlayerInfoRemovePacket(listOf(serverPlayer.uuid))
         val entityRemovePacket = ClientboundRemoveEntitiesPacket(serverPlayer.id)
 
-        player.getConnection().let { connection ->
-            connection.send(infoRemovePacket)
-            connection.send(entityRemovePacket)
-        }
+        player.sendPacket(infoRemovePacket, entityRemovePacket)
 
     }
     /**
@@ -674,9 +647,7 @@ class NMSPlayer: NMSPlayer {
 
         val dataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, dataList)
 
-        viewers.forEach{
-            it.getConnection().send(dataPacket)
-        }
+        viewers.sendPacket(dataPacket)
     }
 
     /**

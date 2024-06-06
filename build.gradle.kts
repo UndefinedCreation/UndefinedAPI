@@ -7,6 +7,7 @@ plugins {
     kotlin("jvm") version "1.9.22"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("org.jetbrains.dokka") version "1.9.20"
 
 }
 
@@ -46,6 +47,7 @@ allprojects {
     apply(plugin = "java")
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
+    apply(plugin="org.jetbrains.dokka")
 
     group = groupIdVar
     version = versionVar
