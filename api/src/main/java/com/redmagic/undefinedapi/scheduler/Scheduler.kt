@@ -28,10 +28,10 @@ fun async(runnable: BukkitRunnable.() -> Unit): BukkitTask = createRunnable(runn
  * @param runnable The runnable task to be executed after the delay.
  * @return The BukkitTask representing the delayed task.
  */
-fun delay(ticks: Int, unit: TimeUnit = TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit):BukkitTask{
-    return if (async){
+fun delay(ticks: Int, unit: TimeUnit = TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit):BukkitTask {
+    return if (async) {
         createRunnable(runnable).runTaskLater(API.plugin, unit.toTicks(ticks.toLong()))
-    }else{
+    } else {
         createRunnable(runnable).runTaskLater(API.plugin, unit.toTicks(ticks.toLong()))
     }
 }

@@ -18,19 +18,19 @@ class PlayerMoveManager{
         val map = HashMap<UUID, Location>()
 
         repeatingTask(5) {
-            Bukkit.getOnlinePlayers().forEach{
-                if (!map.containsKey(it.uniqueId)){
+            Bukkit.getOnlinePlayers().forEach {
+                if (!map.containsKey(it.uniqueId)) {
                     map[it.uniqueId] = it.location
-                }else{
+                } else {
                     val fromLocation = map[it.uniqueId]
-                    if (fromLocation!! != it.location){
+                    if (fromLocation!! != it.location) {
 
                         val event = PlayerMoveEvent(it, fromLocation)
 
                         Bukkit.getPluginManager().callEvent(event)
-                        if (event.isCancelled){
+                        if (event.isCancelled) {
                             it.teleport(fromLocation)
-                        }else {
+                        } else {
                             map[it.uniqueId] = it.location
                         }
                     }

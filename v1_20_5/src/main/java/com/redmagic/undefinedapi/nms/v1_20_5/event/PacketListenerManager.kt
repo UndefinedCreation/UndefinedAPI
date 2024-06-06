@@ -1,6 +1,5 @@
 package com.redmagic.undefinedapi.nms.v1_20_5.event
 
-import com.redmagic.undefinedapi.nms.v1_20_5.NMSManager
 import com.redmagic.undefinedapi.customEvents.PlayerArmSwingEvent
 import com.redmagic.undefinedapi.customEvents.PlayerExtinguishEvent
 import com.redmagic.undefinedapi.customEvents.PlayerIgniteEvent
@@ -10,14 +9,12 @@ import com.redmagic.undefinedapi.nms.PlayerInteract
 import com.redmagic.undefinedapi.nms.extensions.getMetaDataInfo
 import com.redmagic.undefinedapi.nms.extensions.removeMetaData
 import com.redmagic.undefinedapi.nms.extensions.setMetaData
+import com.redmagic.undefinedapi.nms.v1_20_5.NMSManager
 import com.redmagic.undefinedapi.nms.v1_20_5.extensions.*
 import com.redmagic.undefinedapi.scheduler.sync
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
-import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.network.protocol.game.ServerboundInteractPacket
 import net.minecraft.network.protocol.game.ServerboundSwingPacket
-import net.minecraft.server.network.ServerCommonPacketListenerImpl
-import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -52,7 +49,7 @@ class PacketListenerManager {
 
                     when (this) {
                         is ServerboundSwingPacket -> {
-                            val event = PlayerArmSwingEvent(player, if (this.hand.equals(InteractionHand.MAIN_HAND)) EquipmentSlot.HAND else EquipmentSlot.OFF_HAND)
+                            val event = PlayerArmSwingEvent(player, if (this.hand == InteractionHand.MAIN_HAND) EquipmentSlot.HAND else EquipmentSlot.OFF_HAND)
                             Bukkit.getPluginManager().callEvent(event)
                             if (event.isCancelled) return@UndefinedDuplexHandler true
                         }
@@ -105,16 +102,14 @@ class PacketListenerManager {
             
 
             list.filter { it.id == 0 && it.value is Byte }.forEach {
-                if (it.value == 0.toByte()){
+                if (it.value == 0.toByte()) {
                     player.getMetaDataInfo("onFire")?.also {
                         Bukkit.getPluginManager().callEvent(PlayerExtinguishEvent(player))
                         player.removeMetaData("onFire")
                     }
-                }else if (it.value == 1.toByte()){
-                    if (player.getMetaDataInfo("onFire") == null) {
-                        Bukkit.getPluginManager().callEvent(PlayerIgniteEvent(player))
-                        player.setMetaData("onFire", true)
-                    }
+                } else if (it.value == 1.toByte() && player.getMetaDataInfo("onFire") == null) {
+                    Bukkit.getPluginManager().callEvent(PlayerIgniteEvent(player))
+                    player.setMetaData("onFire", true)
                 }
             }
 

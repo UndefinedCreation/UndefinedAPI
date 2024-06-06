@@ -42,7 +42,7 @@ object PlayerExtension {
         val cPlayer = player as CraftPlayer
         val sPlayer = cPlayer.handle
         val gameProfile = sPlayer.gameProfile
-        val property = gameProfile.properties.get("textures").iterator().next()
+        val property = gameProfile.properties["textures"].iterator().next()
         val texture = property.value as String
         val sign = property.signature as String
 
@@ -59,5 +59,5 @@ object PlayerExtension {
 fun isPaper(): Boolean {
     val hasClass = { name: String -> try { Class.forName(name); true } catch (e: ClassNotFoundException) { false } }
 
-    return if (hasClass("com.destroystokyo.paper.PaperConfig") || hasClass("io.papermc.paper.configuration.Configuration")) true else false
+    return hasClass("com.destroystokyo.paper.PaperConfig") || hasClass("io.papermc.paper.configuration.Configuration")
 }

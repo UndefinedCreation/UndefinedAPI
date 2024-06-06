@@ -31,9 +31,10 @@ class PlayerHitByPlayerManager(){
 
             val projectile = damager as? Projectile
             if (projectile != null){
-                if (projectile.shooter is Player)
+                if (projectile.shooter is Player) {
                     if (projectile.shooter as Player == player) return@event
                     Bukkit.getPluginManager().callEvent(PlayerHitByPlayerEvent(player, projectile.shooter as Player, HitCause.PROJECTILE))
+                }
             }
 
             val tnt = damager as? TNTPrimed

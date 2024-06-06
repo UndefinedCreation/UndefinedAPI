@@ -1,6 +1,5 @@
 package com.redmagic.undefinedapi.nms.v1_20_4.extensions
 
-import com.mojang.brigadier.context.ContextChain.Stage
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket
 import org.bukkit.block.Block

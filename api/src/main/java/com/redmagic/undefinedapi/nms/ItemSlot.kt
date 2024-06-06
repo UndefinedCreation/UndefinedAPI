@@ -14,7 +14,7 @@ enum class ItemSlot(val slot: Int){
 object ItemSlotObject{
     fun getItemSlotFromSlot(int: Int): ItemSlot?{
 
-        ItemSlot.entries.forEach(){
+        ItemSlot.entries.forEach() {
             if (it.slot == int) {
                 return it
             }

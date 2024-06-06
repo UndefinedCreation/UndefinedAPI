@@ -13,5 +13,5 @@ import net.minecraft.server.network.ServerCommonPacketListenerImpl
 fun ServerCommonPacketListenerImpl.getConnection(): Connection {
     val field = ServerCommonPacketListenerImpl::class.java.getDeclaredField("c")
     field.isAccessible = true
-    return field.get(this) as Connection
+    return field[this] as Connection
 }
