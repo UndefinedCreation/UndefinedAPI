@@ -61,12 +61,8 @@ class PacketListenerManager {
                 return@UndefinedDuplexHandler false
             },{
 
-
-                    sync {
-
-                        when (this@UndefinedDuplexHandler) {
-                            is ClientboundSetEntityDataPacket -> handleFire(player, this@UndefinedDuplexHandler)
-                        }
+                    when (this@UndefinedDuplexHandler) {
+                        is ClientboundSetEntityDataPacket -> handleFire(player, this@UndefinedDuplexHandler)
                     }
 
                 return@UndefinedDuplexHandler false
@@ -105,12 +101,12 @@ class PacketListenerManager {
             list.filter { it.id == 0 && it.value is Byte }.forEach {
                 if (it.value == 0.toByte()){
                     player.getMetaDataInfo("onFire")?.also {
-                        Bukkit.getPluginManager().callEvent(PlayerExtinguishEvent(player))
+                        sync { Bukkit.getPluginManager().callEvent(PlayerExtinguishEvent(player)) }
                         player.removeMetaData("onFire")
                     }
                 }else if (it.value == 1.toByte()){
                     if (player.getMetaDataInfo("onFire") == null) {
-                        Bukkit.getPluginManager().callEvent(PlayerIgniteEvent(player))
+                        sync { Bukkit.getPluginManager().callEvent(PlayerIgniteEvent(player)) }
                         player.setMetaData("onFire", true)
                     }
                 }
