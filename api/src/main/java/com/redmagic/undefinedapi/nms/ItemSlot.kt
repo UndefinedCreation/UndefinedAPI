@@ -4,10 +4,10 @@ enum class ItemSlot(val slot: Int){
 
     MAINHAND(0),
     OFFHAND(40),
-    CHESTPLATE(38),
-    LEGGINGS(37),
-    HELMET(39),
-    BOOTS(36)
+    CHEST(38),
+    LEGS(37),
+    HEAD(39),
+    FEET(36)
 
 }
 
