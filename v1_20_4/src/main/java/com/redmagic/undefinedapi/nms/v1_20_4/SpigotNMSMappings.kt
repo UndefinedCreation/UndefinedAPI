@@ -12,4 +12,7 @@ object SpigotNMSMappings {
     const val ServerboundInteractPacketActionHand = "a"
     const val ServerCommonPacketListenerImplConnection = "c"
     const val LivingEntitySetFlag = "c"
+    const val ClientboundContainerSetSlotPacketContairID = "c"
+    const val ClientboundContainerSetSlotPacketSlot = "e"
+    const val ClientboundContainerSetSlotPacketItemStack = "f"
 }

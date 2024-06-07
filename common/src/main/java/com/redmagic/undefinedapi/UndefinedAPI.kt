@@ -1,9 +1,6 @@
 package com.redmagic.undefinedapi
 
-import com.redmagic.undefinedapi.customEvents.BlockProgressManager
-import com.redmagic.undefinedapi.customEvents.BlockProgressUpdateEvent
-import com.redmagic.undefinedapi.customEvents.PlayerHitByPlayerManager
-import com.redmagic.undefinedapi.customEvents.PlayerMoveManager
+import com.redmagic.undefinedapi.customEvents.*
 import com.redmagic.undefinedapi.menu.MenuManager
 import com.redmagic.undefinedapi.nms.NMSManager
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
@@ -31,6 +28,7 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
         PlayerMoveManager()
         PlayerHitByPlayerManager()
         BlockProgressManager()
+        PlayerArmorChangeManager()
         NMSManager()
     }
 

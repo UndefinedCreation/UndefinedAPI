@@ -1,5 +1,6 @@
 package com.redmagic.undefinedapi
 
+import com.redmagic.undefinedapi.customEvents.PlayerArmorChangeEvent
 import com.redmagic.undefinedapi.customEvents.PlayerExtinguishEvent
 import com.redmagic.undefinedapi.customEvents.PlayerIgniteEvent
 import com.redmagic.undefinedapi.event.event
@@ -23,32 +24,9 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-        event<PlayerJoinEvent> {
-            val npc = api.createFakePlayer("the", "the")!!
-            npc.viewers.add(player)
-            npc.spawn(player.location)
-            npc.onFire = true
-            npc.interact {
-
-                when(actionType){
-                    ClickType.LEFT_CLICK -> sendLog("Left click")
-                    ClickType.RIGHT_CLICK -> sendLog("Right click")
-                }
-
-            }
-        }
-
-
-        event<PlayerIgniteEvent> {
-            sendLog("Ignite event")
-        }
-
-        event<PlayerExtinguishEvent> {
-            sendLog("Extinguish event")
-        }
-
-        event<BlockDamageEvent> {
-            println("Damage")
+        event<PlayerArmorChangeEvent> {
+            println(itemStack.type)
+            println(slot)
         }
 
     }
