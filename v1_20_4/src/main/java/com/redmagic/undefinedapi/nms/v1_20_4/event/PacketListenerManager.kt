@@ -49,24 +49,6 @@ class PacketListenerManager {
             pipeline.addBefore("packet_handler", "${player.uniqueId}_UNDEFINEDAPI", UndefinedDuplexHandler(
                 {
 
-                    if (this.javaClass.simpleName.contains("Block") && ! this.javaClass.simpleName.contains("Multi")) {
-                        println(this.javaClass.simpleName)
-                    }
-
-                    if (this is ServerboundPlayerActionPacket){
-                        val activeAction = this.getPrivateField<ServerboundPlayerActionPacket.Action>("c")
-                        println(activeAction)
-                        val actionList = listOf(ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, ServerboundPlayerActionPacket.Action.ABORT_DESTROY_BLOCK)
-                        if (actionList.contains(activeAction)){
-                            println("${this.pos} : ${activeAction.name}")
-                        }
-                    }
-
-                    if (this is ClientboundBlockDestructionPacket){
-                        val progess = this.getPrivateField<Int>("c")
-                        println(progess.toString())
-                    }
-
                     when (this) {
                         is ServerboundSwingPacket -> {
                             val event = PlayerArmSwingEvent(player, if (this.hand.equals(InteractionHand.MAIN_HAND)) EquipmentSlot.HAND else EquipmentSlot.OFF_HAND)
@@ -81,11 +63,6 @@ class PacketListenerManager {
 
 
                     sync {
-
-                        if (this@UndefinedDuplexHandler is ClientboundBlockDestructionPacket){
-                            val progess = this@UndefinedDuplexHandler.getPrivateField<Int>("c")
-                            println(progess.toString())
-                        }
 
                         when (this@UndefinedDuplexHandler) {
                             is ClientboundSetEntityDataPacket -> handleFire(player, this@UndefinedDuplexHandler)

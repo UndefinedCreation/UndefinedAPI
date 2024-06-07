@@ -4,6 +4,7 @@ import com.redmagic.undefinedapi.event.UndefinedEvent
 import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.scheduler.repeatingTask
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
@@ -13,11 +14,11 @@ import org.bukkit.event.block.BlockDamageEvent
 import kotlin.math.ceil
 import kotlin.math.round
 
-class BlockProgressUpdateEvent(val location: Location, val stage: Int): UndefinedEvent()
+class BlockProgressUpdateEvent(val location: Location, val stage: Byte): UndefinedEvent()
 
 class BlockProgressManager(){
 
-    private val blockList: HashMap<Location, Int> = hashMapOf()
+    private val blockList: HashMap<Location, Byte> = hashMapOf()
 
     init {
 
@@ -25,7 +26,7 @@ class BlockProgressManager(){
 
             val breakTime = getTimeNeeded(block, player)
 
-            if (breakTime < 2) return@event
+            if (breakTime < 2 || player.gameMode != GameMode.SPECTATOR) return@event
 
             val timeDetween = ceil(breakTime / 10).toInt()
 
