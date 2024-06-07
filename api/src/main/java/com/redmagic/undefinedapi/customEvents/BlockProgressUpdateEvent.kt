@@ -14,11 +14,11 @@ import org.bukkit.event.block.BlockDamageEvent
 import kotlin.math.ceil
 import kotlin.math.round
 
-class BlockProgressUpdateEvent(val location: Location, val stage: Byte): UndefinedEvent()
+class BlockProgressUpdateEvent(val location: Location, val stage: Int): UndefinedEvent()
 
 class BlockProgressManager(){
 
-    private val blockList: HashMap<Location, Byte> = hashMapOf()
+    private val blockList: HashMap<Location, Int> = hashMapOf()
 
     init {
 
