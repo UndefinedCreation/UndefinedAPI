@@ -26,7 +26,7 @@ class BlockProgressManager(){
 
             val breakTime = getTimeNeeded(block, player)
 
-            if (breakTime < 2 || player.gameMode != GameMode.SPECTATOR) return@event
+            if (breakTime < 2 && player.gameMode != GameMode.SPECTATOR) return@event
 
             val timeDetween = ceil(breakTime / 10).toInt()
 
