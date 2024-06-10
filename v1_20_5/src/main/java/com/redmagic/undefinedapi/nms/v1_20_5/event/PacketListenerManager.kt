@@ -1,9 +1,6 @@
 package com.redmagic.undefinedapi.nms.v1_20_5.event
 
-import com.redmagic.undefinedapi.customEvents.PlayerArmSwingEvent
-import com.redmagic.undefinedapi.customEvents.PlayerArmorChangeEvent
-import com.redmagic.undefinedapi.customEvents.PlayerExtinguishEvent
-import com.redmagic.undefinedapi.customEvents.PlayerIgniteEvent
+import com.redmagic.undefinedapi.customEvents.*
 import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.nms.ClickType
 import com.redmagic.undefinedapi.nms.PlayerInteract
@@ -15,10 +12,7 @@ import com.redmagic.undefinedapi.nms.v1_20_5.NMSManager
 import com.redmagic.undefinedapi.nms.v1_20_5.SpigotNMSMappings
 import com.redmagic.undefinedapi.nms.v1_20_5.extensions.*
 import com.redmagic.undefinedapi.scheduler.sync
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
-import net.minecraft.network.protocol.game.ServerboundInteractPacket
-import net.minecraft.network.protocol.game.ServerboundSwingPacket
+import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.item.ItemStack
 import org.bukkit.Bukkit
@@ -63,6 +57,7 @@ class PacketListenerManager {
                             if (event.isCancelled) return@UndefinedDuplexHandler true
                         }
                         is ServerboundInteractPacket -> handleNPCInteract(this)
+                        is ServerboundSetCarriedItemPacket -> handleMainHandSwitch(this, player)
                     }
 
                     return@UndefinedDuplexHandler false
@@ -91,6 +86,17 @@ class PacketListenerManager {
                 channel.pipeline().remove("${player.uniqueId}_UNDEFINEDAPI")
             }
         }
+
+    }
+
+
+    private fun handleMainHandSwitch(msg: ServerboundSetCarriedItemPacket, player: Player) {
+
+        val slot = msg.getPrivateField<Int>(SpigotNMSMappings.ServerboundSetCarriedItemPacketSlot)
+
+        val item = player.inventory.getItem(slot)
+
+        sync { Bukkit.getPluginManager().callEvent(PlayerMainHandSwitchEvent(player, item)) }
 
     }
 

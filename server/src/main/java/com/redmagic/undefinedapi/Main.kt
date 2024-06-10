@@ -3,6 +3,7 @@ package com.redmagic.undefinedapi
 import com.redmagic.undefinedapi.customEvents.PlayerArmorChangeEvent
 import com.redmagic.undefinedapi.customEvents.PlayerExtinguishEvent
 import com.redmagic.undefinedapi.customEvents.PlayerIgniteEvent
+import com.redmagic.undefinedapi.customEvents.PlayerMainHandSwitchEvent
 import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.nms.ClickType
 import com.redmagic.undefinedapi.nms.ItemSlot
@@ -24,9 +25,8 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-        event<PlayerArmorChangeEvent> {
-            println(itemStack.type)
-            println(slot)
+        event<PlayerMainHandSwitchEvent> {
+            println(itemStack)
         }
 
     }

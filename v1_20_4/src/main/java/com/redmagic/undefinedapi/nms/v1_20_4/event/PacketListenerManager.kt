@@ -1,10 +1,7 @@
 package com.redmagic.undefinedapi.nms.v1_20_4.event
 
+import com.redmagic.undefinedapi.customEvents.*
 import com.redmagic.undefinedapi.nms.v1_20_4.NMSManager
-import com.redmagic.undefinedapi.customEvents.PlayerArmSwingEvent
-import com.redmagic.undefinedapi.customEvents.PlayerArmorChangeEvent
-import com.redmagic.undefinedapi.customEvents.PlayerExtinguishEvent
-import com.redmagic.undefinedapi.customEvents.PlayerIgniteEvent
 import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.nms.extensions.getMetaDataInfo
 import com.redmagic.undefinedapi.nms.extensions.removeMetaData
@@ -57,6 +54,7 @@ class PacketListenerManager {
                             if (event.isCancelled) return@UndefinedDuplexHandler true
                         }
                         is ServerboundInteractPacket -> handleNPCInteract(this)
+                        is ServerboundSetCarriedItemPacket -> handleMainHandSwitch(this, player)
                     }
 
                 return@UndefinedDuplexHandler false
@@ -86,6 +84,16 @@ class PacketListenerManager {
 
     }
 
+
+    private fun handleMainHandSwitch(msg: ServerboundSetCarriedItemPacket, player: Player) {
+
+        val slot = msg.getPrivateField<Int>(SpigotNMSMappings.ServerboundSetCarriedItemPacketSlot)
+
+        val item = player.inventory.getItem(slot)
+
+        sync { Bukkit.getPluginManager().callEvent(PlayerMainHandSwitchEvent(player, item)) }
+
+    }
 
     private fun handleArmorChange(player: Player, msg: ClientboundContainerSetSlotPacket) {
         val sPlayer = (player as CraftPlayer).handle
