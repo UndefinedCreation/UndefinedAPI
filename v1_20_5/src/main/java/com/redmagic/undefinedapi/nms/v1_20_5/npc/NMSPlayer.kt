@@ -199,7 +199,7 @@ class NMSPlayer: NMSPlayer {
         val headRotationYaw = toRotationValue(newLocation.yaw)
         val headRotationPitch = toRotationValue(newLocation.pitch)
 
-        val packet = ClientboundMoveEntityPacket.PosRot(
+        val movement = ClientboundMoveEntityPacket.PosRot(
             player.bukkitEntity.entityId,
             deltaX,
             deltaY,
@@ -209,7 +209,13 @@ class NMSPlayer: NMSPlayer {
             isOnGround
         )
 
-        viewers.sendPacket(packet)
+        val headRot = ClientboundRotateHeadPacket(
+            player,
+            headRotationYaw
+        )
+
+        viewers.sendPacket(movement)
+        viewers.sendPacket(headRot)
 
         location = newLocation
 
