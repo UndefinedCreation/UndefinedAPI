@@ -5,16 +5,13 @@ import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.nms.ClickType
 import com.redmagic.undefinedapi.nms.PlayerInteract
 import com.redmagic.undefinedapi.nms.extensions.getMetaDataInfo
-import com.redmagic.undefinedapi.nms.extensions.getPrivateField
 import com.redmagic.undefinedapi.nms.extensions.removeMetaData
 import com.redmagic.undefinedapi.nms.extensions.setMetaData
 import com.redmagic.undefinedapi.nms.v1_20_5.NMSManager
-import com.redmagic.undefinedapi.nms.v1_20_5.SpigotNMSMappings
 import com.redmagic.undefinedapi.nms.v1_20_5.extensions.*
 import com.redmagic.undefinedapi.scheduler.sync
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.item.ItemStack
 import org.bukkit.Bukkit
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
@@ -63,11 +60,9 @@ class PacketListenerManager {
                     return@UndefinedDuplexHandler false
                 },{
 
-                    sync {
-                        when (this@UndefinedDuplexHandler) {
-                            is ClientboundContainerSetSlotPacket -> handleArmorChange(player, this@UndefinedDuplexHandler)
-                            is ClientboundSetEntityDataPacket -> handleFire(player, this@UndefinedDuplexHandler)
-                        }
+                    when (this@UndefinedDuplexHandler) {
+                        is ClientboundContainerSetSlotPacket -> handleArmorChange(player, this@UndefinedDuplexHandler)
+                        is ClientboundSetEntityDataPacket -> handleDataPacket(player, this@UndefinedDuplexHandler)
                     }
 
                     return@UndefinedDuplexHandler false
@@ -92,7 +87,7 @@ class PacketListenerManager {
 
     private fun handleMainHandSwitch(msg: ServerboundSetCarriedItemPacket, player: Player) {
 
-        val slot = msg.getPrivateField<Int>(SpigotNMSMappings.ServerboundSetCarriedItemPacketSlot)
+        val slot = msg.getEntityID()
 
         val item = player.inventory.getItem(slot)
 
@@ -104,17 +99,17 @@ class PacketListenerManager {
         val sPlayer = (player as CraftPlayer).handle
         val windowID = sPlayer.containerMenu.containerId
 
-        val contairID = msg.getPrivateField<Int>(SpigotNMSMappings.ClientboundContainerSetSlotPacketContairID)
+        val contairID = msg.getContainerID()
 
         if (windowID != contairID) return
 
-        val slot = msg.getPrivateField<Int>(SpigotNMSMappings.ClientboundContainerSetSlotPacketSlot)
+        val slot = msg.getContainerSlot()
 
         if (!armorSlots.containsKey(slot)) return
 
         val bukkitSlot = armorSlots[slot]!!
 
-        val itemStack = msg.getPrivateField<ItemStack>(SpigotNMSMappings.ClientboundContainerSetSlotPacketItemStack)
+        val itemStack = msg.getItemStack()
 
         sync { Bukkit.getPluginManager().callEvent(PlayerArmorChangeEvent(player, itemStack.bukkitStack, bukkitSlot)) }
 
@@ -128,30 +123,47 @@ class PacketListenerManager {
      * @param player The player affected by the fire event.
      * @param msg The packet containing the fire event data.
      */
-    private fun handleFire(player: Player, msg: ClientboundSetEntityDataPacket) {
+    private fun handleDataPacket(player: Player, msg: ClientboundSetEntityDataPacket) {
 
         val id = msg.getEntityID()
 
         if (player.entityId == id){
 
             val list = msg.getSynchedEntityDataList()
-            
 
-            list.filter { it.id == 0 && it.value is Byte }.forEach {
-                if (it.value == 0.toByte()) {
-                    player.getMetaDataInfo("onFire")?.also {
-                        Bukkit.getPluginManager().callEvent(PlayerExtinguishEvent(player))
-                        player.removeMetaData("onFire")
-                    }
-                } else if (it.value == 1.toByte() && player.getMetaDataInfo("onFire") == null) {
-                    Bukkit.getPluginManager().callEvent(PlayerIgniteEvent(player))
-                    player.setMetaData("onFire", true)
+            list.filter { it.value is Byte }.forEach {
+
+                when (it.id) {
+                    0 -> handleFire(player, it.value as Byte)
+                    8 -> handleUsingItem(player, (it.value as Byte).toInt())
                 }
             }
-
         }
-
         return
+    }
+
+    private fun handleUsingItem(player: Player, value: Int) {
+        sync {
+            Bukkit.getPluginManager().callEvent(
+                PlayerUseItemEvent(
+                    player,
+                    value >= 2,
+                    value == 1 || value == 3
+                )
+            )
+        }
+    }
+
+    private fun handleFire(player: Player, value: Byte){
+        if (value == 0.toByte()) {
+            player.getMetaDataInfo("onFire")?.also {
+                Bukkit.getPluginManager().callEvent(PlayerExtinguishEvent(player))
+                player.removeMetaData("onFire")
+            }
+        } else if (value == 1.toByte() && player.getMetaDataInfo("onFire") == null) {
+            Bukkit.getPluginManager().callEvent(PlayerIgniteEvent(player))
+            player.setMetaData("onFire", true)
+        }
     }
 
     /**
