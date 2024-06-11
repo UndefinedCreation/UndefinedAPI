@@ -1,5 +1,6 @@
 package com.redmagic.undefinedapi.nms
 
+import org.bukkit.Location
 import org.bukkit.entity.Player
 
 interface NMSEntity {
@@ -9,4 +10,11 @@ interface NMSEntity {
     fun addViewer(player: Player)
     fun removeViewer(player: Player)
 
+    var location: Location?
+
+    fun spawn(newLocation: Location)
+
+    fun kill()
+
+    fun teleport(newLocation: Location)
 }

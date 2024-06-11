@@ -155,14 +155,16 @@ class PacketListenerManager {
     }
 
     private fun handleFire(player: Player, value: Byte){
-        if (value == 0.toByte()) {
-            player.getMetaDataInfo("onFire")?.also {
-                Bukkit.getPluginManager().callEvent(PlayerExtinguishEvent(player))
-                player.removeMetaData("onFire")
+        sync {
+            if (value == 0.toByte()) {
+                player.getMetaDataInfo("onFire")?.also {
+                    Bukkit.getPluginManager().callEvent(PlayerExtinguishEvent(player))
+                    player.removeMetaData("onFire")
+                }
+            } else if (value == 1.toByte() && player.getMetaDataInfo("onFire") == null) {
+                Bukkit.getPluginManager().callEvent(PlayerIgniteEvent(player))
+                player.setMetaData("onFire", true)
             }
-        } else if (value == 1.toByte() && player.getMetaDataInfo("onFire") == null) {
-            Bukkit.getPluginManager().callEvent(PlayerIgniteEvent(player))
-            player.setMetaData("onFire", true)
         }
     }
 

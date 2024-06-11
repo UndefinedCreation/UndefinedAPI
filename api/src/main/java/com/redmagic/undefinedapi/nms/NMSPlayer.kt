@@ -8,15 +8,9 @@ import java.lang.reflect.Method
 /**
  * Represents an NMS player.
  */
-interface NMSPlayer: NMSEntity {
+interface NMSPlayer: NMSLivingEntity {
 
-    /**
-     * Represents the server-side player in the game.
-     *
-     * @property serverPlayer The NMS player instance associated with the server-side player.
-     */
 
-    var location: Location?
     var name: String
     var signature: String
     var texture: String
@@ -24,28 +18,8 @@ interface NMSPlayer: NMSEntity {
     var isCrouching: Boolean
     var isSwimming: Boolean
     var isGliding: Boolean
-    var onFire: Boolean
 
 
-    /**
-     * Moves the entity to the specified location.
-     *
-     * @param newLocation The destination location to move the entity to.
-     */
-    fun moveTo(newLocation: Location)
-    /**
-     * Moves or teleports the entity to the specified location.
-     *
-     * @param newLocation the destination location to move or teleport the entity to
-     */
-    fun moveOrTeleport(newLocation: Location)
-
-    /**
-     * Teleports the NMSEntity to the specified location.
-     *
-     * @param newLocation The destination location to teleport the entity to.
-     */
-    fun teleport(newLocation: Location)
 
     /**
      * Sets the skin of the player character.
@@ -127,26 +101,6 @@ interface NMSPlayer: NMSEntity {
      */
     fun moveOffHand()
 
-    /**
-     * Spawns a server player entity at the specified location.
-     *
-     * @param location the location where the server player should be spawned
-     * @param done a lambda function that will be executed after the server player is spawned
-     */
-    fun spawn(location: Location, done : NMSPlayer.() -> Unit = {})
-    /**
-     * Kills the entity.
-     */
-    fun kill()
-    /**
-     * Triggers a death animation for the entity.
-     *
-     * This method plays the animation of the entity dying. It does not directly apply any damage or modify the entity's health.
-     * The animation can be used to provide visual feedback to the player or create special effects.
-     *
-     * @receiver The entity to perform the death animation on.
-     */
-    fun deathAnimation()
 
     /**
      * Resets the pose of the entity.
@@ -162,15 +116,7 @@ interface NMSPlayer: NMSEntity {
 
     fun getEntityID(): Int
 
-    /**
-     * Triggers a damage animation for the entity.
-     *
-     * This method plays the animation of the entity being damaged. It does not directly apply any damage or modify the entity's health.
-     * The animation can be used to provide visual feedback to the player or create special effects.
-     *
-     * @receiver The entity to perform the damage animation on.
-     */
-    fun damageAnimation()
+
 
     /**
      * Updates the metadata packet for the entity.
@@ -191,12 +137,6 @@ interface NMSPlayer: NMSEntity {
      */
     fun removeBasePackets(player: Player)
 
-    /**
-     * Checks if the entity is alive.
-     *
-     * @return true if the entity is alive, false otherwise.
-     */
-    fun isAlive(): Boolean
 
     /**
      * Sets the pose of the entity.

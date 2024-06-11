@@ -61,7 +61,7 @@ class NMSPlayer: NMSPlayer {
             serverPlayer ?: return
             val tempLocation = location!!.clone()
             kill()
-            spawn(tempLocation){}
+            spawn(tempLocation)
         }
     override var signature: String = ""
     override var texture: String = ""
@@ -431,7 +431,7 @@ class NMSPlayer: NMSPlayer {
      * @param location the location at which to spawn the player
      * @param done the action to be performed by the player after spawning
      */
-    override fun spawn(location: Location, done: NMSPlayer.() -> Unit) {
+    override fun spawn(location: Location) {
 
         if (viewers.isEmpty()) {
             return
@@ -466,8 +466,6 @@ class NMSPlayer: NMSPlayer {
         viewers.forEach{
             sendBasePackets(it)
         }
-
-        done.invoke(this)
 
     }
 

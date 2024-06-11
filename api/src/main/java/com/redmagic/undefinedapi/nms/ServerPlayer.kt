@@ -6,9 +6,9 @@ import java.io.InputStreamReader
 import java.net.URI
 
 
-fun NMSPlayer.toDeltaValue(value: Double, newValue: Double) = (((newValue - value) * 32 * 128).toInt().toShort())
+fun NMSLivingEntity.toDeltaValue(value: Double, newValue: Double) = (((newValue - value) * 32 * 128).toInt().toShort())
 
-fun NMSPlayer.toRotationValue(rotation: Float) = (((rotation % 360) * 256 / 360).toInt().toByte())
+fun NMSLivingEntity.toRotationValue(rotation: Float) = (((rotation % 360) * 256 / 360).toInt().toByte())
 
 
 fun NMSPlayer.getSkinTexture(name: String): Array<String> {

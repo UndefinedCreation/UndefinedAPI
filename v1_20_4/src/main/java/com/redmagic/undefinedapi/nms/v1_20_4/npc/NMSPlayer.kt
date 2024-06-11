@@ -60,7 +60,7 @@ class NMSPlayer: NMSPlayer {
             serverPlayer ?: return
             val tempLocation = location!!.clone()
             kill()
-            spawn(tempLocation){}
+            spawn(tempLocation)
         }
     override var signature: String = ""
     override var texture: String = ""
@@ -358,6 +358,7 @@ class NMSPlayer: NMSPlayer {
     override fun useOffHand() {
         val player = serverPlayer ?: return
 
+
         if (!equipped.containsKey(ItemSlot.OFFHAND.slot)) return
 
         val method = getLivingEntityFlagMethod()
@@ -433,16 +434,16 @@ class NMSPlayer: NMSPlayer {
     /**
      * Spawns the player at the specified location and performs the specified action when done.
      *
-     * @param location the location at which to spawn the player
+     * @param newLocation the location at which to spawn the player
      * @param done the action to be performed by the player after spawning
      */
-    override fun spawn(location: Location, done: NMSPlayer.() -> Unit) {
+    override fun spawn(newLocation: Location) {
 
         if (viewers.isEmpty()) {
             return
         }
 
-        this.location = location
+        this.location = newLocation
 
         val sPlayer = viewers.random().getConnection()
 
@@ -454,8 +455,8 @@ class NMSPlayer: NMSPlayer {
         val serverLevel = sPlayer.player.serverLevel()
 
         val fakeServerPlayer = ServerPlayer(server, serverLevel, gameProfile, ClientInformation.createDefault())
-        fakeServerPlayer.setPos(location.x, location.y, location.z)
-        fakeServerPlayer.moveTo(location.x, location.y, location.z, location.yaw, location.pitch)
+        fakeServerPlayer.setPos(newLocation.x, newLocation.y, newLocation.z)
+        fakeServerPlayer.moveTo(newLocation.x, newLocation.y, newLocation.z, newLocation.yaw, newLocation.pitch)
 
         val connection = ServerGamePacketListenerImpl(
             server,
@@ -471,8 +472,6 @@ class NMSPlayer: NMSPlayer {
         viewers.forEach{
             sendBasePackets(it)
         }
-
-        done.invoke(this)
 
     }
 

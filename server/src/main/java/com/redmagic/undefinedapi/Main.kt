@@ -5,9 +5,11 @@ import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.nms.ItemSlot
 import com.redmagic.undefinedapi.nms.createFakePlayer
 import com.redmagic.undefinedapi.scheduler.delay
+import com.redmagic.undefinedapi.scheduler.repeatingTask
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
@@ -23,6 +25,19 @@ class Main: JavaPlugin() {
         event<PlayerUseItemEvent> {
             println(this.offhand)
             println(this.starting)
+        }
+
+
+        event<PlayerJoinEvent> {
+
+            val e = com.redmagic.undefinedapi.nms.v1_20_4.entity.NMSEntity(EntityType.ENDERMAN)
+            e.viewers.add(player)
+            e.spawn(player.location)
+
+            repeatingTask(1) {
+                e.moveTo(player.location)
+            }
+
         }
 
     }
