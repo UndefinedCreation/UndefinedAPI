@@ -1,6 +1,7 @@
-package com.redmagic.undefinedapi.nms
+package com.redmagic.undefinedapi.nms.interfaces
 
-import org.bukkit.Location
+import com.redmagic.undefinedapi.nms.ItemSlot
+import com.redmagic.undefinedapi.nms.Pose
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.lang.reflect.Method
@@ -111,11 +112,6 @@ interface NMSPlayer: NMSLivingEntity {
      * Note: This method does not have any parameters or return values.
      */
     fun resetPose()
-
-    fun interact(interact: PlayerInteract.() -> Unit)
-
-    fun getEntityID(): Int
-
 
 
     /**

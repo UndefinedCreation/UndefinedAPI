@@ -3,13 +3,17 @@ package com.redmagic.undefinedapi
 import com.redmagic.undefinedapi.customEvents.*
 import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.nms.ItemSlot
+import com.redmagic.undefinedapi.nms.createFakeEntity
 import com.redmagic.undefinedapi.nms.createFakePlayer
 import com.redmagic.undefinedapi.scheduler.delay
 import com.redmagic.undefinedapi.scheduler.repeatingTask
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Item
+
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
@@ -27,22 +31,38 @@ class Main: JavaPlugin() {
             println(this.starting)
         }
 
+        println(EntityType.DROPPED_ITEM.name)
 
         event<PlayerJoinEvent> {
 
-            val e = com.redmagic.undefinedapi.nms.v1_20_4.entity.NMSEntity(EntityType.ENDERMAN)
-            e.viewers.add(player)
+
+            val e = api.createFakeEntity(EntityType.ENDERMAN)!!
+            e.addViewer(player)
+
             e.spawn(player.location)
 
-            repeatingTask(1) {
-                e.moveTo(player.location)
-            }
+            e.customName = "Testing"
+
+
 
         }
 
     }
 
     fun test(player : Player){
+
+        val npc = api.createFakePlayer("the", "the")!!
+        npc.viewers.add(player)
+
+        npc.spawn(player.location)
+
+        npc.onFire = true
+
+
+        repeatingTask(1) {
+            npc.teleport(player.location)
+        }
+
         event<PlayerJoinEvent> {
 
             val npc = api.createFakePlayer("TheRedMagic", "TheRedMagic")!!

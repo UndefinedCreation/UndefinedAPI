@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.nms
+package com.redmagic.undefinedapi.nms.interfaces
 
 import org.bukkit.Location
 

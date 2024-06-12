@@ -5,10 +5,11 @@ import com.mojang.authlib.properties.Property
 import com.mojang.datafixers.util.Pair
 import com.redmagic.undefinedapi.nms.v1_20_4.extensions.getConnection
 import com.redmagic.undefinedapi.nms.*
-import com.redmagic.undefinedapi.nms.NMSPlayer
+import com.redmagic.undefinedapi.nms.interfaces.NMSPlayer
 import com.redmagic.undefinedapi.scheduler.delay
 import com.redmagic.undefinedapi.nms.v1_20_4.NMSManager
 import com.redmagic.undefinedapi.nms.v1_20_4.SpigotNMSMappings
+import com.redmagic.undefinedapi.nms.v1_20_4.entity.NMSLivingEntity
 import com.redmagic.undefinedapi.nms.v1_20_4.extensions.sendPacket
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -20,12 +21,12 @@ import net.minecraft.server.network.CommonListenerCookie
 import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.phys.Vec3
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_20_R3.CraftServer
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.lang.reflect.Method
@@ -38,7 +39,7 @@ import java.util.*
  * This class provides methods to manipulate and interact with a player,
  * such as moving, teleporting, setting items, changing pose, and more.
  */
-class NMSPlayer: NMSPlayer {
+class NMSPlayer: NMSPlayer, NMSLivingEntity {
     override val viewers: MutableList<Player> = mutableListOf()
     private var serverPlayer: ServerPlayer? = null
     /**
@@ -122,142 +123,20 @@ class NMSPlayer: NMSPlayer {
             val player = serverPlayer ?: return false
             return player.pose.equals(net.minecraft.world.entity.Pose.FALL_FLYING)
         }
-    /**
-     * Boolean variable indicating if the player is on fire.
-     *
-     * When this variable is set to true, the player will be set on fire and the corresponding packets will be sent to all viewers.
-     * Setting this variable to false will extinguish the fire on the player and update the viewers accordingly.
-     * The variable is overridden from the superclass.
-     *
-     * @property onFire true if the player is on fire, false otherwise
-     */
-    override var onFire: Boolean = false
-        set(value){
 
-            val serverPlayer = serverPlayer ?: return
-            field = value
-            if (value){
-
-                serverPlayer.remainingFireTicks = 2000000
-
-                val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
-                    SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0x01)
-                )
-
-                val dataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, dataList)
-
-                viewers.sendPacket(dataPacket)
-            }else{
-                serverPlayer.remainingFireTicks = 0
-
-                val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
-                    SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0)
-                )
-
-                val dataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, dataList)
-
-                viewers.sendPacket(dataPacket)
-            }
-
-        }
-
-
-    constructor(name: String, texture: String, sign: String) {
+    constructor(name: String, texture: String, sign: String) : super(EntityType.PLAYER) {
         this.name = name
         this.texture = texture
         this.signature = sign
-
     }
 
-    constructor(name: String, skin: String) {
+    constructor(name: String, skin: String) : super(EntityType.PLAYER) {
         this.name = name
         val skinString = getSkinTexture(skin)
         texture = skinString[0]
         signature = skinString[1]
     }
 
-
-
-    /**
-     * Moves the player to a new location.
-     *
-     * If distance is bigger than it will cancel. Instead, you should use [NMSPlayer.location]
-     *
-     * @param newLocation the new location to move to
-     */
-    override fun moveTo(newLocation: Location) {
-        val currentLocation = location ?: return
-        val player = serverPlayer ?: return
-
-        if (currentLocation.distance(newLocation) > 8.0)
-            return
-
-        val deltaX = toDeltaValue(currentLocation.x, newLocation.x)
-        val deltaY =  toDeltaValue(currentLocation.y, newLocation.y)
-        val deltaZ = toDeltaValue(currentLocation.z, newLocation.z)
-        val isOnGround = newLocation.clone().subtract(0.0,0.1,0.0).block.type.isSolid
-
-        val headRotationYaw = toRotationValue(newLocation.yaw)
-        val headRotationPitch = toRotationValue(newLocation.pitch)
-
-        val movement = ClientboundMoveEntityPacket.PosRot(
-            player.bukkitEntity.entityId,
-            deltaX,
-            deltaY,
-            deltaZ,
-            headRotationYaw,
-            headRotationPitch,
-            isOnGround
-        )
-
-        val headRot = ClientboundRotateHeadPacket(
-            player,
-            headRotationYaw
-        )
-        
-        viewers.sendPacket(movement)
-        viewers.sendPacket(headRot)
-
-        location = newLocation
-
-    }
-
-    /**
-     * Moves the player to a new location if the distance between the current location and the new location is less than or equal to 8.0,
-     * otherwise teleports the player to the new location.
-     *
-     * @param newLocation the new location to move or teleport to
-     */
-    override fun moveOrTeleport(newLocation: Location) {
-        serverPlayer?.let {
-            location?.let {
-                if (it.distance(newLocation) > 8.0) {
-                    teleport(newLocation)
-                } else {
-                    moveTo(newLocation)
-                }
-            }
-        }
-    }
-
-    /**
-     * Teleports the player to a new location.
-     *
-     * @param newLocation the new location to teleport to
-     */
-    override fun teleport(newLocation: Location) {
-        serverPlayer?.let { player ->
-            player.setPos(Vec3(newLocation.x, newLocation.y, newLocation.z))
-            player.moveTo(newLocation.x, newLocation.y, newLocation.z, newLocation.yaw, newLocation.pitch)
-
-            val packet = ClientboundTeleportEntityPacket(player)
-
-            viewers.sendPacket(packet)
-            location = newLocation
-        }
-
-
-    }
 
 
     /**
@@ -468,23 +347,12 @@ class NMSPlayer: NMSPlayer {
         fakeServerPlayer.connection = connection
 
         serverPlayer = fakeServerPlayer
+        entity = serverPlayer
 
         viewers.forEach{
             sendBasePackets(it)
         }
 
-    }
-
-    /**
-     * Perform damage animation for the player.
-     */
-    override fun damageAnimation() {
-        val player = serverPlayer ?: return
-        val packet = ClientboundHurtAnimationPacket(
-            player.bukkitEntity.entityId,
-            0f
-        )
-        viewers.sendPacket(packet)
     }
 
     /**
@@ -522,30 +390,10 @@ class NMSPlayer: NMSPlayer {
         }
 
         this.serverPlayer = null
+        entity = null
         this.location = null
     }
 
-    /**
-     * Performs the death animation for the player.
-     *
-     * The death animation includes sending two clientbound entity event packets to all the viewers of the player.
-     * The first packet has the event type 3, which triggers the "hurt" animation for the player.
-     * The second packet has the event type 60, which triggers the "death" animation for the player.
-     *
-     * If the serverPlayer property is null, the method returns without performing any actions.
-     *
-     * @see ClientboundEntityEventPacket
-     * @see Player.getConnection
-     */
-    override fun deathAnimation() {
-        val serverPlayer = serverPlayer ?: return
-
-        val animatepacket1 = ClientboundEntityEventPacket(serverPlayer, 3)
-        val animatePacket2 = ClientboundEntityEventPacket(serverPlayer, 60)
-
-        viewers.sendPacket(animatepacket1, animatePacket2)
-
-    }
 
     /**
      * Removes a player from the list of viewers and removes the base packets for the player.
@@ -553,7 +401,7 @@ class NMSPlayer: NMSPlayer {
      * @param player the player to remove as a viewer
      */
     override fun removeViewer(player: Player) {
-        viewers.remove(player)
+        super.removeViewer(player)
         removeBasePackets(player)
     }
     /**
@@ -562,7 +410,7 @@ class NMSPlayer: NMSPlayer {
      * @param player the player to add as a viewer
      */
     override fun addViewer(player: Player) {
-        viewers.add(player)
+        super.addViewer(player)
         sendBasePackets(player)
     }
 
@@ -622,11 +470,9 @@ class NMSPlayer: NMSPlayer {
 
     }
 
-    override fun interact(interact: PlayerInteract.() -> Unit) {
-        NMSManager.npcInteraction[this] = interact
+    override fun interact(interact: EntityInteract.() -> Unit) {
+        NMSManager.entityInteraction[this] = interact
     }
-
-    override fun getEntityID(): Int = if (serverPlayer == null) 0 else serverPlayer!!.id
 
     /**
      * Resets the pose of the player.

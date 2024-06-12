@@ -1,5 +1,6 @@
-package com.redmagic.undefinedapi.nms
+package com.redmagic.undefinedapi.nms.interfaces
 
+import com.redmagic.undefinedapi.nms.EntityInteract
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
@@ -7,7 +8,10 @@ interface NMSEntity {
 
     val viewers: MutableList<Player>
 
+    var customName: String?
+
     fun addViewer(player: Player)
+
     fun removeViewer(player: Player)
 
     var location: Location?
@@ -17,4 +21,8 @@ interface NMSEntity {
     fun kill()
 
     fun teleport(newLocation: Location)
+
+    fun getEntityID(): Int
+
+    fun interact(interact: EntityInteract.() -> Unit)
 }

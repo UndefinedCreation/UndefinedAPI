@@ -1,19 +1,19 @@
-package com.redmagic.undefinedapi.nms.v1_20_4.entity
+package com.redmagic.undefinedapi.nms.v1_20_5.entity
 
 import com.redmagic.undefinedapi.nms.EntityInteract
 import com.redmagic.undefinedapi.nms.interfaces.NMSEntity
-import com.redmagic.undefinedapi.nms.v1_20_4.NMSManager
-import com.redmagic.undefinedapi.nms.v1_20_4.entity.entityClasses.UndefinedEntity
-import com.redmagic.undefinedapi.nms.v1_20_4.extensions.sendPacket
+import com.redmagic.undefinedapi.nms.v1_20_5.NMSManager
+import com.redmagic.undefinedapi.nms.v1_20_5.entity.entityClass.UndefinedEntity
+import com.redmagic.undefinedapi.nms.v1_20_5.extensions.sendPacket
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import org.bukkit.Location
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntityType
-import org.bukkit.craftbukkit.v1_20_R3.util.CraftChatMessage
+import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.entity.CraftEntityType
+import org.bukkit.craftbukkit.util.CraftChatMessage
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 
@@ -21,7 +21,6 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
     override val viewers: MutableList<Player> = mutableListOf()
     override var location: Location? = null
     var entity: Entity? = null
-
 
     override var customName: String? = null
         get() = if (field == null) "" else field
@@ -34,7 +33,7 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
                 entity!!.isCustomNameVisible = false
 
-                sendMetaPackets()
+                sendMetaDataPackets()
 
             }else{
                 //Show / Set name
@@ -49,7 +48,8 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
                 entity!!.isCustomNameVisible = true
 
-                sendMetaPackets()
+                sendMetaDataPackets()
+
             }
 
             field = value
@@ -113,14 +113,12 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
     open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = UndefinedEntity(entityType, level)
 
-    private fun sendMetaPackets() {
-        if (entity == null) return
+    private fun sendMetaDataPackets() {
         entity!!.entityData.packDirty()?.let {
             ClientboundSetEntityDataPacket(
                 entity!!.id,
                 it
             )
         }?.let { viewers.sendPacket(it) }
-
     }
 }

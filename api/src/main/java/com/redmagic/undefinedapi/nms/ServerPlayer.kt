@@ -2,6 +2,8 @@ package com.redmagic.undefinedapi.nms
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.redmagic.undefinedapi.nms.interfaces.NMSLivingEntity
+import com.redmagic.undefinedapi.nms.interfaces.NMSPlayer
 import java.io.InputStreamReader
 import java.net.URI
 

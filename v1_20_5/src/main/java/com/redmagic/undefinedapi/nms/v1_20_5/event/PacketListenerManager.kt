@@ -3,7 +3,7 @@ package com.redmagic.undefinedapi.nms.v1_20_5.event
 import com.redmagic.undefinedapi.customEvents.*
 import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.nms.ClickType
-import com.redmagic.undefinedapi.nms.PlayerInteract
+import com.redmagic.undefinedapi.nms.EntityInteract
 import com.redmagic.undefinedapi.nms.extensions.getMetaDataInfo
 import com.redmagic.undefinedapi.nms.extensions.removeMetaData
 import com.redmagic.undefinedapi.nms.extensions.setMetaData
@@ -192,9 +192,9 @@ class PacketListenerManager {
 
         val action = if(attacking) ClickType.LEFT_CLICK else ClickType.RIGHT_CLICK
 
-        NMSManager.npcInteraction.entries.forEach {
+        NMSManager.entityInteraction.entries.forEach {
             if (it.key.getEntityID() == msg.getEntityID()) {
-                it.value.invoke(PlayerInteract(action, it.key))
+                it.value.invoke(EntityInteract(action, it.key))
             }
         }
     }
