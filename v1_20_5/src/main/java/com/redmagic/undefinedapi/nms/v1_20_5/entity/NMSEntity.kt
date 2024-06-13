@@ -8,6 +8,7 @@ import com.redmagic.undefinedapi.nms.v1_20_5.extensions.sendPacket
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
+import net.minecraft.world.entity.AgeableMob
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import org.bukkit.Location
