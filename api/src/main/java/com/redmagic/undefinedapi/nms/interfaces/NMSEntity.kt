@@ -10,6 +10,9 @@ interface NMSEntity {
 
     var customName: String?
 
+    var glowing: Boolean
+    var isVisible: Boolean
+
     fun addViewer(player: Player)
 
     fun removeViewer(player: Player)

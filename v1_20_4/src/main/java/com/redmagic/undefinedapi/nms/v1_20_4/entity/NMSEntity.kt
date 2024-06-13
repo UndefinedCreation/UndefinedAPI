@@ -1,6 +1,7 @@
 package com.redmagic.undefinedapi.nms.v1_20_4.entity
 
 import com.redmagic.undefinedapi.nms.EntityInteract
+import com.redmagic.undefinedapi.nms.extensions.getPrivateField
 import com.redmagic.undefinedapi.nms.interfaces.NMSEntity
 import com.redmagic.undefinedapi.nms.v1_20_4.NMSManager
 import com.redmagic.undefinedapi.nms.v1_20_4.entity.entityClasses.UndefinedEntity
@@ -8,6 +9,9 @@ import com.redmagic.undefinedapi.nms.v1_20_4.extensions.sendPacket
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import org.bukkit.Location
@@ -22,6 +26,34 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
     override var location: Location? = null
     var entity: Entity? = null
 
+    override var glowing: Boolean = false
+        set(value) {
+
+            if (entity == null) return
+
+            field = value
+
+            val data = entity!!.entityData
+
+            data.set(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0x40)
+
+            viewers.sendPacket(ClientboundSetEntityDataPacket(
+                entity!!.id,
+                data.packDirty()
+            ))
+
+        }
+    override var isVisible: Boolean = true
+        set(value) {
+
+            if (entity == null) return
+
+            entity!!.isInvisible = !value
+
+            sendMetaPackets()
+
+            field = value
+        }
 
     override var customName: String? = null
         get() = if (field == null) "" else field

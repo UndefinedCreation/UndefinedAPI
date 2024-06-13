@@ -36,12 +36,18 @@ class Main: JavaPlugin() {
         event<PlayerJoinEvent> {
 
 
-            val e = api.createFakeEntity(EntityType.ENDERMAN)!!
+            val e = api.createFakeEntity(EntityType.SHEEP)!!
             e.addViewer(player)
 
             e.spawn(player.location)
 
-            e.customName = "Testing"
+            e.glowing = true
+
+            delay(100) {
+                e.glowing = false
+                println("Not")
+            }
+
 
 
 

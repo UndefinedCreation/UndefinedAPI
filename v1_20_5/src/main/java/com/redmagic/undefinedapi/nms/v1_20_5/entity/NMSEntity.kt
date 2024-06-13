@@ -8,7 +8,6 @@ import com.redmagic.undefinedapi.nms.v1_20_5.extensions.sendPacket
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
-import net.minecraft.world.entity.AgeableMob
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import org.bukkit.Location
@@ -23,6 +22,29 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
     override var location: Location? = null
     var entity: Entity? = null
 
+    override var glowing: Boolean = false
+        set(value) {
+
+            if (entity == null) return
+
+            entity!!.setSharedFlag(5, value)
+
+            sendMetaPackets()
+
+            field = value
+        }
+    override var isVisible: Boolean = true
+        set(value) {
+
+            if (entity == null) return
+
+            entity!!.setSharedFlag(6, value)
+
+            sendMetaPackets()
+
+            field = value
+        }
+
     override var customName: String? = null
         get() = if (field == null) "" else field
         set(value) {
@@ -34,7 +56,7 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
                 entity!!.isCustomNameVisible = false
 
-                sendMetaDataPackets()
+                sendMetaPackets()
 
             }else{
                 //Show / Set name
@@ -49,7 +71,7 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
                 entity!!.isCustomNameVisible = true
 
-                sendMetaDataPackets()
+                sendMetaPackets()
 
             }
 
@@ -114,7 +136,7 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
     open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = UndefinedEntity(entityType, level)
 
-    private fun sendMetaDataPackets() {
+    private fun sendMetaPackets() {
         entity!!.entityData.packDirty()?.let {
             ClientboundSetEntityDataPacket(
                 entity!!.id,
