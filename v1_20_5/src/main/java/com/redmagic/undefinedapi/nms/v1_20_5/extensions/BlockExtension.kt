@@ -2,7 +2,11 @@ package com.redmagic.undefinedapi.nms.v1_20_5.extensions
 
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.monster.Slime
+import org.bukkit.ChatColor
 import org.bukkit.block.Block
+import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.entity.Player
 
 object BlockExtension {
@@ -13,5 +17,4 @@ object BlockExtension {
 
         player.sendPacket(packet)
     }
-
 }
