@@ -1,6 +1,7 @@
 package com.redmagic.undefinedapi.nms.interfaces
 
 import com.redmagic.undefinedapi.nms.EntityInteract
+import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
@@ -11,6 +12,8 @@ interface NMSEntity {
     var customName: String?
 
     var glowing: Boolean
+    var glowingColor: ChatColor
+
     var isVisible: Boolean
 
     fun addViewer(player: Player)

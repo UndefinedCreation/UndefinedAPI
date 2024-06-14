@@ -8,6 +8,7 @@ import com.redmagic.undefinedapi.nms.createFakePlayer
 import com.redmagic.undefinedapi.scheduler.delay
 import com.redmagic.undefinedapi.scheduler.repeatingTask
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Entity
@@ -36,20 +37,17 @@ class Main: JavaPlugin() {
         event<PlayerJoinEvent> {
 
 
-            val e = api.createFakeEntity(EntityType.SHEEP)!!
+            val e = api.createFakeEntity(EntityType.ENDER_DRAGON)!!
             e.addViewer(player)
 
             e.spawn(player.location)
 
             e.glowing = true
+            e.isVisible = false
 
-            delay(100) {
-                e.glowing = false
-                println("Not")
+            repeatingTask(5) {
+                e.glowingColor = ChatColor.entries.toTypedArray().random()
             }
-
-
-
 
         }
 

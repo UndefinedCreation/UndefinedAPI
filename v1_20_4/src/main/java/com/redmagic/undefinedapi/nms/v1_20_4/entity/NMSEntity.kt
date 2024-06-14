@@ -6,25 +6,53 @@ import com.redmagic.undefinedapi.nms.interfaces.NMSEntity
 import com.redmagic.undefinedapi.nms.v1_20_4.NMSManager
 import com.redmagic.undefinedapi.nms.v1_20_4.entity.entityClasses.UndefinedEntity
 import com.redmagic.undefinedapi.nms.v1_20_4.extensions.sendPacket
+import net.minecraft.ChatFormatting
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
+import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
+import net.minecraft.world.scores.PlayerTeam
+import net.minecraft.world.scores.Scoreboard
+import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntityType
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftChatMessage
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
+import kotlin.random.Random
 
 open class NMSEntity(open val entityType: EntityType): NMSEntity {
     override val viewers: MutableList<Player> = mutableListOf()
     override var location: Location? = null
     var entity: Entity? = null
+
+    private val scoreboard = Scoreboard()
+    private val team = scoreboard.addPlayerTeam("glow")
+
+    override var glowingColor: ChatColor = ChatColor.WHITE
+        set(value) {
+
+            if (entity == null) return
+
+            field = value
+
+            val format = ChatFormatting.valueOf(value.name)
+            team.color = format
+
+            scoreboard.addPlayerToTeam(entity!!.uuid.toString(), team)
+
+            viewers.sendPacket(
+                ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true),
+                ClientboundSetPlayerTeamPacket.createPlayerPacket(team, entity!!.uuid.toString(), ClientboundSetPlayerTeamPacket.Action.ADD)
+            )
+
+        }
 
     override var glowing: Boolean = false
         set(value) {
@@ -33,16 +61,12 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
             field = value
 
-            val data = entity!!.entityData
+            entity!!.setGlowingTag(value)
 
-            data.set(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0x40)
-
-            viewers.sendPacket(ClientboundSetEntityDataPacket(
-                entity!!.id,
-                data.packDirty()
-            ))
-
+            sendMetaPackets()
         }
+
+
     override var isVisible: Boolean = true
         set(value) {
 
@@ -147,7 +171,7 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
     private fun sendMetaPackets() {
         if (entity == null) return
-        entity!!.entityData.packDirty()?.let {
+        entity!!.entityData.nonDefaultValues?.let {
             ClientboundSetEntityDataPacket(
                 entity!!.id,
                 it
