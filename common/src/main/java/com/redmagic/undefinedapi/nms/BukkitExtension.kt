@@ -32,10 +32,14 @@ fun UndefinedAPI.createFakePlayer(name: String, texture: String, sign: String): 
 fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMSEntity? {
     val isLivingEntity = LivingEntity::class.java.isAssignableFrom(entityType.entityClass!!)
     val isPlayer = entityType == EntityType.PLAYER
+    val isSlime = entityType == EntityType.SLIME
 
     return when(getNMSVersion()) {
         "1.20.4" -> when {
-            isLivingEntity -> com.redmagic.undefinedapi.nms.v1_20_4.entity.NMSLivingEntity(entityType)
+            isLivingEntity -> when {
+                isSlime -> com.redmagic.undefinedapi.nms.v1_20_4.entity.livingEntities.NMSSlimeEntity()
+                else -> com.redmagic.undefinedapi.nms.v1_20_4.entity.NMSLivingEntity(entityType)
+            }
             isPlayer -> when(data.size){
                 2 -> com.redmagic.undefinedapi.nms.v1_20_4.npc.NMSPlayer(data[0] as String, data[1] as String)
                 3 -> com.redmagic.undefinedapi.nms.v1_20_4.npc.NMSPlayer(data[0] as String, data[1] as String, data[2] as String)
@@ -45,7 +49,10 @@ fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMS
         }
 
         "1.20.5", "1.20.6" -> when {
-            isLivingEntity -> com.redmagic.undefinedapi.nms.v1_20_5.entity.NMSLivingEntity(entityType)
+            isLivingEntity -> when {
+                isSlime -> com.redmagic.undefinedapi.nms.v1_20_5.entity.livingEntities.NMSSlimeEntity()
+                else -> com.redmagic.undefinedapi.nms.v1_20_5.entity.NMSLivingEntity(entityType)
+            }
             isPlayer -> when(data.size){
                 2 -> com.redmagic.undefinedapi.nms.v1_20_5.npc.NMSPlayer(data[0] as String, data[1] as String)
                 3 -> com.redmagic.undefinedapi.nms.v1_20_5.npc.NMSPlayer(data[0] as String, data[1] as String, data[2] as String)

@@ -5,6 +5,7 @@ import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.nms.ItemSlot
 import com.redmagic.undefinedapi.nms.createFakeEntity
 import com.redmagic.undefinedapi.nms.createFakePlayer
+import com.redmagic.undefinedapi.nms.interfaces.NMSSlimeEntity
 import com.redmagic.undefinedapi.scheduler.delay
 import com.redmagic.undefinedapi.scheduler.repeatingTask
 import org.bukkit.Bukkit
@@ -37,17 +38,18 @@ class Main: JavaPlugin() {
         event<PlayerJoinEvent> {
 
 
-            val e = api.createFakeEntity(EntityType.ENDER_DRAGON)!!
+            val e = api.createFakeEntity(EntityType.SLIME)!! as NMSSlimeEntity
             e.addViewer(player)
 
-            e.spawn(player.location)
+            e.spawn(player.location.block.location.add(0.5, 0.0,0.5))
+
+            e.size = 10
 
             e.glowing = true
             e.isVisible = false
+            e.glowingColor = ChatColor.GREEN
 
-            repeatingTask(5) {
-                e.glowingColor = ChatColor.entries.toTypedArray().random()
-            }
+            repeatingTask(40) { e.collibable = !e.collibable }
 
         }
 

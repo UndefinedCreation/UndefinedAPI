@@ -14,6 +14,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import net.minecraft.world.scores.PlayerTeam
 import net.minecraft.world.scores.Scoreboard
+import net.minecraft.world.scores.Team
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.craftbukkit.CraftWorld
@@ -72,6 +73,20 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
             field = value
         }
 
+    override var collibable: Boolean = false
+        set(value) {
+
+            if (entity == null) return
+
+            field = value
+
+            team.collisionRule = if (value) Team.CollisionRule.ALWAYS else Team.CollisionRule.NEVER
+
+            viewers.sendPacket(
+                ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true),
+            )
+        }
+
     override var customName: String? = null
         get() = if (field == null) "" else field
         set(value) {
@@ -123,14 +138,23 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
         val craftWorld = newLocation.world as CraftWorld
 
-        val entity = UndefinedEntity(nmsEntityType, craftWorld.handle)
+        val entity = getUndefinedEntityClass(nmsEntityType, craftWorld.handle)
 
         entity.setPos(newLocation.x, newLocation.y, newLocation.z)
         entity.setRot(newLocation.yaw, newLocation.pitch)
 
+        scoreboard.addPlayerToTeam(entity.uuid.toString(), team)
+
         val packet = entity.addEntityPacket
 
-        viewers.sendPacket(packet)
+        team.collisionRule = Team.CollisionRule.NEVER
+        team.setSeeFriendlyInvisibles(false)
+
+        viewers.sendPacket(
+            packet,
+            ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true),
+            ClientboundSetPlayerTeamPacket.createPlayerPacket(team, entity.uuid.toString(), ClientboundSetPlayerTeamPacket.Action.ADD)
+        )
         this.entity = entity
         this.location = newLocation
     }
@@ -163,8 +187,8 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
     open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = UndefinedEntity(entityType, level)
 
-    private fun sendMetaPackets() {
-        entity!!.entityData.packDirty()?.let {
+    fun sendMetaPackets() {
+        entity!!.entityData.nonDefaultValues?.let {
             ClientboundSetEntityDataPacket(
                 entity!!.id,
                 it

@@ -16,6 +16,8 @@ interface NMSEntity {
 
     var isVisible: Boolean
 
+    var collibable: Boolean
+
     fun addViewer(player: Player)
 
     fun removeViewer(player: Player)
