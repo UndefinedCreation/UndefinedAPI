@@ -3,6 +3,7 @@ package com.redmagic.undefinedapi.nms.v1_20_5.entity
 import com.redmagic.undefinedapi.nms.EntityInteract
 import com.redmagic.undefinedapi.nms.interfaces.NMSEntity
 import com.redmagic.undefinedapi.nms.v1_20_5.NMSManager
+import com.redmagic.undefinedapi.nms.v1_20_5.SpigotNMSMappings
 import com.redmagic.undefinedapi.nms.v1_20_5.entity.entityClass.UndefinedEntity
 import com.redmagic.undefinedapi.nms.v1_20_5.extensions.sendPacket
 import net.minecraft.ChatFormatting
@@ -141,7 +142,9 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
         val entity = getUndefinedEntityClass(nmsEntityType, craftWorld.handle)
 
         entity.setPos(newLocation.x, newLocation.y, newLocation.z)
-        entity.setRot(newLocation.yaw, newLocation.pitch)
+        val m = Entity::class.java.getDeclaredMethod(SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
+        m.isAccessible = true
+        m.invoke(entity, newLocation.yaw, newLocation.pitch)
 
         scoreboard.addPlayerToTeam(entity.uuid.toString(), team)
 
@@ -162,7 +165,9 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
     override fun teleport(newLocation: Location) {
         entity?.let {
             entity!!.setPos(newLocation.x, newLocation.y, newLocation.z)
-            entity!!.setRot(newLocation.yaw, newLocation.pitch)
+            val m = Entity::class.java.getDeclaredMethod(SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
+            m.isAccessible = true
+            m.invoke(entity, newLocation.yaw, newLocation.pitch)
 
             val packet = ClientboundTeleportEntityPacket(entity!!)
 

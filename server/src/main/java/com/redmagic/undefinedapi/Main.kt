@@ -33,7 +33,7 @@ class Main: JavaPlugin() {
 
         event<PlayerJoinEvent> {
 
-            println(player.getTexture())
+            player.location.block.glow(ChatColor.RED, listOf(player), 10000)
 
         }
 
