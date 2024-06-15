@@ -28,5 +28,6 @@ class NMSSlimeEntity: NMSLivingEntity(EntityType.SLIME), NMSSlimeEntity {
         this.size = size
     }
 
-    override fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = Slime(net.minecraft.world.entity.EntityType.SLIME, level)
+    override fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity =
+        Slime(net.minecraft.world.entity.EntityType.SLIME, level)
 }

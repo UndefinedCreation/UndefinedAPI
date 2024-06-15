@@ -172,7 +172,7 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
     }
 
     override fun kill() {
-        if (entity != null) return
+        if (entity == null) return
 
         val entityRemovePacket = ClientboundRemoveEntitiesPacket(entity!!.id)
 

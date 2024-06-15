@@ -22,6 +22,7 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
 
     init {
         plugin = javaPlugin
+        api = this
         API(plugin)
         adventure = BukkitAudiences.create(javaPlugin)
         MenuManager.setup(plugin)
@@ -39,6 +40,7 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
      */
     companion object{
         lateinit var plugin: JavaPlugin
+        lateinit var api: UndefinedAPI
 
         fun adventure(): BukkitAudiences {
             checkNotNull(adventure()) { "Tried to access Adventure when the plugin was disabled!" }

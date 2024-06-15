@@ -2,6 +2,7 @@ package com.redmagic.undefinedapi
 
 import com.redmagic.undefinedapi.customEvents.*
 import com.redmagic.undefinedapi.event.event
+import com.redmagic.undefinedapi.extension.glow
 import com.redmagic.undefinedapi.nms.ItemSlot
 import com.redmagic.undefinedapi.nms.createFakeEntity
 import com.redmagic.undefinedapi.nms.createFakePlayer
@@ -28,28 +29,9 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-        event<PlayerUseItemEvent> {
-            println(this.offhand)
-            println(this.starting)
-        }
-
-        println(EntityType.DROPPED_ITEM.name)
-
         event<PlayerJoinEvent> {
 
-
-            val e = api.createFakeEntity(EntityType.SLIME)!! as NMSSlimeEntity
-            e.addViewer(player)
-
-            e.spawn(player.location.block.location.add(0.5, 0.0,0.5))
-
-            e.size = 10
-
-            e.glowing = true
-            e.isVisible = false
-            e.glowingColor = ChatColor.GREEN
-
-            repeatingTask(40) { e.collibable = !e.collibable }
+            player.location.block.glow(ChatColor.RED, 100)
 
         }
 
