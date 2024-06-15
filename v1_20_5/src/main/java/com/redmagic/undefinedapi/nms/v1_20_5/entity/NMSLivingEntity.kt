@@ -91,6 +91,16 @@ open class NMSLivingEntity(override var entityType: EntityType): NMSLivingEntity
         }
     }
 
+    override fun setHeadRotation(yaw: Float) {
+        if (entity == null) return
+        val headRot = ClientboundRotateHeadPacket(
+            entity,
+            toRotationValue(yaw)
+        )
+
+        viewers.sendPacket(headRot)
+    }
+
     override fun isAlive(): Boolean = entity != null
 
     override fun deathAnimation() {

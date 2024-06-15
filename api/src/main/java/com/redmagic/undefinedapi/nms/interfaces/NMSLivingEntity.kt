@@ -30,7 +30,17 @@ interface NMSLivingEntity: NMSEntity {
      */
     fun deathAnimation()
 
+    /**
+     * Triggers a damage animation for the entity.
+     *
+     * This method plays the animation of the entity being damaged. It does not directly apply any damage or modify the entity's health.
+     * The animation can be used to provide visual feedback to the player or create special effects.
+     *
+     * @receiver The entity to perform the damage animation on.
+     */
     fun damageAnimation()
+
+    fun setHeadRotation(yaw: Float)
 
     /**
      * Checks if the entity is alive.

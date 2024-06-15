@@ -7,6 +7,7 @@ import com.redmagic.undefinedapi.nms.ItemSlot
 import com.redmagic.undefinedapi.nms.createFakeEntity
 import com.redmagic.undefinedapi.nms.createFakePlayer
 import com.redmagic.undefinedapi.nms.interfaces.NMSSlimeEntity
+import com.redmagic.undefinedapi.scheduler.TimeUnit
 import com.redmagic.undefinedapi.scheduler.delay
 import com.redmagic.undefinedapi.scheduler.repeatingTask
 import org.bukkit.Bukkit
@@ -31,6 +32,7 @@ class Main: JavaPlugin() {
 
         event<PlayerJoinEvent> {
 
+            player.location.block.glow(ChatColor.RED, listOf(player), 10, TimeUnit.MINUTES)
 
         }
 

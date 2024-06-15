@@ -2,6 +2,7 @@ package com.redmagic.undefinedapi.extension
 
 import com.redmagic.undefinedapi.UndefinedAPI
 import com.redmagic.undefinedapi.nms.createFakeEntity
+import com.redmagic.undefinedapi.nms.interfaces.NMSLivingEntity
 import com.redmagic.undefinedapi.nms.interfaces.NMSSlimeEntity
 import com.redmagic.undefinedapi.scheduler.TimeUnit
 import com.redmagic.undefinedapi.scheduler.delay
@@ -36,13 +37,18 @@ fun Block.glow(chatColor: ChatColor, viewers: List<Player>, tick: Int) {
 
     val slime = glowMap[this] ?: UndefinedAPI.api.createFakeEntity(EntityType.SLIME)!! as NMSSlimeEntity
     glowMap[this] = slime
+
     slime.size = 2
 
     slime.viewers.clear()
 
     viewers.forEach { slime.addViewer(it) }
 
-    slime.spawn(this.location.add(0.5,0.0,0.5))
+    val l = this.location.add(0.5,-1.0,0.5)
+
+    slime.spawn(l)
+
+    slime.setHeadRotation(0F)
     slime.isVisible = false
     slime.glowing = true
     slime.glowingColor = chatColor
