@@ -10,6 +10,7 @@ import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
+import org.bukkit.scheduler.BukkitTask
 
 fun Block.getConnectedBlocks(): List<Block> = BlockFace.values()
     .filter { !it.name.contains("_") && it != BlockFace.SELF }
@@ -23,9 +24,15 @@ fun Block.sendBreakProgress(player: Player, stage: Int) {
 }
 
 private val glowMap: HashMap<Block, NMSSlimeEntity> = hashMapOf()
+private val taskMap: HashMap<Block, BukkitTask> = hashMapOf()
 
 
-fun Block.glow(chatColor: ChatColor, tick: Int) {
+fun Block.glow(chatColor: ChatColor, viewers: List<Player>, tick: Int) {
+
+    taskMap[this]?.let {
+        taskMap[this]!!.cancel()
+        taskMap.remove(this)
+    }
 
     val slime = glowMap[this] ?: UndefinedAPI.api.createFakeEntity(EntityType.SLIME)!! as NMSSlimeEntity
     glowMap[this] = slime
@@ -33,20 +40,17 @@ fun Block.glow(chatColor: ChatColor, tick: Int) {
 
     slime.viewers.clear()
 
-    this.location.world!!.getNearbyEntities(this.location,25.0, 25.0, 25.0)
-        .filterIsInstance<Player>()
-        .forEach { slime.addViewer(it) }
+    viewers.forEach { slime.addViewer(it) }
 
     slime.spawn(this.location.add(0.5,0.0,0.5))
     slime.isVisible = false
     slime.glowing = true
     slime.glowingColor = chatColor
 
-    delay(tick) {
-        println("KIll")
+    taskMap[this] = delay(tick) {
         slime.kill()
         glowMap.remove(this@glow)
     }
 }
 
-fun Block.glow(chatColor: ChatColor, amount: Int, timeUnit: TimeUnit) = this.glow(chatColor, timeUnit.toTicks(amount.toLong()).toInt())
+fun Block.glow(chatColor: ChatColor, viewers: List<Player>, amount: Int, timeUnit: TimeUnit) = this.glow(chatColor, viewers, timeUnit.toTicks(amount.toLong()).toInt())
