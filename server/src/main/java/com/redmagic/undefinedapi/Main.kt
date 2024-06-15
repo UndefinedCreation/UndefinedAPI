@@ -31,7 +31,6 @@ class Main: JavaPlugin() {
 
         event<PlayerJoinEvent> {
 
-            player.location.block.glow(ChatColor.RED, 100)
 
         }
 
