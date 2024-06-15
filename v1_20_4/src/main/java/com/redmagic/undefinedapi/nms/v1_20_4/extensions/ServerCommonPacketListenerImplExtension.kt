@@ -1,5 +1,6 @@
 package com.redmagic.undefinedapi.nms.v1_20_4.extensions
 
+import com.redmagic.undefinedapi.nms.v1_20_4.SpigotNMSMappings
 import net.minecraft.network.Connection
 import net.minecraft.server.network.ServerCommonPacketListenerImpl
 
@@ -11,7 +12,7 @@ import net.minecraft.server.network.ServerCommonPacketListenerImpl
  * @throws IllegalAccessException if access to the "c" field is denied
  */
 fun ServerCommonPacketListenerImpl.getConnection(): Connection {
-    val field = ServerCommonPacketListenerImpl::class.java.getDeclaredField("c")
+    val field = ServerCommonPacketListenerImpl::class.java.getDeclaredField(SpigotNMSMappings.ServerCommonPacketListenerImplConnection)
     field.isAccessible = true
     return field[this] as Connection
 }

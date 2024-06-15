@@ -6,6 +6,7 @@ import com.redmagic.undefinedapi.extension.glow
 import com.redmagic.undefinedapi.nms.ItemSlot
 import com.redmagic.undefinedapi.nms.createFakeEntity
 import com.redmagic.undefinedapi.nms.createFakePlayer
+import com.redmagic.undefinedapi.nms.getTexture
 import com.redmagic.undefinedapi.nms.interfaces.NMSSlimeEntity
 import com.redmagic.undefinedapi.scheduler.TimeUnit
 import com.redmagic.undefinedapi.scheduler.delay
@@ -32,7 +33,7 @@ class Main: JavaPlugin() {
 
         event<PlayerJoinEvent> {
 
-            player.location.block.glow(ChatColor.RED, listOf(player), 10, TimeUnit.MINUTES)
+            println(player.getTexture())
 
         }
 

@@ -48,7 +48,7 @@ object PlayerExtension {
     fun getTextures(player: Player): Array<String> {
         val cPlayer = player as CraftPlayer
         val sPlayer = cPlayer.handle
-        val gameProfile = sPlayer.gameProfile
+        val gameProfile = sPlayer.getGameProfile()
         val property = gameProfile.properties["textures"].iterator().next()
         val texture = property.value as String
         val sign = property.signature as String
