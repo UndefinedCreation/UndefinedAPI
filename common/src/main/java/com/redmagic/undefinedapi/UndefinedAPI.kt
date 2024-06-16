@@ -26,7 +26,6 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
         API(plugin)
         adventure = BukkitAudiences.create(javaPlugin)
         MenuManager.setup(plugin)
-        PlayerMoveManager()
         PlayerHitByPlayerManager()
         BlockProgressManager()
         PlayerArmorChangeManager()

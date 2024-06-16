@@ -31,10 +31,9 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-        event<PlayerJoinEvent> {
+        event<EntityMoveEvent> {
 
-            player.location.block.glow(ChatColor.RED, listOf(player), 10000)
-
+            println("${entity.location}, ${newLocation}")
         }
 
     }

@@ -6,11 +6,12 @@ import com.redmagic.undefinedapi.nms.interfaces.NMSLivingEntity
 import com.redmagic.undefinedapi.nms.interfaces.NMSPlayer
 import java.io.InputStreamReader
 import java.net.URI
+import kotlin.math.floor
 
 
 fun NMSLivingEntity.toDeltaValue(value: Double, newValue: Double) = (((newValue - value) * 32 * 128).toInt().toShort())
 
-fun NMSLivingEntity.toRotationValue(rotation: Float) = (((rotation % 360) * 256 / 360).toInt().toByte())
+fun NMSLivingEntity.toRotationValue(rotation: Float): Byte = floor(rotation * 256.0f / 360.0f).toInt().toByte()
 
 
 fun NMSPlayer.getSkinTexture(name: String): Array<String> {

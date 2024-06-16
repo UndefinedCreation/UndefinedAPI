@@ -126,12 +126,10 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
     override fun addViewer(player: Player) {
         viewers.add(player)
-        scoreboard.addPlayerToTeam(player.name, team)
     }
 
     override fun removeViewer(player: Player) {
         viewers.remove(player)
-        scoreboard.removePlayerFromTeam(player.name)
     }
 
 

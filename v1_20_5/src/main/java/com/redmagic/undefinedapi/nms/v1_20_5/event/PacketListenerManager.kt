@@ -5,19 +5,26 @@ import com.redmagic.undefinedapi.event.event
 import com.redmagic.undefinedapi.nms.ClickType
 import com.redmagic.undefinedapi.nms.EntityInteract
 import com.redmagic.undefinedapi.nms.extensions.getMetaDataInfo
+import com.redmagic.undefinedapi.nms.extensions.getPrivateFieldFromSuper
 import com.redmagic.undefinedapi.nms.extensions.removeMetaData
 import com.redmagic.undefinedapi.nms.extensions.setMetaData
 import com.redmagic.undefinedapi.nms.v1_20_5.NMSManager
+import com.redmagic.undefinedapi.nms.v1_20_5.SpigotNMSMappings
 import com.redmagic.undefinedapi.nms.v1_20_5.extensions.*
 import com.redmagic.undefinedapi.scheduler.sync
+import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
 import org.bukkit.Bukkit
+import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.EquipmentSlot
+import java.util.*
+import kotlin.collections.ArrayDeque
+import kotlin.collections.HashMap
 
 /**
  * This class represents a packet listener for Minecraft version 1.20.5.
@@ -30,6 +37,9 @@ class PacketListenerManager {
 
     private val armorSlots: HashMap<Int, Int> = hashMapOf(Pair(4, 39), Pair(5, 38), Pair(6, 37), Pair(7, 36))
 
+    private val onFire: MutableList<UUID> = mutableListOf()
+
+    private val que = ArrayDeque<Packet<*>>(6)
 
     init {
 
@@ -84,6 +94,21 @@ class PacketListenerManager {
 
     }
 
+
+    private fun handleEntityMove(msg: ClientboundMoveEntityPacket, craftWorld: CraftWorld) {
+
+        if (!checkQue(msg)) return
+
+        val entityID = msg.getPrivateFieldFromSuper<Int>(SpigotNMSMappings.ClientboundMoveEntityPacketEntityID)
+
+        sync {
+            craftWorld.handle.getEntity(entityID)?.bukkitEntity?.apply {
+
+                Bukkit.getPluginManager().callEvent(EntityMoveEvent(this@apply, this.location))
+
+            }
+        }
+    }
 
     private fun handleMainHandSwitch(msg: ServerboundSetCarriedItemPacket, player: Player) {
 
@@ -158,11 +183,11 @@ class PacketListenerManager {
         sync {
             if (value == 0.toByte()) {
                 player.getMetaDataInfo("onFire")?.also {
-                    Bukkit.getPluginManager().callEvent(PlayerExtinguishEvent(player))
+                    Bukkit.getPluginManager().callEvent(EntityExtinguishEvent(player))
                     player.removeMetaData("onFire")
                 }
             } else if (value == 1.toByte() && player.getMetaDataInfo("onFire") == null) {
-                Bukkit.getPluginManager().callEvent(PlayerIgniteEvent(player))
+                Bukkit.getPluginManager().callEvent(EntityIgniteEvent(player))
                 player.setMetaData("onFire", true)
             }
         }
@@ -197,6 +222,17 @@ class PacketListenerManager {
                 it.value.invoke(EntityInteract(action, it.key))
             }
         }
+    }
+
+    private fun checkQue(packet: Packet<*>): Boolean {
+        if (que.size == 6)  que.removeLast()
+
+        for (p in que) {
+            if (p == packet) return false
+        }
+
+        que.addFirst(packet)
+        return true
     }
 
 }
