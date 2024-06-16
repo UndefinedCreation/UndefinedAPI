@@ -176,9 +176,12 @@ class PacketListenerManager {
 
         val entityID = msg.getEntityID()
 
-        val entity = craftWorld.handle.getEntity(entityID)
+
 
         sync {
+
+            val entity = craftWorld.handle.getEntity(entityID)
+
             if (value == 0.toByte() && onFire.contains(entity!!.uuid)) {
                 Bukkit.getPluginManager().callEvent(EntityExtinguishEvent(entity.bukkitEntity))
                 onFire.remove(entity.uuid)

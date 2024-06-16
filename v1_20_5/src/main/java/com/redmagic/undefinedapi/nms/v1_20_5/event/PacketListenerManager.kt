@@ -46,7 +46,7 @@ class PacketListenerManager {
         event<PlayerJoinEvent> {
 
             if (player.fireTicks > 0) {
-                player.setMetaData("onFire", true)
+                onFire.add(player.uniqueId)
             }
 
 
@@ -159,7 +159,7 @@ class PacketListenerManager {
             list.filter { it.value is Byte }.forEach {
 
                 when (it.id) {
-                    0 -> handleFire(player, it.value as Byte)
+                    0 -> handleFire(msg, it.value as Byte, player.world as CraftWorld)
                     8 -> handleUsingItem(player, (it.value as Byte).toInt())
                 }
             }
@@ -179,16 +179,24 @@ class PacketListenerManager {
         }
     }
 
-    private fun handleFire(player: Player, value: Byte){
+    private fun handleFire(msg: ClientboundSetEntityDataPacket, value: Byte, craftWorld: CraftWorld){
+
+        if (!checkQue(msg)) return
+
+        val entityID = msg.getEntityID()
+
+
+
         sync {
-            if (value == 0.toByte()) {
-                player.getMetaDataInfo("onFire")?.also {
-                    Bukkit.getPluginManager().callEvent(EntityExtinguishEvent(player))
-                    player.removeMetaData("onFire")
-                }
-            } else if (value == 1.toByte() && player.getMetaDataInfo("onFire") == null) {
-                Bukkit.getPluginManager().callEvent(EntityIgniteEvent(player))
-                player.setMetaData("onFire", true)
+
+            val entity = craftWorld.handle.getEntity(entityID)
+
+            if (value == 0.toByte() && onFire.contains(entity!!.uuid)) {
+                Bukkit.getPluginManager().callEvent(EntityExtinguishEvent(entity.bukkitEntity))
+                onFire.remove(entity.uuid)
+            } else if (value == 1.toByte() && !onFire.contains(entity!!.uuid)) {
+                Bukkit.getPluginManager().callEvent(EntityIgniteEvent(entity.bukkitEntity))
+                onFire.add(entity.uuid)
             }
         }
     }
