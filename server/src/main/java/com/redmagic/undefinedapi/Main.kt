@@ -31,9 +31,13 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-        event<EntityMoveEvent> {
+        event<EntityIgniteEvent> {
 
-            println("${entity.location}, ${newLocation}")
+            println("${entity.type} Ignite")
+        }
+
+        event<EntityExtinguishEvent> {
+            println("${entity.type} Extinguish")
         }
 
     }

@@ -94,22 +94,6 @@ class PacketListenerManager {
 
     }
 
-
-    private fun handleEntityMove(msg: ClientboundMoveEntityPacket, craftWorld: CraftWorld) {
-
-        if (!checkQue(msg)) return
-
-        val entityID = msg.getPrivateFieldFromSuper<Int>(SpigotNMSMappings.ClientboundMoveEntityPacketEntityID)
-
-        sync {
-            craftWorld.handle.getEntity(entityID)?.bukkitEntity?.apply {
-
-                Bukkit.getPluginManager().callEvent(EntityMoveEvent(this@apply, this.location))
-
-            }
-        }
-    }
-
     private fun handleMainHandSwitch(msg: ServerboundSetCarriedItemPacket, player: Player) {
 
         val slot = msg.getEntityID()
@@ -152,16 +136,13 @@ class PacketListenerManager {
 
         val id = msg.getEntityID()
 
-        if (player.entityId == id){
+        val list = msg.getSynchedEntityDataList()
 
-            val list = msg.getSynchedEntityDataList()
+        list.filter { it.value is Byte }.forEach {
 
-            list.filter { it.value is Byte }.forEach {
-
-                when (it.id) {
-                    0 -> handleFire(msg, it.value as Byte, player.world as CraftWorld)
-                    8 -> handleUsingItem(player, (it.value as Byte).toInt())
-                }
+            when (it.id) {
+                0 -> handleFire(msg, it.value as Byte, player.world as CraftWorld)
+                8 -> if (player.entityId == id) handleUsingItem(player, (it.value as Byte).toInt())
             }
         }
         return

@@ -66,7 +66,6 @@ class PacketListenerManager {
                     when (this@UndefinedDuplexHandler) {
                         is ClientboundSetEntityDataPacket -> handleDataPacket(player, this@UndefinedDuplexHandler)
                         is ClientboundContainerSetSlotPacket -> handleArmorChange(player, this@UndefinedDuplexHandler)
-                        is ClientboundMoveEntityPacket -> handleEntityMove(this, player.world as CraftWorld)
                     }
 
                 return@UndefinedDuplexHandler false
@@ -86,21 +85,6 @@ class PacketListenerManager {
             }
         }
 
-    }
-
-    private fun handleEntityMove(msg: ClientboundMoveEntityPacket, craftWorld: CraftWorld) {
-
-        if (!checkQue(msg)) return
-
-        val entityID = msg.getPrivateFieldFromSuper<Int>(SpigotNMSMappings.ClientboundMoveEntityPacketEntityID)
-
-        sync {
-            craftWorld.handle.getEntity(entityID)?.bukkitEntity?.apply {
-
-                Bukkit.getPluginManager().callEvent(EntityMoveEvent(this@apply, this.location))
-
-            }
-        }
     }
 
     private fun handleMainHandSwitch(msg: ServerboundSetCarriedItemPacket, player: Player) {
@@ -143,16 +127,13 @@ class PacketListenerManager {
 
         val id = msg.getEntityID()
 
-        if (player.entityId == id){
+        val list = msg.getSynchedEntityDataList()
 
-            val list = msg.getSynchedEntityDataList()
+        list.filter { it.value is Byte }.forEach {
 
-            list.filter { it.value is Byte }.forEach {
-
-                when (it.id) {
-                    0 -> handleFire(msg, it.value as Byte, player.world as CraftWorld)
-                    8 -> handleUsingItem(player, (it.value as Byte).toInt())
-                }
+            when (it.id) {
+                0 -> handleFire(msg, it.value as Byte, player.world as CraftWorld)
+                8 -> if (player.entityId == id) handleUsingItem(player, (it.value as Byte).toInt())
             }
         }
         return
@@ -176,19 +157,20 @@ class PacketListenerManager {
 
         val entityID = msg.getEntityID()
 
-
-
         sync {
 
-            val entity = craftWorld.handle.getEntity(entityID)
-
-            if (value == 0.toByte() && onFire.contains(entity!!.uuid)) {
-                Bukkit.getPluginManager().callEvent(EntityExtinguishEvent(entity.bukkitEntity))
-                onFire.remove(entity.uuid)
-            } else if (value == 1.toByte() && !onFire.contains(entity!!.uuid)) {
-                Bukkit.getPluginManager().callEvent(EntityIgniteEvent(entity.bukkitEntity))
-                onFire.add(entity.uuid)
+            craftWorld.handle.getEntity(entityID)?.let {
+                if (value == 0.toByte() && onFire.contains(it.uuid)) {
+                    Bukkit.getPluginManager().callEvent(EntityExtinguishEvent(it.bukkitEntity))
+                    onFire.remove(it.uuid)
+                } else if (value == 1.toByte() && !onFire.contains(it.uuid)) {
+                    Bukkit.getPluginManager().callEvent(EntityIgniteEvent(it.bukkitEntity))
+                    onFire.add(it.uuid)
+                }
             }
+
+
+
         }
     }
 
