@@ -7,6 +7,7 @@ import com.redmagic.undefinedapi.nms.interfaces.NMSPlayer
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 
 @Deprecated("Use createFakeEntity instead")
@@ -33,6 +34,7 @@ fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMS
     val isLivingEntity = LivingEntity::class.java.isAssignableFrom(entityType.entityClass!!)
     val isPlayer = entityType == EntityType.PLAYER
     val isSlime = entityType == EntityType.SLIME
+    val isItem = entityType == EntityType.DROPPED_ITEM
 
     return when(getNMSVersion()) {
         "1.20.4" -> when {
@@ -45,6 +47,7 @@ fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMS
                 3 -> com.redmagic.undefinedapi.nms.v1_20_4.npc.NMSPlayer(data[0] as String, data[1] as String, data[2] as String)
                 else -> null
             }
+            isItem -> com.redmagic.undefinedapi.nms.v1_20_4.entity.entityClasses.NMSItemEntity(data[0] as ItemStack)
             else -> com.redmagic.undefinedapi.nms.v1_20_4.entity.NMSEntity(entityType)
         }
 
@@ -58,6 +61,7 @@ fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMS
                 3 -> com.redmagic.undefinedapi.nms.v1_20_5.npc.NMSPlayer(data[0] as String, data[1] as String, data[2] as String)
                 else -> null
             }
+            isItem -> com.redmagic.undefinedapi.nms.v1_20_5.entity.entityClass.NMSItemEntity(data[0] as ItemStack)
             else -> com.redmagic.undefinedapi.nms.v1_20_5.entity.NMSEntity(entityType)
         }
 

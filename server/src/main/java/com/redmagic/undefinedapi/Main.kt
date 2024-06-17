@@ -31,13 +31,14 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-        event<EntityIgniteEvent> {
+        event<PlayerJoinEvent> {
 
-            println("${entity.type} Ignite")
-        }
+            val item = api.createFakeEntity(EntityType.DROPPED_ITEM, ItemStack(Material.DIAMOND))!!
 
-        event<EntityExtinguishEvent> {
-            println("${entity.type} Extinguish")
+            item.addViewer(player)
+
+            item.spawn(player.location)
+
         }
 
     }

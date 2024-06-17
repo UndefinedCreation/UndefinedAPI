@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.nms.v1_20_5.entity.entityClass
+package com.redmagic.undefinedapi.nms.v1_20_5.entity
 
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.SynchedEntityData

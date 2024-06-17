@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.nms.v1_20_4.entity.entityClasses
+package com.redmagic.undefinedapi.nms.v1_20_4.entity
 
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.Entity

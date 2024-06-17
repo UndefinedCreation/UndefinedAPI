@@ -4,7 +4,6 @@ import com.redmagic.undefinedapi.nms.EntityInteract
 import com.redmagic.undefinedapi.nms.interfaces.NMSEntity
 import com.redmagic.undefinedapi.nms.v1_20_5.NMSManager
 import com.redmagic.undefinedapi.nms.v1_20_5.SpigotNMSMappings
-import com.redmagic.undefinedapi.nms.v1_20_5.entity.entityClass.UndefinedEntity
 import com.redmagic.undefinedapi.nms.v1_20_5.extensions.sendPacket
 import net.minecraft.ChatFormatting
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
@@ -13,7 +12,6 @@ import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
-import net.minecraft.world.scores.PlayerTeam
 import net.minecraft.world.scores.Scoreboard
 import net.minecraft.world.scores.Team
 import org.bukkit.ChatColor
@@ -23,7 +21,6 @@ import org.bukkit.craftbukkit.entity.CraftEntityType
 import org.bukkit.craftbukkit.util.CraftChatMessage
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
-import kotlin.random.Random
 
 open class NMSEntity(open val entityType: EntityType): NMSEntity {
     override val viewers: MutableList<Player> = mutableListOf()

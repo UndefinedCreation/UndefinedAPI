@@ -5,6 +5,7 @@ import com.redmagic.undefinedapi.menu.MenuManager
 import com.redmagic.undefinedapi.nms.NMSManager
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.plugin.java.JavaPlugin
 import org.yaml.snakeyaml.Yaml
