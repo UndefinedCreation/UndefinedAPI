@@ -7,6 +7,7 @@ import com.redmagic.undefinedapi.nms.ItemSlot
 import com.redmagic.undefinedapi.nms.createFakeEntity
 import com.redmagic.undefinedapi.nms.createFakePlayer
 import com.redmagic.undefinedapi.nms.getTexture
+import com.redmagic.undefinedapi.nms.interfaces.NMSItemEntity
 import com.redmagic.undefinedapi.nms.interfaces.NMSSlimeEntity
 import com.redmagic.undefinedapi.scheduler.TimeUnit
 import com.redmagic.undefinedapi.scheduler.delay
@@ -33,9 +34,16 @@ class Main: JavaPlugin() {
 
         event<PlayerJoinEvent> {
 
-            val item = api.createFakeEntity(EntityType.ITEM, ItemStack(Material.DIAMOND))!!
+            val item = api.createFakeEntity(EntityType.ITEM, ItemStack(Material.DIAMOND))!! as NMSItemEntity
             item.addViewer(player)
             item.spawn(player.location)
+
+
+            repeatingTask(1) {
+                item.itemStack = ItemStack(Material.entries.filter { it.isItem }.random())
+            }
+
+            EntityType.ZOMBIE
 
         }
 

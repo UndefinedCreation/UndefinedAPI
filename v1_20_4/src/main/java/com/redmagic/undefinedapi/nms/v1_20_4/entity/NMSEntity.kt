@@ -10,6 +10,7 @@ import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
+import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import net.minecraft.world.scores.Scoreboard
@@ -29,7 +30,17 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
     private val scoreboard = Scoreboard()
     private val team = scoreboard.addPlayerTeam("glow")
+    private val DATA_NO_GRAVITY: EntityDataAccessor<Boolean>
+    override var gravity: Boolean = false
+        set(value) {
 
+            entity?.let {
+                entity!!.entityData.set(DATA_NO_GRAVITY, !value)
+                field = value
+                sendMetaPackets()
+            }
+
+        }
     override var glowingColor: ChatColor = ChatColor.WHITE
         set(value) {
 
@@ -117,6 +128,12 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
             field = value
         }
 
+    init {
+        val field = Entity::class.java.getDeclaredField(SpigotNMSMappings.EntityNoGrafity)
+        field.isAccessible = true
+        DATA_NO_GRAVITY = field.get(null) as EntityDataAccessor<Boolean>
+    }
+
     override fun addViewer(player: Player) {
         viewers.add(player)
     }
@@ -194,7 +211,7 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
         entity?.let { entity ->
             entity.entityData.nonDefaultValues?.let {
                 ClientboundSetEntityDataPacket(
-                    entity!!.id,
+                    entity.id,
                     it
                 )
             }?.let { viewers.sendPacket(it) }

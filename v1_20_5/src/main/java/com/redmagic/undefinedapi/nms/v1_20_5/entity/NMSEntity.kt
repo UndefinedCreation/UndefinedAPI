@@ -10,6 +10,7 @@ import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
+import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.server.level.ServerEntity
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
@@ -30,7 +31,17 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
     private val scoreboard = Scoreboard()
     private val team = scoreboard.addPlayerTeam("glow")
+    private val DATA_NO_GRAVITY: EntityDataAccessor<Boolean>
+    override var gravity: Boolean = false
+        set(value) {
 
+            entity?.let {
+                entity!!.entityData.set(DATA_NO_GRAVITY, !value)
+                field = value
+                sendMetaPackets()
+            }
+
+        }
     override var glowingColor: ChatColor = ChatColor.WHITE
         set(value) {
 
@@ -41,36 +52,25 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
             val format = ChatFormatting.valueOf(value.name)
             team.color = format
 
-            scoreboard.addPlayerToTeam(entity!!.uuid.toString(), team)
-
             viewers.sendPacket(
                 ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true),
                 ClientboundSetPlayerTeamPacket.createPlayerPacket(team, entity!!.uuid.toString(), ClientboundSetPlayerTeamPacket.Action.ADD)
             )
 
         }
+
     override var glowing: Boolean = false
         set(value) {
 
             if (entity == null) return
 
-            entity!!.setSharedFlag(5, value)
+            field = value
+
+            entity!!.setGlowingTag(value)
 
             sendMetaPackets()
-
-            field = value
         }
-    override var isVisible: Boolean = true
-        set(value) {
 
-            if (entity == null) return
-
-            entity!!.setSharedFlag(6, value)
-
-            sendMetaPackets()
-
-            field = value
-        }
 
     override var collibable: Boolean = false
         set(value) {
@@ -84,6 +84,17 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
             viewers.sendPacket(
                 ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true),
             )
+        }
+    override var isVisible: Boolean = true
+        set(value) {
+
+            if (entity == null) return
+
+            entity!!.isInvisible = !value
+
+            sendMetaPackets()
+
+            field = value
         }
 
     override var customName: String? = null
@@ -113,11 +124,16 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
                 entity!!.isCustomNameVisible = true
 
                 sendMetaPackets()
-
             }
 
             field = value
         }
+
+    init {
+        val field = Entity::class.java.getDeclaredField(SpigotNMSMappings.EntityNoGrafity)
+        field.isAccessible = true
+        DATA_NO_GRAVITY = field.get(null) as EntityDataAccessor<Boolean>
+    }
 
     override fun addViewer(player: Player) {
         viewers.add(player)
@@ -140,9 +156,11 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
         val entity = getUndefinedEntityClass(nmsEntityType, craftWorld.handle)
 
         entity.setPos(newLocation.x, newLocation.y, newLocation.z)
+
         val m = Entity::class.java.getDeclaredMethod(SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
         m.isAccessible = true
         m.invoke(entity, newLocation.yaw, newLocation.pitch)
+
 
         scoreboard.addPlayerToTeam(entity.uuid.toString(), team)
 
@@ -154,7 +172,7 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
         viewers.sendPacket(
             packet,
             ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true),
-            ClientboundSetPlayerTeamPacket.createPlayerPacket(team, entity.uuid.toString(), ClientboundSetPlayerTeamPacket.Action.ADD)
+            ClientboundSetPlayerTeamPacket.createPlayerPacket(team, entity.uuid.toString(), ClientboundSetPlayerTeamPacket.Action.ADD),
         )
         this.entity = entity
         this.location = newLocation
@@ -173,7 +191,6 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
             location = newLocation
         }
     }
-
     override fun kill() {
         if (entity == null) return
 
@@ -181,22 +198,19 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
         viewers.sendPacket(entityRemovePacket)
     }
-
     override fun getEntityID(): Int = if (entity == null) 0 else entity!!.id
-
     override fun interact(interact: EntityInteract.() -> Unit) {
         NMSManager.entityInteraction[this] = interact
     }
-
-    open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity =
-        UndefinedEntity(entityType, level)
-
+    open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = UndefinedEntity(entityType, level)
     fun sendMetaPackets() {
-        entity!!.entityData.nonDefaultValues?.let {
-            ClientboundSetEntityDataPacket(
-                entity!!.id,
-                it
-            )
-        }?.let { viewers.sendPacket(it) }
+        entity?.let { entity ->
+            entity.entityData.nonDefaultValues?.let {
+                ClientboundSetEntityDataPacket(
+                    entity.id,
+                    it
+                )
+            }?.let { viewers.sendPacket(it) }
+        }
     }
 }

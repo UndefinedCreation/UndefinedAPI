@@ -1,6 +1,8 @@
 package com.redmagic.undefinedapi.nms.v1_20_4.entity.entityClasses
 
+import com.redmagic.undefinedapi.nms.extensions.getPrivateField
 import com.redmagic.undefinedapi.nms.interfaces.NMSItemEntity
+import com.redmagic.undefinedapi.nms.v1_20_4.SpigotNMSMappings
 import com.redmagic.undefinedapi.nms.v1_20_4.entity.NMSEntity
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -15,15 +17,20 @@ import org.bukkit.inventory.ItemStack
 
 class NMSItemEntity(item: ItemStack): NMSEntity(EntityType.DROPPED_ITEM), NMSItemEntity {
 
-    private val DATA_ITEM: EntityDataAccessor<net.minecraft.world.item.ItemStack> = SynchedEntityData.defineId(
-        ItemEntity::class.java, EntityDataSerializers.ITEM_STACK
-    )
-
+    private val ITEM_DATA: EntityDataAccessor<net.minecraft.world.item.ItemStack>?
+        get() {
+            entity?.let {
+                return it.getPrivateField(SpigotNMSMappings.ItemEntityAccessor)
+            }
+            return null
+        }
     override var itemStack: ItemStack = item
         set(value) {
-
             entity?.let {
-                it.entityData.set(DATA_ITEM, CraftItemStack.asNMSCopy(value))
+
+                val itemEntity = entity as ItemEntity
+
+                itemEntity.entityData.set(ITEM_DATA!!, CraftItemStack.asNMSCopy(value))
 
                 sendMetaPackets()
                 field = value
@@ -33,12 +40,12 @@ class NMSItemEntity(item: ItemStack): NMSEntity(EntityType.DROPPED_ITEM), NMSIte
 
     override fun spawn(newLocation: Location) {
         super.spawn(newLocation)
-        update()
+        sendMetaPackets()
     }
 
     override fun update() {
         itemStack = itemStack
     }
 
-    override fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = ItemEntity(net.minecraft.world.entity.EntityType.ITEM, level)
+    override fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = ItemEntity(level, 0.0,0.0,0.0, CraftItemStack.asNMSCopy(itemStack))
 }

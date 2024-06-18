@@ -1,7 +1,10 @@
 package com.redmagic.undefinedapi.nms.v1_21.entity.entityClass
 
+import com.redmagic.undefinedapi.nms.extensions.getPrivateField
 import com.redmagic.undefinedapi.nms.interfaces.NMSItemEntity
+import com.redmagic.undefinedapi.nms.v1_21.SpigotNMSMappings
 import com.redmagic.undefinedapi.nms.v1_21.entity.NMSEntity
+import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.Entity
@@ -13,19 +16,21 @@ import org.bukkit.entity.EntityType
 import org.bukkit.inventory.ItemStack
 
 class NMSItemEntity(item: ItemStack): NMSEntity(EntityType.ITEM), NMSItemEntity {
+
+    private val ITEM_DATA: EntityDataAccessor<net.minecraft.world.item.ItemStack>?
+        get() {
+            entity?.let {
+                return it.getPrivateField(SpigotNMSMappings.ItemEntityAccessor)
+            }
+            return null
+        }
     override var itemStack: ItemStack = item
         set(value) {
-
             entity?.let {
 
                 val itemEntity = entity as ItemEntity
 
-                itemEntity.item = CraftItemStack.asNMSCopy(itemStack)
-
-                itemEntity.entityData.set(
-                    SynchedEntityData.defineId(
-                        ItemEntity::class.java, EntityDataSerializers.ITEM_STACK
-                    ), CraftItemStack.asNMSCopy(value))
+                itemEntity.entityData.set(ITEM_DATA!!, CraftItemStack.asNMSCopy(value))
 
                 sendMetaPackets()
                 field = value
@@ -35,7 +40,7 @@ class NMSItemEntity(item: ItemStack): NMSEntity(EntityType.ITEM), NMSItemEntity 
 
     override fun spawn(newLocation: Location) {
         super.spawn(newLocation)
-        update()
+        sendMetaPackets()
     }
 
     override fun update() {
