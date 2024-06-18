@@ -42,13 +42,14 @@ fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMS
         "1.20.4" -> when {
             isLivingEntity -> when {
                 isSlime -> com.redmagic.undefinedapi.nms.v1_20_4.entity.livingEntities.NMSSlimeEntity()
+                isPlayer -> when(data.size){
+                    2 -> com.redmagic.undefinedapi.nms.v1_20_4.npc.NMSPlayer(data[0] as String, data[1] as String)
+                    3 -> com.redmagic.undefinedapi.nms.v1_20_4.npc.NMSPlayer(data[0] as String, data[1] as String, data[2] as String)
+                    else -> null
+                }
                 else -> com.redmagic.undefinedapi.nms.v1_20_4.entity.NMSLivingEntity(entityType)
             }
-            isPlayer -> when(data.size){
-                2 -> com.redmagic.undefinedapi.nms.v1_20_4.npc.NMSPlayer(data[0] as String, data[1] as String)
-                3 -> com.redmagic.undefinedapi.nms.v1_20_4.npc.NMSPlayer(data[0] as String, data[1] as String, data[2] as String)
-                else -> null
-            }
+
             isItem -> com.redmagic.undefinedapi.nms.v1_20_4.entity.entityClasses.NMSItemEntity(data[0] as ItemStack)
             else -> com.redmagic.undefinedapi.nms.v1_20_4.entity.NMSEntity(entityType)
         }
@@ -56,13 +57,14 @@ fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMS
         "1.20.5", "1.20.6" -> when {
             isLivingEntity -> when {
                 isSlime -> com.redmagic.undefinedapi.nms.v1_20_5.entity.livingEntities.NMSSlimeEntity()
+                isPlayer -> when(data.size){
+                    2 -> com.redmagic.undefinedapi.nms.v1_20_5.npc.NMSPlayer(data[0] as String, data[1] as String)
+                    3 -> com.redmagic.undefinedapi.nms.v1_20_5.npc.NMSPlayer(data[0] as String, data[1] as String, data[2] as String)
+                    else -> null
+                }
                 else -> com.redmagic.undefinedapi.nms.v1_20_5.entity.NMSLivingEntity(entityType)
             }
-            isPlayer -> when(data.size){
-                2 -> com.redmagic.undefinedapi.nms.v1_20_5.npc.NMSPlayer(data[0] as String, data[1] as String)
-                3 -> com.redmagic.undefinedapi.nms.v1_20_5.npc.NMSPlayer(data[0] as String, data[1] as String, data[2] as String)
-                else -> null
-            }
+
             isItem -> com.redmagic.undefinedapi.nms.v1_20_5.entity.entityClass.NMSItemEntity(data[0] as ItemStack)
             else -> com.redmagic.undefinedapi.nms.v1_20_5.entity.NMSEntity(entityType)
         }
@@ -70,13 +72,14 @@ fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMS
         "1.21" -> when {
             isLivingEntity -> when {
                 isSlime -> com.redmagic.undefinedapi.nms.v1_21.entity.livingEntities.NMSSlimeEntity()
+                isPlayer -> when(data.size){
+                    2 -> com.redmagic.undefinedapi.nms.v1_21.npc.NMSPlayer(data[0] as String, data[1] as String)
+                    3 -> com.redmagic.undefinedapi.nms.v1_21.npc.NMSPlayer(data[0] as String, data[1] as String, data[2] as String)
+                    else -> null
+                }
                 else -> com.redmagic.undefinedapi.nms.v1_21.entity.NMSLivingEntity(entityType)
             }
-            isPlayer -> when(data.size){
-                2 -> com.redmagic.undefinedapi.nms.v1_21.npc.NMSPlayer(data[0] as String, data[1] as String)
-                3 -> com.redmagic.undefinedapi.nms.v1_21.npc.NMSPlayer(data[0] as String, data[1] as String, data[2] as String)
-                else -> null
-            }
+
             isItem -> com.redmagic.undefinedapi.nms.v1_21.entity.entityClass.NMSItemEntity(data[0] as ItemStack)
             else -> com.redmagic.undefinedapi.nms.v1_21.entity.NMSEntity(entityType)
         }
