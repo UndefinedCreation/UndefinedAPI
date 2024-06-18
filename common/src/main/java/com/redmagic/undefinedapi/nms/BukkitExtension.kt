@@ -16,6 +16,7 @@ fun UndefinedAPI.createFakePlayer(name: String, skinName: String = name): NMSPla
     return when(version){
         "1.20.4" -> com.redmagic.undefinedapi.nms.v1_20_4.npc.NMSPlayer(name, skinName)
         "1.20.5", "1.20.6" -> com.redmagic.undefinedapi.nms.v1_20_5.npc.NMSPlayer(name, skinName)
+        "1.21" -> com.redmagic.undefinedapi.nms.v1_21.npc.NMSPlayer(name, skinName)
         else -> null
     }
 }
@@ -26,6 +27,7 @@ fun UndefinedAPI.createFakePlayer(name: String, texture: String, sign: String): 
     return when(version){
         "1.20.4" -> com.redmagic.undefinedapi.nms.v1_20_4.npc.NMSPlayer(name, texture, sign)
         "1.20.5", "1.20.6" -> com.redmagic.undefinedapi.nms.v1_20_5.npc.NMSPlayer(name, texture, sign)
+        "1.21" -> com.redmagic.undefinedapi.nms.v1_21.npc.NMSPlayer(name, texture, sign)
         else -> null
     }
 }
@@ -63,6 +65,20 @@ fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMS
             }
             isItem -> com.redmagic.undefinedapi.nms.v1_20_5.entity.entityClass.NMSItemEntity(data[0] as ItemStack)
             else -> com.redmagic.undefinedapi.nms.v1_20_5.entity.NMSEntity(entityType)
+        }
+
+        "1.21" -> when {
+            isLivingEntity -> when {
+                isSlime -> com.redmagic.undefinedapi.nms.v1_21.entity.livingEntities.NMSSlimeEntity()
+                else -> com.redmagic.undefinedapi.nms.v1_21.entity.NMSLivingEntity(entityType)
+            }
+            isPlayer -> when(data.size){
+                2 -> com.redmagic.undefinedapi.nms.v1_21.npc.NMSPlayer(data[0] as String, data[1] as String)
+                3 -> com.redmagic.undefinedapi.nms.v1_21.npc.NMSPlayer(data[0] as String, data[1] as String, data[2] as String)
+                else -> null
+            }
+            isItem -> com.redmagic.undefinedapi.nms.v1_21.entity.entityClass.NMSItemEntity(data[0] as ItemStack)
+            else -> com.redmagic.undefinedapi.nms.v1_21.entity.NMSEntity(entityType)
         }
 
         else -> null

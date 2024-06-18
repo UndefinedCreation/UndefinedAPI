@@ -1,4 +1,4 @@
-package com.redmagic.undefinedapi.nms.v1_20_5
+package com.redmagic.undefinedapi.nms.v1_21
 
 
 object SpigotNMSMappings {

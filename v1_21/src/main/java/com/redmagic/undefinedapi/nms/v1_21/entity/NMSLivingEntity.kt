@@ -1,9 +1,9 @@
-package com.redmagic.undefinedapi.nms.v1_20_5.entity
+package com.redmagic.undefinedapi.nms.v1_21.entity
 
 import com.redmagic.undefinedapi.nms.interfaces.NMSLivingEntity
 import com.redmagic.undefinedapi.nms.toDeltaValue
 import com.redmagic.undefinedapi.nms.toRotationValue
-import com.redmagic.undefinedapi.nms.v1_20_5.extensions.sendPacket
+import com.redmagic.undefinedapi.nms.v1_21.extensions.sendPacket
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers

@@ -1,15 +1,15 @@
-package com.redmagic.undefinedapi.nms.v1_20_5.npc
+package com.redmagic.undefinedapi.nms.v1_21.npc
 
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import com.mojang.datafixers.util.Pair
-import com.redmagic.undefinedapi.nms.v1_20_5.NMSManager
-import com.redmagic.undefinedapi.nms.v1_20_5.SpigotNMSMappings
-import com.redmagic.undefinedapi.nms.v1_20_5.extensions.getConnection
+import com.redmagic.undefinedapi.nms.v1_21.NMSManager
+import com.redmagic.undefinedapi.nms.v1_21.SpigotNMSMappings
+import com.redmagic.undefinedapi.nms.v1_21.extensions.getConnection
 import com.redmagic.undefinedapi.nms.*
 import com.redmagic.undefinedapi.nms.interfaces.NMSPlayer
-import com.redmagic.undefinedapi.nms.v1_20_5.entity.NMSLivingEntity
-import com.redmagic.undefinedapi.nms.v1_20_5.extensions.sendPacket
+import com.redmagic.undefinedapi.nms.v1_21.entity.NMSLivingEntity
+import com.redmagic.undefinedapi.nms.v1_21.extensions.sendPacket
 import com.redmagic.undefinedapi.scheduler.delay
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -441,8 +441,14 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
     override fun sendBasePackets(player: Player) {
         val serverPlayer = serverPlayer ?: return
 
+        val cWorld = player.world as CraftWorld
+
+        val serverE = ServerEntity(cWorld.handle,
+            serverPlayer,0 ,false, {}, mutableSetOf()
+        )
+
         val addPlayerPacket = ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, serverPlayer)
-        val addEntityPacket = ClientboundAddEntityPacket(serverPlayer)
+        val addEntityPacket = ClientboundAddEntityPacket(serverPlayer, serverE)
 
         player.sendPacket(addPlayerPacket)
         player.sendPacket(addEntityPacket)

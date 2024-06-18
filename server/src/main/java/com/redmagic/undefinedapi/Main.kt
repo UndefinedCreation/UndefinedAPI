@@ -33,42 +33,27 @@ class Main: JavaPlugin() {
 
         event<PlayerJoinEvent> {
 
-            val item = api.createFakeEntity(EntityType.DROPPED_ITEM, ItemStack(Material.DIAMOND))!!
-
+            val item = api.createFakeEntity(EntityType.ITEM, ItemStack(Material.DIAMOND))!!
             item.addViewer(player)
-
             item.spawn(player.location)
 
         }
 
     }
 
-    fun test(player : Player){
+    fun test(){
 
-        val npc = api.createFakePlayer("the", "the")!!
-        npc.viewers.add(player)
-
-        npc.spawn(player.location)
-
-        npc.onFire = true
-
-
-        repeatingTask(1) {
-            npc.teleport(player.location)
-        }
 
         event<PlayerJoinEvent> {
 
+            println("join")
+
             val npc = api.createFakePlayer("TheRedMagic", "TheRedMagic")!!
-            npc.viewers.remove(player)
-
-            val newLoc = Location(Bukkit.getWorld("world"), 10.0, 10.0, 10.0)
-
+            npc.addViewer(player)
+            npc.spawn(player.location)
+            val newLoc = player.location.clone().add(0.0,5.0,0.0)
             npc.moveOrTeleport(newLoc)
 
-            npc.name = "NewName"
-
-            npc.resetPose()
 
             delay(20) {
                 npc.teleport(newLoc)

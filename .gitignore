@@ -12,8 +12,8 @@
 /server/.gradle/
 /server/run/
 /server/build/
-/v1_20_6/.gradle/
-/v1_20_6/build/
+/v1_21/.gradle/
+/v1_21/build/
 
 # User-specific stuff
 .idea/**/workspace.xml

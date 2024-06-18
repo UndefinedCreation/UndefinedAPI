@@ -1,10 +1,10 @@
-package com.redmagic.undefinedapi.nms.v1_20_5.entity
+package com.redmagic.undefinedapi.nms.v1_21.entity
 
 import com.redmagic.undefinedapi.nms.EntityInteract
 import com.redmagic.undefinedapi.nms.interfaces.NMSEntity
-import com.redmagic.undefinedapi.nms.v1_20_5.NMSManager
-import com.redmagic.undefinedapi.nms.v1_20_5.SpigotNMSMappings
-import com.redmagic.undefinedapi.nms.v1_20_5.extensions.sendPacket
+import com.redmagic.undefinedapi.nms.v1_21.NMSManager
+import com.redmagic.undefinedapi.nms.v1_21.SpigotNMSMappings
+import com.redmagic.undefinedapi.nms.v1_21.extensions.sendPacket
 import net.minecraft.ChatFormatting
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
@@ -146,7 +146,11 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
 
         scoreboard.addPlayerToTeam(entity.uuid.toString(), team)
 
-        val packet = entity.addEntityPacket
+        val serverE = ServerEntity(craftWorld.handle,
+            entity,0 ,false, {}, mutableSetOf()
+        )
+
+        val packet = entity.getAddEntityPacket(serverE)
 
         team.collisionRule = Team.CollisionRule.NEVER
         team.setSeeFriendlyInvisibles(false)
@@ -188,8 +192,7 @@ open class NMSEntity(open val entityType: EntityType): NMSEntity {
         NMSManager.entityInteraction[this] = interact
     }
 
-    open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity =
-        UndefinedEntity(entityType, level)
+    open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = UndefinedEntity(entityType, level)
 
     fun sendMetaPackets() {
         entity!!.entityData.nonDefaultValues?.let {
