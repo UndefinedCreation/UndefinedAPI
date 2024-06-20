@@ -16,12 +16,13 @@ repositories {
 
 dependencies {
 
-    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT")
 
     implementation(project(":common"))
     implementation(project(":api"))
     implementation(project(":v1_20_4:", "reobf"))
     implementation(project(":v1_20_5:", "reobf"))
+    implementation(project(":v1_21:", "reobf"))
     compileOnly(project(":v1_20_4"))
 }
 
@@ -44,7 +45,7 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.20.4")
+        minecraftVersion("1.21")
     }
 
 }
