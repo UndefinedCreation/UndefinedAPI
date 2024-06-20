@@ -1,6 +1,8 @@
 package com.undefined.api
 
 import com.undefined.api.UndefinedAPI
+import com.undefined.api.command.UndefinedCommand
+import com.undefined.api.command.sub.EnumSubCommand
 import com.undefined.api.event.event
 import com.undefined.api.nms.ItemSlot
 import com.undefined.api.nms.createFakeEntity
@@ -9,6 +11,7 @@ import com.undefined.api.nms.interfaces.NMSPlayer
 import com.undefined.api.scheduler.delay
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Player
 
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
@@ -21,23 +24,10 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-        event<PlayerJoinEvent> {
 
-            val p = api.createFakeEntity(EntityType.PLAYER, "the", "the")!! as NMSPlayer
-
-            p.addViewer(player)
-            p.spawn(player.location)
-
-            p.setItem(ItemSlot.MAINHAND, ItemStack(Material.SHIELD))
-            p.useMainHand()
-
-            com.undefined.api.scheduler.delay(100) {
-                p.stopUsingMainHandItem()
-                println("stop")
-            }
-
-        }
-
+        val c = UndefinedCommand("name")
+            .addEnumSubCommand<Material>()
+            .addEnumExecute { println(value.name); return@addEnumExecute true }
     }
 
     fun test(){

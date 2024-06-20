@@ -1,5 +1,8 @@
 package com.undefined.api.command
 
+import com.undefined.api.command.info.AllCommand
+import com.undefined.api.command.sub.UndefinedSubCommand
+import com.undefined.api.nms.extensions.getPrivateField
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandMap
 import org.bukkit.command.CommandSender
@@ -8,23 +11,119 @@ import org.bukkit.command.defaults.BukkitCommand
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
-/**
- * Abstract class representing an undefined command in Bukkit.
- *
- * @param commandName The name of the command.
- * @param commandType The type of the command. Default is [CommandType.ALL].
- * @param description The description of the command. Default is "Command created with UndefinedAPI".
- * @param aliases The aliases for the command. Default is an empty list.
- * @param permission The permission required to execute the command. Default is an empty string.
- */
-abstract class UndefinedCommand
-(
-        private val commandName: String,
-        private val commandType: CommandType = CommandType.ALL,
-        description: String = "Command created with UndefinedAPI",
-        aliases : List<String> = emptyList(),
-        permission: String = "",
-        ) : BukkitCommand(commandName) {
+
+class UndefinedCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList()): BaseUndefinedCommand()  {
+
+    init {
+
+        UndefinedCoreCommand(name, permission, description, aliases, {
+
+
+            val player: Player?
+            val console: ConsoleCommandSender?
+
+            when {
+                sender is Player -> {
+                    player = sender
+                    playerExecute.forEach { execution -> if (!execution.invoke(player)) return@UndefinedCoreCommand false }
+                }
+                else -> {
+                    console = sender as ConsoleCommandSender
+                    consoleExecute.forEach { execution -> if (!execution.invoke(console)) return@UndefinedCoreCommand false }
+                }
+            }
+
+            genExecute.forEach { execution -> if (!execution.invoke(sender)) return@UndefinedCoreCommand false }
+            mainExecute.forEach { execution -> if (!execution.invoke(AllCommand(sender, arg))) return@UndefinedCoreCommand false}
+
+
+
+            if (arg.isNullOrEmpty()) return@UndefinedCoreCommand false
+
+            var lastSub: BaseUndefinedCommand = this@UndefinedCommand
+
+            arg.forEach { arg ->
+                val sub = getAndRun(lastSub, arg, this.arg, sender is Player, sender, this.arg.indexOf(arg)) ?: return@UndefinedCoreCommand false
+                lastSub = sub
+            }
+
+            return@UndefinedCoreCommand true
+
+        }, {
+
+            if (this.isNullOrEmpty()) return@UndefinedCoreCommand mutableListOf()
+            val index = this.size - 1
+            return@UndefinedCoreCommand StringUtil.copyPartialMatches(this[index], getAllSubCommandNames(this), mutableListOf())
+
+
+        })
+
+    }
+
+    private fun getAllSubCommandNames(args: Array<out  String>): List<String> {
+        if (args.isEmpty()) return emptyList()
+        var lastSub: BaseUndefinedCommand = this
+        var index = 0
+        val maxIndex = args.size - 1
+
+        args.onEach {
+            if (index == maxIndex) {
+                return getNameList(lastSub.subCommandList)
+            }
+
+            lastSub = lastSub.getSubCommand(args[index]) ?: return emptyList()
+            index++
+        }
+
+        return emptyList()
+    }
+
+    private fun getNameList(list: List<UndefinedSubCommand>): List<String> = list.flatMap { it.getNames() }
+
+    private fun getAndRun(
+        sub: BaseUndefinedCommand,
+        name: String,
+        arg: Array<out String>?,
+        isPlayer: Boolean,
+        commandSender: CommandSender,
+        indexOf: Int
+    ): UndefinedSubCommand? {
+        val command = sub.getSubCommand(name)
+        println(command!!::class.java.simpleName)
+        command?.let {
+            if (isPlayer) {
+                it.playerExecute.forEach { func ->
+                    (commandSender as? Player)?.let { player ->
+                        if (!func.invoke(player)) return null
+                    }
+                }
+            } else {
+                it.consoleExecute.forEach { func ->
+                    (commandSender as? ConsoleCommandSender)?.let { console ->
+                        if (!func.invoke(console)) return null
+                    }
+                }
+            }
+            it.genExecute.forEach { if (!it.invoke(commandSender)) return null }
+            it.mainExecute.forEach { if (!it.invoke(AllCommand(commandSender, arg))) return null}
+
+            println("Running special")
+            if (!it.runSpecialExecute(arg!!, commandSender, indexOf)) return null
+
+        }
+        return command
+    }
+
+    override fun getNames(): List<String> = listOf()
+
+    override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean = true
+
+}
+
+class UndefinedCoreCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList(), val c1: AllCommand.() -> Boolean, val c2: Array<out String>?.() -> MutableList<String> ): BukkitCommand(name) {
+    override fun execute(p0: CommandSender, p1: String, p2: Array<out String>?): Boolean = c1.invoke(AllCommand(p0, p2))
+
+    override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>?): MutableList<String> = c2.invoke(args)
 
     init {
 
@@ -36,76 +135,11 @@ abstract class UndefinedCommand
 
     }
 
-    /**
-     * Sets the field "commandMap" of the Bukkit server object to enable registration of commands.
-     * This method is private and can only be accessed within the same class.
-     */
     private fun setField(){
-        val field = Bukkit.getServer().javaClass.getDeclaredField("commandMap");
-        field.setAccessible(true)
-        val commandMap = field.get(Bukkit.getServer()) as CommandMap
-        commandMap.register(commandName, this)
+        val commandMap = Bukkit.getServer().getPrivateField<CommandMap>("commandMap")
+        commandMap.register(name, this)
     }
-
-    /**
-     * Executes the command based on the command sender, command name, and arguments.
-     *
-     * @param sender The command sender.
-     * @param commandName The name of the command.
-     * @param args The command arguments (optional).
-     * @return Returns true if the command was executed successfully, false otherwise.
-     */
-    override fun execute(sender: CommandSender, commandName: String, args: Array<out String>?): Boolean {
-        val isCorrectType = when (commandType) {
-            CommandType.ALL -> true
-            CommandType.PLAYER -> sender is Player
-            CommandType.CONSOLE -> sender is ConsoleCommandSender
-        }
-
-        return if (isCorrectType) {
-            execute(sender, args!!)
-            true
-        } else false
-    }
-
-    /**
-     * Generates tab completions for a command.
-     *
-     * @param sender The command sender.
-     * @param alias The command alias.
-     * @param args The command arguments.
-     * @return A list of tab completions.
-     */
-    override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>): List<String> {
-        val commandUtil = tabComplete(sender, args)
-
-        return StringUtil.copyPartialMatches(args[commandUtil.index], commandUtil.list, ArrayList())
-    }
-
-    /**
-     * Executes the command.
-     *
-     * @param sender The command sender.
-     * @param args The command arguments.
-     */
-    abstract fun execute(sender: CommandSender, args: Array<out String>)
-
-    /**
-     * Performs tab completion for a command.
-     *
-     * @param sender The command sender.
-     * @param args The command arguments.
-     * @return The CommandTabUtil object that represents the tab completion results.
-     */
-    abstract fun tabComplete(sender: CommandSender, args: Array<out String>): CommandTabUtil
 
 }
 
-/**
- * Enum class representing the type of a command.
- */
-enum class CommandType{
-    PLAYER,
-    CONSOLE,
-    ALL
-}
+
