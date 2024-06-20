@@ -22,7 +22,7 @@ publishing {
     repositories {
         maven {
             name = "repo.undefinedcreation.com"
-            url = uri("https://repo.undefinedcreation.com/api")
+            url = uri("https://repo.undefinedcreation.com/repo")
             credentials(PasswordCredentials::class) {
                 username = System.getenv("MAVEN_NAME")
                 password = System.getenv("MAVEN_SECRET")
