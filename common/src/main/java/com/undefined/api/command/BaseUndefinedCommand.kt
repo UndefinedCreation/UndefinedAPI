@@ -79,10 +79,15 @@ abstract class BaseUndefinedCommand {
         val subCommand = BooleanSubCommand()
         return addBooleanSubCommand(subCommand)
     }
-    inline fun <reified T :Enum<T>> addEnumSubCommand(): EnumSubCommand<T> {
-        val subCommand = EnumSubCommand<T>(T::class.java)
-        subCommandList.add(subCommand)
-        return subCommand
+
+    fun addEnumSubCommand(enumSubCommand: EnumSubCommand<*>): EnumSubCommand<*> {
+        subCommandList.add(enumSubCommand)
+        return enumSubCommand
+    }
+
+    inline fun <reified T :Enum<T>> addEnumSubCommand(): EnumSubCommand<*> {
+        val subCommand = EnumSubCommand(T::class.java)
+        return addEnumSubCommand(subCommand)
     }
 
 

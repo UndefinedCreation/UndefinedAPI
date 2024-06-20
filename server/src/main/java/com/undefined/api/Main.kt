@@ -24,10 +24,6 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-
-        val c = UndefinedCommand("name")
-            .addEnumSubCommand<Material>()
-            .addEnumExecute { println(value.name); return@addEnumExecute true }
     }
 
     fun test(){
