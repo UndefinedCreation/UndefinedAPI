@@ -29,7 +29,7 @@ class Main: JavaPlugin() {
 
         UndefinedCommand("test").addEnumSubCommand<WeatherType>()
             .addEnumExecute {
-                value
+
                 return@addEnumExecute true
             }
 
