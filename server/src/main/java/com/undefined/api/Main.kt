@@ -10,8 +10,10 @@ import com.undefined.api.nms.createFakePlayer
 import com.undefined.api.nms.interfaces.NMSPlayer
 import com.undefined.api.scheduler.delay
 import org.bukkit.Material
+import org.bukkit.WeatherType
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerChatEvent
 
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
@@ -23,6 +25,14 @@ class Main: JavaPlugin() {
 
     override fun onEnable() {
         api = UndefinedAPI(this)
+
+
+        UndefinedCommand("test").addEnumSubCommand<WeatherType>()
+            .addEnumExecute {
+                value
+                return@addEnumExecute true
+            }
+
 
     }
 

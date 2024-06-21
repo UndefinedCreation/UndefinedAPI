@@ -12,7 +12,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.5.33"
+val versionVar = "0.5.34"
 val groupIdVar = "com.undefined"
 val artifactIdVar = "api"
 
@@ -77,8 +77,8 @@ allprojects {
 
     dependencies {
         implementation("org.jetbrains.kotlin:kotlin-stdlib")
-        implementation("net.kyori:adventure-platform-bukkit:4.3.2")
-        implementation("net.kyori:adventure-text-minimessage:4.16.0")
+        implementation("net.kyori:adventure-platform-bukkit:4.3.3")
+        implementation("net.kyori:adventure-text-minimessage:4.17.0")
         implementation("org.json:json:20231013")
         implementation("com.googlecode.json-simple:json-simple:1.1.1")
     }
