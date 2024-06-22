@@ -4,13 +4,17 @@ import com.undefined.api.UndefinedAPI
 import com.undefined.api.command.UndefinedCommand
 import com.undefined.api.command.sub.EnumSubCommand
 import com.undefined.api.event.event
+import com.undefined.api.extension.glow
 import com.undefined.api.nms.ItemSlot
 import com.undefined.api.nms.createFakeEntity
 import com.undefined.api.nms.createFakePlayer
+import com.undefined.api.nms.interfaces.NMSEntity
 import com.undefined.api.nms.interfaces.NMSPlayer
+import com.undefined.api.nms.interfaces.NMSSlimeEntity
 import com.undefined.api.scheduler.delay
 import org.bukkit.Material
 import org.bukkit.WeatherType
+import org.bukkit.block.Block
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerChatEvent
@@ -25,15 +29,6 @@ class Main: JavaPlugin() {
 
     override fun onEnable() {
         api = UndefinedAPI(this)
-
-
-        UndefinedCommand("test").addEnumSubCommand<WeatherType>()
-            .addEnumExecute {
-
-                return@addEnumExecute true
-            }
-
-
     }
 
     fun test(){

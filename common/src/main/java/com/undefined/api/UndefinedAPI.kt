@@ -19,13 +19,13 @@ import java.io.File
  */
 class UndefinedAPI(javaPlugin: JavaPlugin) {
 
-    //private var adventure: BukkitAudiences
+    private var adventure: BukkitAudiences
 
     init {
         plugin = javaPlugin
         api = this
         API(plugin)
-        //adventure = BukkitAudiences.create(javaPlugin)
+        adventure = BukkitAudiences.create(javaPlugin)
         MenuManager.setup(plugin)
         PlayerHitByPlayerManager()
         BlockProgressManager()
