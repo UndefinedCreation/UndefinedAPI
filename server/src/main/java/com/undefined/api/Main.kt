@@ -12,6 +12,7 @@ import com.undefined.api.nms.interfaces.NMSEntity
 import com.undefined.api.nms.interfaces.NMSPlayer
 import com.undefined.api.nms.interfaces.NMSSlimeEntity
 import com.undefined.api.scheduler.delay
+import com.undefined.api.scheduler.repeatingTask
 import org.bukkit.Material
 import org.bukkit.WeatherType
 import org.bukkit.block.Block
@@ -19,6 +20,7 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerChatEvent
+import org.bukkit.event.player.PlayerInteractEvent
 
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
@@ -31,32 +33,6 @@ class Main: JavaPlugin() {
 
     override fun onEnable() {
         api = UndefinedAPI(this)
-
-        event<PlayerJoinEvent> {
-
-            val boat = api.createFakeEntity(EntityType.PLAYER, "the", "the")!!
-            val npc = api.createFakeEntity(EntityType.PLAYER, "test", "test")!!
-
-            boat.addViewer(player)
-            npc.addViewer(player)
-
-            boat.spawn(player.location)
-            delay(100) {
-
-                npc.spawn(player.location)
-
-                boat.addPassenger(npc)
-
-                delay(100) {
-                    boat.removePassenger(npc)
-                    sendLog("Remove")
-                }
-
-            }
-
-        }
-
-
 
     }
 
