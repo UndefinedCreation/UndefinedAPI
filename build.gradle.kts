@@ -12,7 +12,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.5.37"
+val versionVar = "0.5.38"
 val groupIdVar = "com.undefined"
 val artifactIdVar = "api"
 
@@ -111,11 +111,11 @@ tasks {
     }
 
     compileKotlin {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = "21"
     }
 }
 
 
 kotlin{
-    jvmToolchain(17)
+    jvmToolchain(21)
 }

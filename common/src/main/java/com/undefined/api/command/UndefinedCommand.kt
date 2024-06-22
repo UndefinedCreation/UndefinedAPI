@@ -89,7 +89,6 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
         indexOf: Int
     ): UndefinedSubCommand? {
         val command = sub.getSubCommand(name)
-        println(command!!::class.java.simpleName)
         command?.let {
             if (isPlayer) {
                 it.playerExecute.forEach { func ->
@@ -107,7 +106,6 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
             it.genExecute.forEach { if (!it.invoke(commandSender)) return null }
             it.mainExecute.forEach { if (!it.invoke(AllCommand(commandSender, arg))) return null}
 
-            println("Running special")
             if (!it.runSpecialExecute(arg!!, commandSender, indexOf)) return null
 
         }
@@ -120,7 +118,7 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
 
 }
 
-class UndefinedCoreCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList(), val c1: AllCommand.() -> Boolean, val c2: Array<out String>?.() -> MutableList<String> ): BukkitCommand(name) {
+class UndefinedCoreCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList(), private val c1: AllCommand.() -> Boolean, private val c2: Array<out String>?.() -> MutableList<String> ): BukkitCommand(name) {
     override fun execute(p0: CommandSender, p1: String, p2: Array<out String>?): Boolean = c1.invoke(AllCommand(p0, p2))
 
     override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>?): MutableList<String> = c2.invoke(args)

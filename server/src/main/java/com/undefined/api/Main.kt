@@ -15,6 +15,7 @@ import com.undefined.api.scheduler.delay
 import org.bukkit.Material
 import org.bukkit.WeatherType
 import org.bukkit.block.Block
+import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerChatEvent
@@ -22,6 +23,7 @@ import org.bukkit.event.player.PlayerChatEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
 
 class Main: JavaPlugin() {
 
@@ -29,6 +31,16 @@ class Main: JavaPlugin() {
 
     override fun onEnable() {
         api = UndefinedAPI(this)
+
+        val f =File( dataFolder,"config.yml")
+
+        if (!f.exists()) {
+            f.parentFile.mkdirs()
+            f.createNewFile()
+        }
+
+        val config = YamlConfiguration.loadConfiguration(f)
+
     }
 
     fun test(){
