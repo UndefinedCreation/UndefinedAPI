@@ -1,5 +1,7 @@
 package com.undefined.api.nms.v1_20_4.entity
 
+import com.google.common.collect.ImmutableList
+import com.google.common.collect.Lists
 import com.undefined.api.nms.EntityInteract
 import com.undefined.api.nms.interfaces.NMSEntity
 import com.undefined.api.nms.v1_20_4.NMSManager
@@ -8,11 +10,13 @@ import com.undefined.api.nms.v1_20_4.extensions.sendPacket
 import net.minecraft.ChatFormatting
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.scores.Scoreboard
 import net.minecraft.world.scores.Team
 import org.bukkit.ChatColor
@@ -22,6 +26,7 @@ import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntityType
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftChatMessage
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
+
 
 open class NMSEntity(open val entityType: EntityType): com.undefined.api.nms.interfaces.NMSEntity {
     override val viewers: MutableList<Player> = mutableListOf()
@@ -205,6 +210,52 @@ open class NMSEntity(open val entityType: EntityType): com.undefined.api.nms.int
         NMSManager.entityInteraction[this] = interact
     }
 
+    override fun addPassenger(nmsEntity: NMSEntity) {
+        entity?.let {
+            val method = com.undefined.api.nms.v1_20_4.entity.NMSEntity::class.java.getDeclaredMethod("getEntityM")
+            method.isAccessible = true
+            val rider = method.invoke(nmsEntity) as Entity?
+
+            rider?.let { rider ->
+
+                if (it.passengers.isEmpty()) {
+                    it.passengers = ImmutableList.of(rider)
+                } else {
+                    val list: MutableList<Entity> = Lists.newArrayList(it.passengers)
+
+                    if (!it.level().isClientSide && rider is Player && it.getPassengers() !is Player) {
+                        list.add(0, rider)
+                    } else {
+                        list.add(rider)
+                    }
+
+                    it.passengers = ImmutableList.copyOf(list)
+
+                }
+
+                viewers.sendPacket(ClientboundSetPassengersPacket(it))
+            }
+        }
+    }
+
+    override fun removePassenger(nmsEntity: NMSEntity) {
+        entity?.let {
+            val method = com.undefined.api.nms.v1_20_4.entity.NMSEntity::class.java.getDeclaredMethod("getEntityM")
+            method.isAccessible = true
+            val rider = method.invoke(nmsEntity) as Entity?
+
+            rider?.let { rider ->
+
+                if (it.passengers.contains(rider)) {
+                    val list: MutableList<Entity> = Lists.newArrayList(it.passengers)
+                    list.remove(rider)
+                    it.passengers = ImmutableList.copyOf(list)
+                    viewers.sendPacket(ClientboundSetPassengersPacket(it))
+                }
+            }
+        }
+    }
+
     open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = UndefinedEntity(entityType, level)
 
     fun sendMetaPackets() {
@@ -217,4 +268,6 @@ open class NMSEntity(open val entityType: EntityType): com.undefined.api.nms.int
             }?.let { viewers.sendPacket(it) }
         }
     }
+
+    fun getEntityM(): Entity? = entity
 }

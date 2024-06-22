@@ -1,15 +1,14 @@
 package com.undefined.api.nms.v1_21.entity
 
+import com.google.common.collect.ImmutableList
+import com.google.common.collect.Lists
 import com.undefined.api.nms.EntityInteract
 import com.undefined.api.nms.interfaces.NMSEntity
 import com.undefined.api.nms.v1_21.NMSManager
 import com.undefined.api.nms.v1_21.SpigotNMSMappings
 import com.undefined.api.nms.v1_21.extensions.sendPacket
 import net.minecraft.ChatFormatting
-import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
-import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
+import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.server.level.ServerEntity
 import net.minecraft.world.entity.Entity
@@ -207,6 +206,52 @@ open class NMSEntity(open val entityType: EntityType): com.undefined.api.nms.int
 
     override fun interact(interact: EntityInteract.() -> Unit) {
         NMSManager.entityInteraction[this] = interact
+    }
+
+    override fun addPassenger(nmsEntity: NMSEntity) {
+        entity?.let {
+            val method = com.undefined.api.nms.v1_21.entity.NMSEntity::class.java.getDeclaredMethod("getEntityM")
+            method.isAccessible = true
+            val rider = method.invoke(nmsEntity) as Entity?
+
+            rider?.let { rider ->
+
+                if (it.passengers.isEmpty()) {
+                    it.passengers = ImmutableList.of(rider)
+                } else {
+                    val list: MutableList<Entity> = Lists.newArrayList(it.passengers)
+
+                    if (!it.level().isClientSide && rider is Player && it.getPassengers() !is Player) {
+                        list.add(0, rider)
+                    } else {
+                        list.add(rider)
+                    }
+
+                    it.passengers = ImmutableList.copyOf(list)
+
+                }
+
+                viewers.sendPacket(ClientboundSetPassengersPacket(it))
+            }
+        }
+    }
+
+    override fun removePassenger(nmsEntity: NMSEntity) {
+        entity?.let {
+            val method = com.undefined.api.nms.v1_21.entity.NMSEntity::class.java.getDeclaredMethod("getEntityM")
+            method.isAccessible = true
+            val rider = method.invoke(nmsEntity) as Entity?
+
+            rider?.let { rider ->
+
+                if (it.passengers.contains(rider)) {
+                    val list: MutableList<Entity> = Lists.newArrayList(it.passengers)
+                    list.remove(rider)
+                    it.passengers = ImmutableList.copyOf(list)
+                    viewers.sendPacket(ClientboundSetPassengersPacket(it))
+                }
+            }
+        }
     }
 
     open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = UndefinedEntity(entityType, level)

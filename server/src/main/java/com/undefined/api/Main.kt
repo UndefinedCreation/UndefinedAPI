@@ -32,14 +32,31 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-        val f =File( dataFolder,"config.yml")
+        event<PlayerJoinEvent> {
 
-        if (!f.exists()) {
-            f.parentFile.mkdirs()
-            f.createNewFile()
+            val boat = api.createFakeEntity(EntityType.PLAYER, "the", "the")!!
+            val npc = api.createFakeEntity(EntityType.PLAYER, "test", "test")!!
+
+            boat.addViewer(player)
+            npc.addViewer(player)
+
+            boat.spawn(player.location)
+            delay(100) {
+
+                npc.spawn(player.location)
+
+                boat.addPassenger(npc)
+
+                delay(100) {
+                    boat.removePassenger(npc)
+                    sendLog("Remove")
+                }
+
+            }
+
         }
 
-        val config = YamlConfiguration.loadConfiguration(f)
+
 
     }
 
