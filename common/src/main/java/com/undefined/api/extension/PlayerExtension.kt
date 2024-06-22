@@ -2,7 +2,6 @@ package com.undefined.api.extension
 
 import com.undefined.api.UndefinedAPI
 import com.undefined.api.scheduler.TimeUnit
-import com.undefined.api.scheduler.repeatingTask
 import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -13,36 +12,60 @@ import org.bukkit.entity.Player
 /**
  * Sends an action bar message to the player.
  *
- * @param string The action bar message to be sent.
+ * @param message The action bar message.
  * @param time The duration for which the action bar message should be displayed.
  * @param timeUnit The time unit in which the duration is measured. (Default: [TimeUnit.TICKS])
  *
  * @throws IllegalArgumentException if the provided `time` parameter is negative.
  */
-fun Player.sendActionBar(string: String, time: Int, timeUnit: TimeUnit = TimeUnit.TICKS) {
+fun Player.sendActionBar(message: Component, time: Int, timeUnit: TimeUnit = TimeUnit.TICKS) {
     com.undefined.api.scheduler.repeatingTask(
         1,
         timeUnit.toTicks(time.toLong()).toInt()
-    ) { this@sendActionBar.sendActionBar(string) }
+    ) { this@sendActionBar.sendActionBar(message) }
 }
 
 /**
  * Sends an action bar message to the player.
  *
- * @param string The message to be displayed in the action bar.
+ * @param message The action bar message.
+ * @param time The duration for which the action bar message should be displayed.
+ * @param timeUnit The time unit in which the duration is measured. (Default: [TimeUnit.TICKS])
+ *
+ * @throws IllegalArgumentException if the provided `time` parameter is negative.
  */
-fun Player.sendActionBar(string: String){
-    this.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(string
+fun Player.sendActionBar(message: String, time: Int, timeUnit: TimeUnit = TimeUnit.TICKS) {
+    com.undefined.api.scheduler.repeatingTask(
+        1,
+        timeUnit.toTicks(time.toLong()).toInt()
+    ) { this@sendActionBar.sendActionBar(message) }
+}
+
+/**
+ * Sends an action bar message to the player.
+ *
+ * @param message The action bar message.
+ */
+fun Player.sendActionBar(message: String){
+    this.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(message
     ))
 }
+
 /**
  * Sends an action bar message to the player.
  *
- * @param string The message to be displayed in the action bar.
+ * @param message The action bar message.
  * @param time The duration in ticks for which the message should be displayed.
  */
-fun Player.sendActionBar(string: String, time: Int) = sendActionBar(string, time, TimeUnit.TICKS)
+fun Player.sendActionBar(message: String, time: Int) = sendActionBar(message, time, TimeUnit.TICKS)
 
+/**
+ * Sends an action bar message to the player.
+ *
+ * @param message The action bar message.
+ * @param time The duration in ticks for which the message should be displayed.
+ */
+fun Player.sendActionBar(message: Component, time: Int) = sendActionBar(message, time, TimeUnit.TICKS)
 
 /**
  * Sets the food level of the player to the maximum value (20).
