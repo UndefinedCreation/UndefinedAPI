@@ -1,14 +1,15 @@
 package com.undefined.api.nms.v1_20_4.event
 
-import com.undefined.api.customEvents.*
-import com.undefined.api.nms.v1_20_4.NMSManager
+import com.undefined.api.customEvents.PlayerArmSwingEvent
+import com.undefined.api.customEvents.PlayerArmorChangeEvent
+import com.undefined.api.customEvents.PlayerMainHandSwitchEvent
+import com.undefined.api.customEvents.PlayerUseItemEvent
 import com.undefined.api.event.event
 import com.undefined.api.nms.ClickType
 import com.undefined.api.nms.EntityInteract
-import com.undefined.api.nms.extensions.*
-import com.undefined.api.nms.v1_20_4.SpigotNMSMappings
+import com.undefined.api.nms.extensions.removeMetaData
+import com.undefined.api.nms.v1_20_4.NMSManager
 import com.undefined.api.nms.v1_20_4.extensions.*
-import com.undefined.api.scheduler.sync
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
@@ -19,7 +20,14 @@ import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.EquipmentSlot
-import java.util.UUID
+import java.util.*
+import kotlin.collections.ArrayDeque
+import kotlin.collections.HashMap
+import kotlin.collections.MutableList
+import kotlin.collections.filter
+import kotlin.collections.forEach
+import kotlin.collections.hashMapOf
+import kotlin.collections.mutableListOf
 
 /**
  * This class represents a packet listener for Minecraft version 1.20.4.
@@ -56,7 +64,7 @@ class PacketListenerManager {
                             Bukkit.getPluginManager().callEvent(event)
                             if (event.isCancelled) return@UndefinedDuplexHandler true
                         }
-                        is ServerboundInteractPacket -> handleNPCInteract(this)
+                        is ServerboundInteractPacket -> handleNPCInteract(this, player)
                         is ServerboundSetCarriedItemPacket -> handleMainHandSwitch(this, player)
                     }
 
@@ -184,7 +192,7 @@ class PacketListenerManager {
      *
      * @param msg The ServerboundInteractPacket containing the interaction data.
      */
-    private fun handleNPCInteract(msg: ServerboundInteractPacket){
+    private fun handleNPCInteract(msg: ServerboundInteractPacket, player: Player){
 
         val firstChar = msg.getActionFirstChar()
 
@@ -198,9 +206,11 @@ class PacketListenerManager {
 
         val action = if(attacking) ClickType.LEFT_CLICK else ClickType.RIGHT_CLICK
 
+
+
         NMSManager.entityInteraction.entries.forEach {
             if (it.key.getEntityID() == msg.getEntityID()) {
-                it.value.invoke(EntityInteract(action, it.key))
+                it.value.invoke(EntityInteract(action, it.key, player))
             }
         }
     }

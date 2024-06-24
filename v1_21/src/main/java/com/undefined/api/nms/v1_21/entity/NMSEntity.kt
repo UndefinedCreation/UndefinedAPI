@@ -23,7 +23,7 @@ import org.bukkit.craftbukkit.util.CraftChatMessage
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 
-open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms.interfaces.NMSEntity {
+open class NMSEntity(override val entityType: EntityType): NMSEntity {
     override val viewers: MutableList<Player> = mutableListOf()
     override var location: Location? = null
     var entity: Entity? = null
