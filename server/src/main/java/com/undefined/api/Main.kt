@@ -1,31 +1,15 @@
 package com.undefined.api
 
-import com.undefined.api.UndefinedAPI
-import com.undefined.api.command.UndefinedCommand
-import com.undefined.api.command.sub.EnumSubCommand
 import com.undefined.api.event.event
-import com.undefined.api.extension.glow
 import com.undefined.api.nms.ItemSlot
 import com.undefined.api.nms.createFakeEntity
 import com.undefined.api.nms.createFakePlayer
-import com.undefined.api.nms.interfaces.NMSEntity
-import com.undefined.api.nms.interfaces.NMSPlayer
-import com.undefined.api.nms.interfaces.NMSSlimeEntity
-import com.undefined.api.scheduler.delay
-import com.undefined.api.scheduler.repeatingTask
+import com.undefined.api.nms.interfaces.NMSBlockDisplayEntity
 import org.bukkit.Material
-import org.bukkit.WeatherType
-import org.bukkit.block.Block
-import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.EntityType
-import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerChatEvent
-import org.bukkit.event.player.PlayerInteractEvent
-
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
-import java.io.File
 
 class Main: JavaPlugin() {
 
@@ -33,6 +17,22 @@ class Main: JavaPlugin() {
 
     override fun onEnable() {
         api = UndefinedAPI(this)
+
+        event<PlayerJoinEvent> {
+
+            val b = api.createFakeEntity(EntityType.BLOCK_DISPLAY, Material.STONE.createBlockData())!! as NMSBlockDisplayEntity
+
+            b.addViewer(player)
+
+            b.spawn(player.location)
+
+            b.scale(5f)
+
+            b.leftRotation(25f,25f,25f)
+
+            b.offsetY = 25f
+
+        }
 
     }
 

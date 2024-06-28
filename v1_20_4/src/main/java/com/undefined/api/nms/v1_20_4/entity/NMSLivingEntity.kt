@@ -100,7 +100,6 @@ open class NMSLivingEntity(override var entityType: EntityType): NMSLivingEntity
 
             viewers.sendPacket(headRot)
         }
-
     }
 
     override fun isAlive(): Boolean = entity != null

@@ -21,4 +21,12 @@ object SpigotNMSMappings {
     const val EntityNoGrafity = "aX"
 
     const val EntitySetRotMethod = "a"
+
+    const val DisplayScale = "u"
+    const val DisplayTransfrom = "t"
+    const val DisplayLeftRot = "v"
+    const val DisplayRightRot = "aE"
+    const val DisplayBillboard = "aF"
+
+    const val BlockDisplayBlockData = "q"
 }

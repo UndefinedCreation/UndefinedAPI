@@ -1,14 +1,16 @@
 package com.undefined.api.nms.v1_20_4.event
 
-import com.undefined.api.customEvents.*
-import com.undefined.api.nms.v1_20_4.NMSManager
+import com.undefined.api.customEvents.PlayerArmSwingEvent
+import com.undefined.api.customEvents.PlayerArmorChangeEvent
+import com.undefined.api.customEvents.PlayerMainHandSwitchEvent
+import com.undefined.api.customEvents.PlayerUseItemEvent
 import com.undefined.api.event.event
 import com.undefined.api.nms.ClickType
 import com.undefined.api.nms.EntityInteract
-import com.undefined.api.nms.extensions.*
-import com.undefined.api.nms.v1_20_4.SpigotNMSMappings
+import com.undefined.api.nms.extensions.getPrivateField
+import com.undefined.api.nms.extensions.removeMetaData
+import com.undefined.api.nms.v1_20_4.NMSManager
 import com.undefined.api.nms.v1_20_4.extensions.*
-import com.undefined.api.scheduler.sync
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
@@ -19,7 +21,14 @@ import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.EquipmentSlot
-import java.util.UUID
+import java.util.*
+import kotlin.collections.ArrayDeque
+import kotlin.collections.HashMap
+import kotlin.collections.MutableList
+import kotlin.collections.filter
+import kotlin.collections.forEach
+import kotlin.collections.hashMapOf
+import kotlin.collections.mutableListOf
 
 /**
  * This class represents a packet listener for Minecraft version 1.20.4.
@@ -62,6 +71,22 @@ class PacketListenerManager {
 
                 return@UndefinedDuplexHandler false
             },{
+
+
+
+                    when(this) {
+                        is ClientboundPlayerLookAtPacket -> {
+                            val id = this.getPrivateField<Int>("d")
+                            if (id  == player.entityId) {
+                                println(this::class.simpleName)
+                            }
+                        }
+                        is ClientboundTeleportEntityPacket -> {
+                            if (this.id == player.entityId) {
+                                println(this::class.java.simpleName)
+                            }
+                        }
+                    }
 
                     when (this@UndefinedDuplexHandler) {
                         is ClientboundSetEntityDataPacket -> handleDataPacket(player, this@UndefinedDuplexHandler)
