@@ -7,7 +7,6 @@ import com.undefined.api.customEvents.PlayerUseItemEvent
 import com.undefined.api.event.event
 import com.undefined.api.nms.ClickType
 import com.undefined.api.nms.EntityInteract
-import com.undefined.api.nms.extensions.getPrivateField
 import com.undefined.api.nms.extensions.removeMetaData
 import com.undefined.api.nms.v1_20_4.NMSManager
 import com.undefined.api.nms.v1_20_4.extensions.*
@@ -65,28 +64,12 @@ class PacketListenerManager {
                             Bukkit.getPluginManager().callEvent(event)
                             if (event.isCancelled) return@UndefinedDuplexHandler true
                         }
-                        is ServerboundInteractPacket -> handleNPCInteract(this)
+                        is ServerboundInteractPacket -> handleNPCInteract(this, player)
                         is ServerboundSetCarriedItemPacket -> handleMainHandSwitch(this, player)
                     }
 
                 return@UndefinedDuplexHandler false
             },{
-
-
-
-                    when(this) {
-                        is ClientboundPlayerLookAtPacket -> {
-                            val id = this.getPrivateField<Int>("d")
-                            if (id  == player.entityId) {
-                                println(this::class.simpleName)
-                            }
-                        }
-                        is ClientboundTeleportEntityPacket -> {
-                            if (this.id == player.entityId) {
-                                println(this::class.java.simpleName)
-                            }
-                        }
-                    }
 
                     when (this@UndefinedDuplexHandler) {
                         is ClientboundSetEntityDataPacket -> handleDataPacket(player, this@UndefinedDuplexHandler)
@@ -209,7 +192,7 @@ class PacketListenerManager {
      *
      * @param msg The ServerboundInteractPacket containing the interaction data.
      */
-    private fun handleNPCInteract(msg: ServerboundInteractPacket){
+    private fun handleNPCInteract(msg: ServerboundInteractPacket, player: Player){
 
         val firstChar = msg.getActionFirstChar()
 
@@ -223,9 +206,11 @@ class PacketListenerManager {
 
         val action = if(attacking) ClickType.LEFT_CLICK else ClickType.RIGHT_CLICK
 
+
+
         NMSManager.entityInteraction.entries.forEach {
             if (it.key.getEntityID() == msg.getEntityID()) {
-                it.value.invoke(EntityInteract(action, it.key))
+                it.value.invoke(EntityInteract(action, it.key, player))
             }
         }
     }

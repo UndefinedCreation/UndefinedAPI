@@ -11,6 +11,8 @@ import com.undefined.api.nms.interfaces.NMSPlayer
 import com.undefined.api.nms.v1_21.entity.NMSLivingEntity
 import com.undefined.api.nms.v1_21.extensions.sendPacket
 import com.undefined.api.scheduler.delay
+import net.minecraft.core.HolderLookup
+import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -138,6 +140,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
         val skinString = getSkinTexture(skin)
         texture = skinString[0]
         signature = skinString[1]
+
     }
 
 

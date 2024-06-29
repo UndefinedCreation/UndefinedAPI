@@ -28,10 +28,11 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 
 
-open class NMSEntity(open val entityType: EntityType): com.undefined.api.nms.interfaces.NMSEntity {
+open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms.interfaces.NMSEntity {
     override val viewers: MutableList<Player> = mutableListOf()
     override var location: Location? = null
     var entity: Entity? = null
+
 
     private val scoreboard = Scoreboard()
     private val team = scoreboard.addPlayerTeam("glow")
