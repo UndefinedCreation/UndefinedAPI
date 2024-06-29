@@ -50,14 +50,6 @@ open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEn
 
             }
         }
-    private fun <T> updateEntityData(accessorNumber: Int, value: T, serializer: EntityDataSerializer<T>) {
-        entity?.let {
-            val dataList = mutableListOf(
-                SynchedEntityData.DataValue.create(EntityDataAccessor(accessorNumber, serializer), value)
-            )
-            viewers.sendPacket(ClientboundSetEntityDataPacket(it.id, dataList as List<SynchedEntityData.DataValue<*>>?))
-        }
-    }
 
     override var billboard: Billboard = Billboard.CENTER
         set(value) {
@@ -181,11 +173,7 @@ open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEn
 
             val d = it as Display
 
-            val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
-                SynchedEntityData.DataValue.create(EntityDataAccessor(12, EntityDataSerializers.VECTOR3), d.getScale())
-            )
-
-            viewers.sendPacket(ClientboundSetEntityDataPacket(it.id, dataList))
+            updateEntityData(12, d.getScale(), EntityDataSerializers.VECTOR3)
 
         }
     }
@@ -195,12 +183,17 @@ open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEn
 
             val d = it as Display
 
-            val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
-                SynchedEntityData.DataValue.create(EntityDataAccessor(11, EntityDataSerializers.VECTOR3), d.getTranslation())
+            updateEntityData(11, d.getTranslation(), EntityDataSerializers.VECTOR3)
+
+        }
+    }
+
+    private fun <T> updateEntityData(accessorNumber: Int, value: T, serializer: EntityDataSerializer<T>) {
+        entity?.let {
+            val dataList = mutableListOf(
+                SynchedEntityData.DataValue.create(EntityDataAccessor(accessorNumber, serializer), value)
             )
-
-            viewers.sendPacket(ClientboundSetEntityDataPacket(it.id, dataList))
-
+            viewers.sendPacket(ClientboundSetEntityDataPacket(it.id, dataList as List<SynchedEntityData.DataValue<*>>?))
         }
     }
 }

@@ -27,13 +27,6 @@ class Main: JavaPlugin() {
 
             b.spawn(player.location)
 
-            b.scale(5f)
-
-            b.leftRotation(25f,25f,25f)
-
-            b.interpolationDelay = 20
-            b.offsetY = 25f
-
         }
 
     }
