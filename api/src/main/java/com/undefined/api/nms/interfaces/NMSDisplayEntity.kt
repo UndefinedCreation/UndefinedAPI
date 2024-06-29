@@ -14,6 +14,10 @@ interface NMSDisplayEntity: NMSEntity {
 
     var billboard: Billboard
 
+    var transformationInterpolationDuration: Int
+    var positionRotationInterpolationDuration: Int
+    var interpolationDelay: Int
+
     fun resetOffset()
 
     fun scale(scale: Float)

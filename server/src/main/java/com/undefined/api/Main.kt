@@ -5,6 +5,7 @@ import com.undefined.api.nms.ItemSlot
 import com.undefined.api.nms.createFakeEntity
 import com.undefined.api.nms.createFakePlayer
 import com.undefined.api.nms.interfaces.NMSBlockDisplayEntity
+import com.undefined.api.scheduler.delay
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.event.player.PlayerJoinEvent
@@ -30,6 +31,7 @@ class Main: JavaPlugin() {
 
             b.leftRotation(25f,25f,25f)
 
+            b.interpolationDelay = 20
             b.offsetY = 25f
 
         }
