@@ -260,16 +260,8 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
     open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = UndefinedEntity(entityType, level)
 
     fun sendMetaPackets() {
-        println("Meta")
         entity?.let { entity ->
-            println("not null")
             entity.entityData.nonDefaultValues?.let {
-
-                println("Sending")
-
-                it.forEach {
-                    println("${it.id}|" + it.value)
-                }
 
                 ClientboundSetEntityDataPacket(
                     entity.id,

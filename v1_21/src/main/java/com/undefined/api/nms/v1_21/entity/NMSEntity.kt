@@ -257,11 +257,16 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
     open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = UndefinedEntity(entityType, level)
 
     fun sendMetaPackets() {
-        entity!!.entityData.nonDefaultValues?.let {
-            ClientboundSetEntityDataPacket(
-                entity!!.id,
-                it
-            )
-        }?.let { viewers.sendPacket(it) }
+        entity?.let { entity ->
+            entity.entityData.nonDefaultValues?.let {
+
+                ClientboundSetEntityDataPacket(
+                    entity.id,
+                    it
+                )
+            }?.let { viewers.sendPacket(it) }
+        }
     }
+
+    fun getEntityM(): Entity? = entity
 }

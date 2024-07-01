@@ -252,6 +252,7 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
     fun sendMetaPackets() {
         entity?.let { entity ->
             entity.entityData.nonDefaultValues?.let {
+
                 ClientboundSetEntityDataPacket(
                     entity.id,
                     it
@@ -259,4 +260,6 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
             }?.let { viewers.sendPacket(it) }
         }
     }
+
+    fun getEntityM(): Entity? = entity
 }
