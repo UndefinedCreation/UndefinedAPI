@@ -74,6 +74,7 @@ open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEn
             field = value
         }
 
+
     override fun scale(scale: Float) {
         entity?.let {
 
@@ -143,7 +144,6 @@ open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEn
                 field = value
             }
         }
-
 
     override fun leftRotation(x: Float, y: Float, z: Float) {
         entity?.let {
