@@ -4,6 +4,7 @@ import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
 import net.minecraft.network.protocol.Packet
+import org.bukkit.Material
 
 /**
  * A custom ChannelDuplexHandler that allows performing custom logic on incoming and outgoing channel events.
@@ -21,6 +22,7 @@ class UndefinedDuplexHandler(private val read: Packet<*>.() -> Boolean, private 
         if (msg is Packet<*>){
             val cancel = read.invoke(msg)
             if (cancel) return
+
         }
         super.channelRead(ctx, msg)
     }

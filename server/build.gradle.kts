@@ -36,8 +36,6 @@ tasks {
 
     val shadowJar by getting(com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar::class) {
         archiveFileName.set("UndefinedAPI-shadow.jar")
-
-
     }
 
     compileKotlin {
