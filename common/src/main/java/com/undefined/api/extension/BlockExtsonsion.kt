@@ -44,7 +44,7 @@ fun Block.glow(chatColor: ChatColor, viewers: List<Player>, tick: Int) {
 
     viewers.forEach { slime.addViewer(it) }
 
-    val l = this.location.add(0.5,-1.0,0.5)
+    val l = this.location.add(0.5,0.0,0.5)
 
     slime.spawn(l)
 

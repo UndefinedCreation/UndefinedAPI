@@ -1,6 +1,7 @@
 package com.undefined.api
 
 import com.undefined.api.event.event
+import com.undefined.api.extension.glow
 import com.undefined.api.nms.ItemSlot
 import com.undefined.api.nms.createFakeEntity
 import com.undefined.api.nms.createFakePlayer
@@ -26,6 +27,8 @@ class Main: JavaPlugin() {
             b.addViewer(player)
 
             b.spawn(player.location)
+
+            player.location.block.glow()
 
         }
 
