@@ -18,6 +18,8 @@ interface NMSDisplayEntity: NMSEntity {
     var positionRotationInterpolationDuration: Int
     var interpolationDelay: Int
 
+    var viewRange: Float
+
 
     fun resetOffset()
 

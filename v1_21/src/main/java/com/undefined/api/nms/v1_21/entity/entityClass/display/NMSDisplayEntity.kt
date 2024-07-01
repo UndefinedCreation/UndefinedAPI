@@ -75,6 +75,21 @@ open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEn
             field = value
         }
 
+    override var viewRange: Float = 1f
+        set(value) {
+            entity?.let {
+                val e = it as Display
+
+                val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
+                    SynchedEntityData.DataValue.create(EntityDataAccessor(17, EntityDataSerializers.FLOAT), value)
+                )
+
+                viewers.sendPacket(ClientboundSetEntityDataPacket(it.id, dataList))
+
+                field = value
+            }
+        }
+
     override fun scale(scale: Float) {
         entity?.let {
 
