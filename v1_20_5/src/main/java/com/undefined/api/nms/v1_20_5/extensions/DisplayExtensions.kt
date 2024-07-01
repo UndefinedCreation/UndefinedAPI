@@ -17,11 +17,23 @@ fun Display.getScaleAccessor(): EntityDataAccessor<Vector3f> {
     return f.get(this) as EntityDataAccessor<Vector3f>
 }
 
-fun Display.getTranslationAccessor(): EntityDataAccessor<Vector3f> = this.getPrivateField(SpigotNMSMappings.DisplayTransfrom)
+fun Display.getTranslationAccessor(): EntityDataAccessor<Vector3f> {
+    val f = Display::class.java.getDeclaredField(SpigotNMSMappings.DisplayTransfrom)
+    f.isAccessible = true
+    return f.get(this) as EntityDataAccessor<Vector3f>
+}
 
-fun Display.getLeftRotation(): EntityDataAccessor<Quaternionf> = this.getPrivateField(SpigotNMSMappings.DisplayLeftRot)
+fun Display.getLeftRotation(): EntityDataAccessor<Quaternionf> {
+    val f = Display::class.java.getDeclaredField(SpigotNMSMappings.DisplayLeftRot)
+    f.isAccessible = true
+    return f.get(this) as EntityDataAccessor<Quaternionf>
+}
 
-fun Display.getRightRotation(): EntityDataAccessor<Quaternionf> = this.getPrivateField(SpigotNMSMappings.DisplayRightRot)
+fun Display.getRightRotation(): EntityDataAccessor<Quaternionf> {
+    val f = Display::class.java.getDeclaredField(SpigotNMSMappings.DisplayRightRot)
+    f.isAccessible = true
+    return f.get(this) as EntityDataAccessor<Quaternionf>
+}
 
 
 fun Display.getScale(): Vector3f = entityData.get(getScaleAccessor())
@@ -80,5 +92,4 @@ fun Display.setRightRotation(x: Float, y: Float, z: Float): Quaternionf {
     entityData.set(l, q)
     return q
 }
-
 
