@@ -8,6 +8,7 @@ import org.bukkit.entity.EnderCrystal
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
 import org.bukkit.entity.TNTPrimed
+import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import java.util.UUID
 
@@ -20,7 +21,8 @@ class PlayerHitByPlayerManager(){
 
         val enderCrystalMap: HashMap<EnderCrystal, UUID> = hashMapOf()
 
-        event<EntityDamageByEntityEvent> {
+        event<EntityDamageByEntityEvent> (priority = EventPriority.HIGHEST) {
+            if (isCancelled) return@event
             val player = entity as? Player ?: return@event
             val damagerPlayer = damager as? Player
             if (damagerPlayer != null){
@@ -60,14 +62,14 @@ class PlayerHitByPlayerManager(){
 
         }
 
-        event<EntityDamageByEntityEvent> {
+        event<EntityDamageByEntityEvent> (priority = EventPriority.HIGHEST) {
+            if (isCancelled) return@event
             val player = damager as? Player ?: return@event
 
             if (entity is EnderCrystal){
 
                 enderCrystalMap[entity as EnderCrystal] = player.uniqueId
-
-                com.undefined.api.scheduler.delay(2) { enderCrystalMap.remove(entity as EnderCrystal) }
+                delay(2) { enderCrystalMap.remove(entity as EnderCrystal) }
 
             }
 

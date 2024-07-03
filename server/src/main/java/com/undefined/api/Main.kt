@@ -7,6 +7,7 @@ import com.undefined.api.nms.createFakeEntity
 import com.undefined.api.nms.createFakePlayer
 import com.undefined.api.nms.interfaces.NMSBlockDisplayEntity
 import com.undefined.api.scheduler.delay
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.event.player.PlayerJoinEvent
@@ -28,7 +29,6 @@ class Main: JavaPlugin() {
 
             b.spawn(player.location)
 
-            player.location.block.glow()
 
         }
 

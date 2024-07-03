@@ -8,6 +8,7 @@ import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
 
@@ -15,8 +16,6 @@ open class NMSLivingEntity(override var entityType: EntityType): NMSLivingEntity
 
     override var onFire: Boolean = false
         set(value){
-
-
 
             val entity = entity ?: return
             field = value
