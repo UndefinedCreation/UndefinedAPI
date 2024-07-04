@@ -6,7 +6,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import org.bukkit.Location
 import org.bukkit.block.data.BlockData
-import org.bukkit.craftbukkit.block.data.CraftBlockData
+import org.bukkit.craftbukkit.v1_21_R1.block.data.CraftBlockData
 import org.bukkit.entity.EntityType
 
 class NMSBlockDisplayEntity(block: BlockData): NMSDisplayEntity(EntityType.BLOCK_DISPLAY), NMSBlockDisplayEntity {

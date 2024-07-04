@@ -1,17 +1,14 @@
 package com.undefined.api.nms.v1_21.entity.entityClass
 
 import com.undefined.api.nms.extensions.getPrivateField
-import com.undefined.api.nms.interfaces.NMSItemEntity
 import com.undefined.api.nms.v1_21.SpigotNMSMappings
 import com.undefined.api.nms.v1_21.entity.NMSEntity
 import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.network.syncher.EntityDataSerializers
-import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.level.Level
 import org.bukkit.Location
-import org.bukkit.craftbukkit.inventory.CraftItemStack
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.ItemStack
 

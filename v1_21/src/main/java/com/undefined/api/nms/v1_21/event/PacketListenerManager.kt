@@ -14,9 +14,14 @@ import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
 import org.bukkit.Bukkit
-import org.bukkit.craftbukkit.CraftWorld
-import org.bukkit.craftbukkit.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftItem
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack
 import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.EquipmentSlot
@@ -41,6 +46,7 @@ class PacketListenerManager {
     init {
 
         event<PlayerJoinEvent> {
+
 
             if (player.fireTicks > 0) {
                 onFire.add(player.uniqueId)
@@ -120,7 +126,7 @@ class PacketListenerManager {
         val itemStack = msg.getItemStack()
 
         com.undefined.api.scheduler.sync {
-            Bukkit.getPluginManager().callEvent(PlayerArmorChangeEvent(player, itemStack.bukkitStack, bukkitSlot))
+            Bukkit.getPluginManager().callEvent(PlayerArmorChangeEvent(player, CraftItemStack.asBukkitCopy(itemStack), bukkitSlot))
         }
 
     }
@@ -195,6 +201,7 @@ class PacketListenerManager {
         val actionN = msg.getAction()
         val firstChar = actionN.toString().split("$")[1][0]
 
+
         if(isRemapped()){
             if (actionN.toString().contains("InteractionAction")) { return }
         }else{
@@ -202,6 +209,8 @@ class PacketListenerManager {
         }
 
         val attacking = msg.isAttacking()
+
+
 
         if (!attacking){
             if (!msg.isMainHand()) return

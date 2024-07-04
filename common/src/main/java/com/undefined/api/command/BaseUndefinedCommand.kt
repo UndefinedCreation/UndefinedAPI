@@ -1,10 +1,8 @@
 package com.undefined.api.command
 
 import com.undefined.api.command.info.AllCommand
-import com.undefined.api.command.info.NumberSubCommandInfo
-import com.undefined.api.command.info.StringSubCommandInfo
 import com.undefined.api.command.sub.*
-import org.bukkit.Material
+import com.undefined.api.command.sub.ListSubCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
@@ -91,6 +89,12 @@ abstract class BaseUndefinedCommand {
         return subCommand
     }
 
+    fun <T> addListSubCommand(list: List<T>): ListSubCommand<T> {
+        val subCommand = ListSubCommand(list)
+        subCommandList.add(subCommand)
+        return subCommand
+    }
+
 
 
     fun clearExecute() = genExecute.clear()
@@ -102,7 +106,8 @@ abstract class BaseUndefinedCommand {
         EnumSubCommand::class.java,
         StringSubCommand::class.java,
         NumberSubCommand::class.java,
-        BooleanSubCommand::class.java
+        BooleanSubCommand::class.java,
+        ListSubCommand::class.java
     )
 
     internal fun getSubCommand(name: String): UndefinedSubCommand? = subCommandList.filter { it.name == name }.getOrNull(0) ?: subCommandList.filter { list.contains(it::class.java) }.getOrNull(0)

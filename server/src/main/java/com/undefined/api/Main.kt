@@ -1,5 +1,6 @@
 package com.undefined.api
 
+import com.undefined.api.command.UndefinedCommand
 import com.undefined.api.event.event
 import com.undefined.api.extension.glow
 import com.undefined.api.nms.ItemSlot
@@ -13,6 +14,7 @@ import org.bukkit.entity.EntityType
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.UUID
 
 class Main: JavaPlugin() {
 
@@ -21,16 +23,18 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-        event<PlayerJoinEvent> {
+        val list: MutableList<UUID> = mutableListOf()
 
-            val b = api.createFakeEntity(EntityType.BLOCK_DISPLAY, Material.STONE.createBlockData())!! as NMSBlockDisplayEntity
-
-            b.addViewer(player)
-
-            b.spawn(player.location)
-
-
+        for (i in 0..10) {
+            list.add(UUID.randomUUID())
         }
+
+        UndefinedCommand("test")
+            .addListSubCommand(list)
+            .addListExecute {
+                println(this)
+                return@addListExecute true
+            }
 
     }
 
