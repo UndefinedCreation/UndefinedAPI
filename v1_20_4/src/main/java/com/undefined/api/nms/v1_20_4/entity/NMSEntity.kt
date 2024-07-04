@@ -26,6 +26,7 @@ import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntityType
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftChatMessage
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
+import java.util.UUID
 
 
 open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms.interfaces.NMSEntity {
@@ -35,7 +36,7 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
 
 
     private val scoreboard = Scoreboard()
-    private val team = scoreboard.addPlayerTeam("glow")
+    private val team = scoreboard.addPlayerTeam("glow_${UUID.randomUUID()}")
     private val DATA_NO_GRAVITY: EntityDataAccessor<Boolean>
     override var gravity: Boolean = false
         set(value) {
