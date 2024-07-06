@@ -89,7 +89,7 @@ abstract class BaseUndefinedCommand {
         return subCommand
     }
 
-    fun <T> addListSubCommand(list: List<T>, serialize: T.() -> String = { this.toString() }, deserialize: String.() -> T = { this as T }): ListSubCommand<T> {
+    fun <T> addListSubCommand(list: Unit.() -> List<T>, serialize: T.() -> String = { this.toString() }, deserialize: String.() -> T = { this as T }): ListSubCommand<T> {
         val subCommand = ListSubCommand(list, serialize, deserialize)
         subCommandList.add(subCommand)
         return subCommand

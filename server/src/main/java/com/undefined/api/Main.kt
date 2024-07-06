@@ -37,7 +37,7 @@ class Main: JavaPlugin() {
 
         val userCommand = main.addSubCommand("userdata")
 
-        userCommand.addListSubCommand(list, { this.toString() } ,{ UUID.fromString(this) })
+        userCommand.addListSubCommand({ list }, { this.toString() } ,{ UUID.fromString(this) })
             .addListExecute {
 
 
