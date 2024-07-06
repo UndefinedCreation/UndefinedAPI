@@ -5,11 +5,11 @@ on:
   push:
     branches: [ master ]
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [ "1.21", "1.20.4", "1.20.5", "1.20.6" ]
+        version: [ "1.21", "1.22", "1.23" ] # Add needed versions here
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK
@@ -18,8 +18,6 @@ jobs:
           java-version: 18
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-
-
       - name: "Cache: Maven-Repository"
         uses: actions/cache@v2
         id: spigot
@@ -27,21 +25,30 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/build.gradle.kts') }}
           restore-keys: |
-           ${{ runner.os }}-maven-
-            
+            ${{ runner.os }}-maven-
       - name: Run Spigot-BuildTools
         if: steps.spigot.outputs.cache-hit != 'true'
         run: |
           mkdir -p .spigot-buildtools
-           cd .spigot-buildtools
-           wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O BuildTools.jar
-           java -jar BuildTools.jar --rev ${{ matrix.version }} --remapped
-           cd ..
-           rm -R .spigot-buildtools
+          cd .spigot-buildtools
+          wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O BuildTools.jar
+          java -jar BuildTools.jar --rev ${{ matrix.version }} --remapped
+          cd ..
+          rm -R .spigot-buildtools
         env:
           SPIGOT_M2: ~/.m2/repository/org/spigotmc/spigot
 
-
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 18
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
       - name: Publish with Gradle
         run: ./gradlew shadowJar publish
         env:
