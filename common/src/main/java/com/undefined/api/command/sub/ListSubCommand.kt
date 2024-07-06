@@ -1,9 +1,12 @@
 package com.undefined.api.command.sub
 
 import org.bukkit.command.CommandSender
-import java.util.UUID
 
-class ListSubCommand<T> (val subList: List<T>): UndefinedSubCommand("undefined_api_list") {
+class ListSubCommand<T>(
+    private val subList: List<T>,
+    private val serialize: T.() -> String = { this.toString() },
+    private val deserialize: String.() -> T = { this as T }
+): UndefinedSubCommand("undefined_api_list") {
 
     private val listExe: MutableList<T.() -> Boolean> = mutableListOf()
 
@@ -12,21 +15,17 @@ class ListSubCommand<T> (val subList: List<T>): UndefinedSubCommand("undefined_a
         return this
     }
 
-    override fun getNames(): List<String> = subList.map { it.toString() }
+    override fun getNames(): List<String> = subList.map { serialize.invoke(it) }
 
     override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
         if (arg.isEmpty()) return false
         val stringValue = arg[indexOf]
 
         try {
-            val value = stringValue as T
-            listExe.forEach { execution -> if (!execution.invoke(value)) return false }
-        }catch (e: Exception) {
-            try {
-                val uuid = UUID.fromString(stringValue)
-                listExe.forEach { execution -> if (!execution.invoke(uuid as T)) return false }
-            } catch (e : Exception) { }
-        }
+            val t = deserialize.invoke(stringValue)
+            listExe.forEach { it.invoke(t) }
+        }catch (_: Exception){}
+
         return true
     }
 }
