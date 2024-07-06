@@ -6,6 +6,7 @@ import com.undefined.api.command.sub.ListSubCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
+import java.util.UUID
 
 abstract class BaseUndefinedCommand {
 
@@ -89,7 +90,7 @@ abstract class BaseUndefinedCommand {
         return subCommand
     }
 
-    fun <T> addListSubCommand(list: Unit.() -> List<T>, serialize: T.() -> String = { this.toString() }, deserialize: String.() -> T = { this as T }): ListSubCommand<T> {
+    fun <T> addListSubCommand(list: CommandSender.() -> List<T>, serialize: T.() -> String = { this.toString() }, deserialize: String.() -> T = { this as T }): ListSubCommand<T> {
         val subCommand = ListSubCommand(list, serialize, deserialize)
         subCommandList.add(subCommand)
         return subCommand
@@ -112,7 +113,7 @@ abstract class BaseUndefinedCommand {
 
     internal fun getSubCommand(name: String): UndefinedSubCommand? = subCommandList.filter { it.name == name }.getOrNull(0) ?: subCommandList.filter { list.contains(it::class.java) }.getOrNull(0)
 
-    abstract fun getNames(): List<String>
+    abstract fun getNames(sender: CommandSender): List<String>
 
     abstract fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean
 

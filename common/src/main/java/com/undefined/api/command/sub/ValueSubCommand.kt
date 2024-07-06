@@ -4,6 +4,7 @@ import com.undefined.api.command.info.BooleanSubCommandInfo
 import com.undefined.api.command.info.NumberSubCommandInfo
 import com.undefined.api.command.info.StringSubCommandInfo
 import org.bukkit.command.CommandSender
+import java.util.*
 
 class StringSubCommand: UndefinedSubCommand("undefined_api_value") {
 
@@ -16,7 +17,7 @@ class StringSubCommand: UndefinedSubCommand("undefined_api_value") {
 
     fun clearStringExecute() = stringExe.clear()
 
-    override fun getNames(): List<String> = listOf("<text>")
+    override fun getNames(sender: CommandSender): List<String> = listOf("<text>")
 
     override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
         if (arg.isEmpty()) return  false
@@ -40,7 +41,7 @@ class NumberSubCommand: UndefinedSubCommand("undefined_api_number") {
 
     fun clearNumberExecute() = numberExe.clear()
 
-    override fun getNames(): List<String> = listOf("<number>")
+    override fun getNames(sender: CommandSender): List<String> = listOf("<number>")
 
     override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
         if (arg.isEmpty()) return  false
@@ -67,7 +68,7 @@ class BooleanSubCommand: UndefinedSubCommand("undefined_api_boolean") {
 
     fun clearNumberExecute() = booleanExe.clear()
 
-    override fun getNames(): List<String> = listOf("true", "false")
+    override fun getNames(sender: CommandSender): List<String> = listOf("true", "false")
 
     override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
         if (arg.isEmpty()) return  false

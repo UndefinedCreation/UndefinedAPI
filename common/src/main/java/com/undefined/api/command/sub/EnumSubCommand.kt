@@ -2,6 +2,7 @@ package com.undefined.api.command.sub
 
 import com.undefined.api.command.info.EnumSubCommandInfo
 import org.bukkit.command.CommandSender
+import java.util.*
 
 class EnumSubCommand<T: Enum<T>>(
     val enumClass: Class<T>
@@ -11,7 +12,7 @@ class EnumSubCommand<T: Enum<T>>(
 
     private val names = enumClass.enumConstants.map { it.name }
 
-    override fun getNames(): List<String> = names
+    override fun getNames(sender: CommandSender): List<String> = names
 
     fun addEnumExecute(c: EnumSubCommandInfo<T>.() -> Boolean): EnumSubCommand<T> {
         enumExe.add(c)

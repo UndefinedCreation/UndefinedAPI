@@ -2,9 +2,10 @@ package com.undefined.api.command.sub
 
 import com.undefined.api.command.info.ListSubCommandInfo
 import org.bukkit.command.CommandSender
+import java.util.UUID
 
 class ListSubCommand<T>(
-    private val subList: Unit.() -> List<T>,
+    private val subList: CommandSender.() -> List<T>,
     private val serialize: T.() -> String = { this.toString() },
     private val deserialize: String.() -> T = { this as T }
 ): UndefinedSubCommand("undefined_api_list") {
@@ -16,7 +17,7 @@ class ListSubCommand<T>(
         return this
     }
 
-    override fun getNames(): List<String> = subList.invoke(Unit).map { serialize.invoke(it) }
+    override fun getNames(sender: CommandSender): List<String> = subList.invoke(sender).map { serialize.invoke(it) }
 
     override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
         if (arg.isEmpty()) return false

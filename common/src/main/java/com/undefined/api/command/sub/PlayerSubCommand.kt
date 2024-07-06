@@ -3,6 +3,7 @@ package com.undefined.api.command.sub
 import com.undefined.api.command.info.TargetCommand
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import java.util.*
 
 class PlayerSubCommand: UndefinedSubCommand("undefined_api_players") {
 
@@ -15,7 +16,7 @@ class PlayerSubCommand: UndefinedSubCommand("undefined_api_players") {
 
     fun clearTargetExecute() = targetExe.clear()
 
-    override fun getNames(): List<String> = Bukkit.getOnlinePlayers().map { it.name }
+    override fun getNames(sender: CommandSender): List<String> = Bukkit.getOnlinePlayers().map { it.name }
     override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
         if (arg.isEmpty()) return false
         val offinePlayer = Bukkit.getOfflinePlayer(arg[indexOf])

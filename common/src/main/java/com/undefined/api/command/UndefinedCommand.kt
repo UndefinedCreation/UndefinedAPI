@@ -4,12 +4,14 @@ import com.undefined.api.command.info.AllCommand
 import com.undefined.api.command.sub.UndefinedSubCommand
 import com.undefined.api.nms.extensions.getPrivateField
 import org.bukkit.Bukkit
+import org.bukkit.command.Command
 import org.bukkit.command.CommandMap
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.command.defaults.BukkitCommand
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
+import java.util.*
 
 
 class UndefinedCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList()): BaseUndefinedCommand()  {
@@ -51,16 +53,16 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
 
         }, {
 
-            if (this.isNullOrEmpty()) return@UndefinedCoreCommand mutableListOf()
-            val index = this.size - 1
-            return@UndefinedCoreCommand StringUtil.copyPartialMatches(this[index], getAllSubCommandNames(this), mutableListOf())
+            if (this.second.isNullOrEmpty()) return@UndefinedCoreCommand mutableListOf()
+            val index = this.second!!.size - 1
+            return@UndefinedCoreCommand StringUtil.copyPartialMatches(this.second!![index], getAllSubCommandNames(this.second!!, this.first), mutableListOf())
 
 
         })
 
     }
 
-    private fun getAllSubCommandNames(args: Array<out  String>): List<String> {
+    private fun getAllSubCommandNames(args: Array<out  String>, sender: CommandSender): List<String> {
         if (args.isEmpty()) return emptyList()
         var lastSub: BaseUndefinedCommand = this
         var index = 0
@@ -68,7 +70,7 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
 
         args.onEach {
             if (index == maxIndex) {
-                return getNameList(lastSub.subCommandList)
+                return getNameList(lastSub.subCommandList, sender)
             }
 
             lastSub = lastSub.getSubCommand(args[index]) ?: return emptyList()
@@ -78,7 +80,7 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
         return emptyList()
     }
 
-    private fun getNameList(list: List<UndefinedSubCommand>): List<String> = list.flatMap { it.getNames() }
+    private fun getNameList(list: List<UndefinedSubCommand>, sender: CommandSender): List<String> = list.flatMap { it.getNames(sender) }
 
     private fun getAndRun(
         sub: BaseUndefinedCommand,
@@ -112,16 +114,16 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
         return command
     }
 
-    override fun getNames(): List<String> = listOf()
+    override fun getNames(sender: CommandSender): List<String> = listOf()
 
     override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean = true
 
 }
 
-class UndefinedCoreCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList(), private val c1: AllCommand.() -> Boolean, private val c2: Array<out String>?.() -> MutableList<String> ): BukkitCommand(name) {
+class UndefinedCoreCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList(), private val c1: AllCommand.() -> Boolean, private val c2: Pair<CommandSender, Array<out String>?>.() -> MutableList<String> ): BukkitCommand(name) {
     override fun execute(p0: CommandSender, p1: String, p2: Array<out String>?): Boolean = c1.invoke(AllCommand(p0, p2))
 
-    override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>?): MutableList<String> = c2.invoke(args)
+    override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>?): MutableList<String> = c2.invoke(Pair(sender, args))
 
     init {
 
