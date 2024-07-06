@@ -1,5 +1,6 @@
 package com.undefined.api.command.sub
 
+import com.undefined.api.command.info.ListSubCommandInfo
 import org.bukkit.command.CommandSender
 
 class ListSubCommand<T>(
@@ -8,9 +9,9 @@ class ListSubCommand<T>(
     private val deserialize: String.() -> T = { this as T }
 ): UndefinedSubCommand("undefined_api_list") {
 
-    private val listExe: MutableList<T.() -> Boolean> = mutableListOf()
+    private val listExe: MutableList<ListSubCommandInfo<T>.() -> Boolean> = mutableListOf()
 
-    fun addListExecute(c: T.() -> Boolean): ListSubCommand<T> {
+    fun addListExecute(c: ListSubCommandInfo<T>.() -> Boolean): ListSubCommand<T> {
         listExe.add(c)
         return this
     }
@@ -23,7 +24,7 @@ class ListSubCommand<T>(
 
         try {
             val t = deserialize.invoke(stringValue)
-            listExe.forEach { it.invoke(t) }
+            listExe.forEach { it.invoke(ListSubCommandInfo(commandSender, t)) }
         }catch (_: Exception){}
 
         return true

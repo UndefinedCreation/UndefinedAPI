@@ -27,6 +27,7 @@ import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_21_R1.CraftServer
 import org.bukkit.craftbukkit.v1_21_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack
+import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -319,6 +320,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      * @param done the action to be performed by the player after spawning
      */
     override fun spawn(newLocation: Location) {
+
 
         if (viewers.isEmpty()) {
             return
