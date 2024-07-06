@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: BuildTools
-          path: .spigot-buildtools/BuildTools.jar
+          path: ~/.m2/repository/org/spigotmc/spigot
 
   publish:
     needs: build
@@ -58,7 +58,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: BuildTools
-          path: .spigot-buildtools/
+          path: ~/.m2/repository/org/spigotmc/spigot
       - name: Publish with Gradle
         run: ./gradlew shadowJar publish
         env:
