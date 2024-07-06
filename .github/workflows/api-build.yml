@@ -59,6 +59,8 @@ jobs:
         with:
           name: BuildTools
           path: ~/.m2/repository/org/spigotmc/spigot
+      - name: Check directory contents
+        run: ls -la ~/.m2/repository/org/spigotmc/spigot/1.21-R0.1-SNAPSHOT/
       - name: Publish with Gradle
         run: ./gradlew shadowJar publish
         env:
