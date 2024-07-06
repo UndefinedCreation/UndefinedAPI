@@ -15,17 +15,51 @@ jobs:
           java-version: 21
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: Cache Spigot-BuildTools v1.21
+        uses: actions/cache@v2
+        with:
+          path: ./.spigot-buildtools/buildtools-1.21.jar
+          key: buildtools-1.21
+
+      - name: Cache Spigot-BuildTools v1.20.4
+        uses: actions/cache@v2
+        with:
+          path: ./.spigot-buildtools/buildtools-1.20.4.jar
+          key: buildtools-1.20.4
+
+      - name: Cache Spigot-BuildTools v1.20.5
+        uses: actions/cache@v2
+        with:
+          path: ./.spigot-buildtools/buildtools-1.20.5.jar
+          key: buildtools-1.20.5
+
+      - name: Cache Spigot-BuildTools v1.20.6
+        uses: actions/cache@v2
+        with:
+          path: ./.spigot-buildtools/buildtools-1.20.6.jar
+          key: buildtools-1.20.6
+
       - name: Run Spigot-BuildTools
         run: |
           mkdir -p .spigot-buildtools
           cd .spigot-buildtools
-          wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O BuildTools.jar
-          java -jar BuildTools.jar --rev 1.21 --remapped
-          java -jar BuildTools.jar --rev 1.20.4 --remapped
-          java -jar BuildTools.jar --rev 1.20.5 --remapped
-          java -jar BuildTools.jar --rev 1.20.6 --remapped
+          if [ ! -f "buildtools-1.21.jar" ]; then
+            wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O buildtools-1.21.jar
+            java -jar buildtools-1.21.jar --rev 1.21 --remapped
+          fi
+          if [ ! -f "buildtools-1.20.4.jar" ]; then
+            wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O buildtools-1.20.4.jar
+            java -jar buildtools-1.20.4.jar --rev 1.20.4 --remapped
+          fi
+          if [ ! -f "buildtools-1.20.5.jar" ]; then
+            wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O buildtools-1.20.5.jar
+            java -jar buildtools-1.20.5.jar --rev 1.20.5 --remapped
+          fi
+          if [ ! -f "buildtools-1.20.6.jar" ]; then
+            wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O buildtools-1.20.6.jar
+            java -jar buildtools-1.20.6.jar --rev 1.20.6 --remapped
+          fi
           cd ..
-          rm -R .spigot-buildtools
         env:
           SPIGOT_M2: ~/.m2/repository/org/spigotmc/spigot
 
