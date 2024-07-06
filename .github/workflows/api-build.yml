@@ -37,6 +37,11 @@ jobs:
           rm -R .spigot-buildtools
         env:
           SPIGOT_M2: ~/.m2/repository/org/spigotmc/spigot
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: BuildTools
+          path: .spigot-buildtools/BuildTools.jar
 
   publish:
     needs: build
@@ -49,6 +54,11 @@ jobs:
           java-version: 21
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: BuildTools
+          path: .spigot-buildtools/
       - name: Publish with Gradle
         run: ./gradlew shadowJar publish
         env:
