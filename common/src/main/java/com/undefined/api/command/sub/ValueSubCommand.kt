@@ -61,12 +61,12 @@ class BooleanSubCommand: UndefinedSubCommand("undefined_api_boolean") {
 
     private val booleanExe: MutableList<BooleanSubCommandInfo.() -> Boolean> = mutableListOf()
 
-    fun addNumberExecute(c: BooleanSubCommandInfo.() -> Boolean): BooleanSubCommand {
+    fun addBooleanExecute(c: BooleanSubCommandInfo.() -> Boolean): BooleanSubCommand {
         booleanExe.add(c)
         return this
     }
 
-    fun clearNumberExecute() = booleanExe.clear()
+    fun clearBooleanExecute() = booleanExe.clear()
 
     override fun getNames(sender: CommandSender): List<String> = listOf("true", "false")
 

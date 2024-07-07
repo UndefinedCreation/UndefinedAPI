@@ -2,6 +2,7 @@ package com.undefined.api.extension.string
 
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.io.BukkitObjectInputStream
@@ -22,9 +23,7 @@ fun Inventory.asString(): String{
 
     dataOutput.writeInt(this.size)
 
-    for (i in this.size downTo 0){
-        dataOutput.writeObject(this.getItem(i))
-    }
+    this.contents.forEach { dataOutput.writeObject(it) }
 
     dataOutput.close()
     return Base64Coder.encodeLines(outputStream.toByteArray())
@@ -69,10 +68,16 @@ fun String.asInventory(): Inventory{
     val inputStream = ByteArrayInputStream(Base64Coder.decodeLines(this))
     val dataInput = BukkitObjectInputStream(inputStream)
 
-    val inv = Bukkit.createInventory(null, dataInput.readInt())
+    val size = dataInput.readInt()
 
-    for (i in inv.size downTo 0){
-        inv.setItem(i, dataInput.readObject() as ItemStack)
+    val inv = if (size == 41) Bukkit.createInventory(null, InventoryType.PLAYER) else Bukkit.createInventory(null, size)
+
+    for (i in inv.size - 1 downTo 0){
+        val o = dataInput.readObject()
+        if (o != null) {
+            inv.setItem(i, o as ItemStack)
+        }
+
     }
 
     dataInput.close()
