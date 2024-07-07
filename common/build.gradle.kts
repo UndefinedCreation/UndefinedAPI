@@ -17,6 +17,7 @@ dependencies {
     compileOnly(project(":api"))
     compileOnly(project(":v1_20_4"))
     compileOnly(project(":v1_20_5"))
+    compileOnly(project(":v1_20_6"))
     compileOnly(project(":v1_21"))
 }
 

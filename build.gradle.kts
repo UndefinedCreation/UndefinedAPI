@@ -12,7 +12,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.5.56"
+val versionVar = "0.5.57"
 val groupIdVar = "com.undefined"
 val artifactIdVar = "api"
 
@@ -88,8 +88,9 @@ allprojects {
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":v1_20_4:", "reobf"))
-    implementation(project(":v1_20_5:", "reobf"))
+    implementation(project(":v1_20_4"))
+    implementation(project(":v1_20_5"))
+    implementation(project(":v1_20_6"))
     implementation(project(":v1_21"))
     implementation(project(":api"))
 }
@@ -100,15 +101,15 @@ tasks {
         dependsOn("shadowJar")
     }
 
-    jar.configure {
-        dependsOn("shadowJar")
-        archiveClassifier.set("dev")
-    }
-
-    withType<ShadowJar> {
-        archiveClassifier.set("mapped")
-        archiveFileName.set("${project.name}-${project.version}.jar")
-    }
+//    jar.configure {
+//        dependsOn("shadowJar")
+//        archiveClassifier.set("dev")
+//    }
+//
+//    withType<ShadowJar> {
+//        archiveClassifier.set("mapped")
+//        archiveFileName.set("${project.name}-${project.version}.jar")
+//    }
 
     compileKotlin {
         kotlinOptions.jvmTarget = "21"

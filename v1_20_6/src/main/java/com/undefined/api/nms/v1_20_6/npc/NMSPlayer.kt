@@ -1,15 +1,13 @@
-package com.undefined.api.nms.v1_20_5.npc
+package com.undefined.api.nms.v1_20_6.npc
 
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import com.mojang.datafixers.util.Pair
-import com.undefined.api.nms.v1_20_5.NMSManager
-import com.undefined.api.nms.v1_20_5.SpigotNMSMappings
-import com.undefined.api.nms.v1_20_5.extensions.getConnection
+import com.undefined.api.nms.v1_20_6.extensions.getConnection
 import com.undefined.api.nms.*
 import com.undefined.api.nms.interfaces.NMSPlayer
-import com.undefined.api.nms.v1_20_5.entity.NMSLivingEntity
-import com.undefined.api.nms.v1_20_5.extensions.sendPacket
+import com.undefined.api.nms.v1_20_6.entity.NMSLivingEntity
+import com.undefined.api.nms.v1_20_6.extensions.sendPacket
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -470,7 +468,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
     }
 
     override fun interact(interact: EntityInteract.() -> Unit) {
-        NMSManager.entityInteraction[this] = interact
+        com.undefined.api.nms.v1_20_6.NMSManager.entityInteraction[this] = interact
     }
 
     /**
@@ -514,5 +512,5 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      *
      * @return the Method object representing the "c" method in the LivingEntity class
      */
-    override fun getLivingEntityFlagMethod(): Method = LivingEntity::class.java.getDeclaredMethod(SpigotNMSMappings.LivingEntitySetFlag, Int::class.java, Boolean::class.java)
+    override fun getLivingEntityFlagMethod(): Method = LivingEntity::class.java.getDeclaredMethod(com.undefined.api.nms.v1_20_6.SpigotNMSMappings.LivingEntitySetFlag, Int::class.java, Boolean::class.java)
 }

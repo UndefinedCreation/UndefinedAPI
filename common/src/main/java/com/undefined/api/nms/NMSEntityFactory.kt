@@ -74,7 +74,38 @@ class NMSEntityV1_20_5Factory : NMSEntityFactory {
 
     override fun createItemEntity(data: Array<out Any>): NMSItemEntity = com.undefined.api.nms.v1_20_5.entity.entityClass.NMSItemEntity(data[0] as ItemStack)
 
-    override fun createEntity(entityType: EntityType): NMSEntity = com.undefined.api.nms.v1_20_5.entity.NMSEntity(entityType)
+    override fun createEntity(entityType: EntityType): NMSEntity =
+        com.undefined.api.nms.v1_20_6.entity.NMSEntity(entityType)
+}
+
+class NMSEntityV1_20_6Factory : NMSEntityFactory {
+    override fun createPlayer(data: Array<out Any>): NMSPlayer? {
+        return when(data.size) {
+
+            2 -> com.undefined.api.nms.v1_20_6.npc.NMSPlayer(
+                data[0] as? String ?: return null,
+                data[1] as? String ?: return null
+            )
+
+            3 -> com.undefined.api.nms.v1_20_6.npc.NMSPlayer(
+                data[0] as? String ?: return null,
+                data[1] as? String ?: return null,
+                data[2] as? String ?: return null
+            )
+
+            else -> null
+        }
+    }
+
+    override fun createSlime(): NMSSlimeEntity = com.undefined.api.nms.v1_20_6.entity.livingEntities.NMSSlimeEntity()
+
+    override fun createBlockDisplay(data: Array<out Any>): NMSBlockDisplayEntity = com.undefined.api.nms.v1_20_6.entity.entityClass.display.NMSBlockDisplayEntity(data[0] as BlockData)
+
+    override fun createLivingEntity(entityType: EntityType): NMSLivingEntity = com.undefined.api.nms.v1_20_6.entity.NMSLivingEntity(entityType)
+
+    override fun createItemEntity(data: Array<out Any>): NMSItemEntity = com.undefined.api.nms.v1_20_6.entity.entityClass.NMSItemEntity(data[0] as ItemStack)
+
+    override fun createEntity(entityType: EntityType): NMSEntity = com.undefined.api.nms.v1_20_6.entity.NMSEntity(entityType)
 }
 
 class NMSEntityV1_21Factory : NMSEntityFactory {
@@ -110,7 +141,7 @@ class NMSEntityV1_21Factory : NMSEntityFactory {
 private val factories = mapOf(
     "1.20.4" to NMSEntityV1_20_4Factory(),
     "1.20.5" to NMSEntityV1_20_5Factory(),
-    "1.20.6" to NMSEntityV1_21Factory(),
+    "1.20.6" to NMSEntityV1_20_6Factory(),
     "1.21" to NMSEntityV1_21Factory()
 )
 

@@ -1,4 +1,4 @@
-package com.undefined.api.nms.v1_20_5.extensions
+package com.undefined.api.nms.v1_20_6.extensions
 
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ServerboundSwingPacket

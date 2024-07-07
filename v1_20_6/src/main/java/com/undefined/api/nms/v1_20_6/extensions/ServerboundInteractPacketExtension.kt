@@ -1,6 +1,6 @@
-package com.undefined.api.nms.v1_21.extensions
+package com.undefined.api.nms.v1_20_6.extensions
 
-import com.undefined.api.nms.v1_21.SpigotNMSMappings
+import com.undefined.api.nms.v1_20_6.SpigotNMSMappings
 import com.undefined.api.nms.extensions.getPrivateField
 import net.minecraft.network.protocol.game.ServerboundInteractPacket
 
@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.game.ServerboundInteractPacket
  *
  * @return The entity ID as an integer.
  */
-fun ServerboundInteractPacket.getEntityID() = getPrivateField<Int>(SpigotNMSMappings.ServerboundInteractPacketEntityID)
+fun ServerboundInteractPacket.getEntityID() = getPrivateField<Int>(com.undefined.api.nms.v1_20_6.SpigotNMSMappings.ServerboundInteractPacketEntityID)
 
 /**
  * Checks if the ServerboundInteractPacket is representing an attack action.
@@ -26,7 +26,7 @@ fun ServerboundInteractPacket.isAttacking(): Boolean {
  *
  * @return The action of the packet.
  */
-fun ServerboundInteractPacket.getAction() = getPrivateField<Any>(SpigotNMSMappings.ServerboundInteractPacketAction)
+fun ServerboundInteractPacket.getAction() = getPrivateField<Any>(com.undefined.api.nms.v1_20_6.SpigotNMSMappings.ServerboundInteractPacketAction)
 
 /**
  * Determines if the ServerboundInteractPacket represents a main hand interaction.
@@ -35,7 +35,7 @@ fun ServerboundInteractPacket.getAction() = getPrivateField<Any>(SpigotNMSMappin
  */
 fun  ServerboundInteractPacket.isMainHand(): Boolean {
     val action = getAction()
-    val string = action.getPrivateField<Any>(SpigotNMSMappings.ServerboundInteractPacketActionHand).toString()
+    val string = action.getPrivateField<Any>(com.undefined.api.nms.v1_20_6.SpigotNMSMappings.ServerboundInteractPacketActionHand).toString()
     return string == "MAIN_HAND"
 }
 

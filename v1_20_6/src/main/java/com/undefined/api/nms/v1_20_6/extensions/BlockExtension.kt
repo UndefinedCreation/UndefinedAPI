@@ -1,7 +1,8 @@
-package com.undefined.api.nms.v1_20_5.extensions
+package com.undefined.api.nms.v1_20_6.extensions
 
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket
+
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 

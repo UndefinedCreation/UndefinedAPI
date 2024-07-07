@@ -1,8 +1,8 @@
-package com.undefined.api.nms.v1_20_5.entity.entityClass
+package com.undefined.api.nms.v1_20_6.entity.entityClass
 
 import com.undefined.api.nms.extensions.getPrivateField
-import com.undefined.api.nms.v1_20_5.SpigotNMSMappings
-import com.undefined.api.nms.v1_20_5.entity.NMSEntity
+import com.undefined.api.nms.v1_20_6.SpigotNMSMappings
+import com.undefined.api.nms.v1_20_6.entity.NMSEntity
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
@@ -12,11 +12,11 @@ import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.ItemStack
 
-class NMSItemEntity(item: ItemStack): NMSEntity(EntityType.ITEM), com.undefined.api.nms.interfaces.NMSItemEntity {
+class NMSItemEntity(item: ItemStack): com.undefined.api.nms.v1_20_6.entity.NMSEntity(EntityType.ITEM), com.undefined.api.nms.interfaces.NMSItemEntity {
     private val ITEM_DATA: EntityDataAccessor<net.minecraft.world.item.ItemStack>?
         get() {
             entity?.let {
-                return it.getPrivateField(SpigotNMSMappings.ItemEntityAccessor)
+                return it.getPrivateField(com.undefined.api.nms.v1_20_6.SpigotNMSMappings.ItemEntityAccessor)
             }
             return null
         }

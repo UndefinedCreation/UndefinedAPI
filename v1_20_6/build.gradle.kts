@@ -1,13 +1,13 @@
-plugins {
+plugins{
     kotlin("jvm") version "1.9.22"
     id("com.undefinedcreation.mapper") version "0.0.3"
 }
 
 dependencies {
 
-    compileOnly("org.spigotmc:spigot:1.20.4-R0.1-SNAPSHOT:remapped-mojang")
+    compileOnly("org.spigotmc:spigot:1.20.6-R0.1-SNAPSHOT:remapped-mojang")
 
-    implementation(project(":api"))
+    compileOnly(project(":api"))
 }
 
 tasks {
@@ -17,10 +17,20 @@ tasks {
     }
 
     remap {
-        mcVersion.set("1.20.4")
+        mcVersion.set("1.20.6")
     }
 
 }
+
+java {
+    disableAutoTargetJvm()
+}
+
 kotlin{
     jvmToolchain(21)
 }
+
+
+
+
+

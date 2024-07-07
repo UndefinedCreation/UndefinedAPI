@@ -1,12 +1,11 @@
-package com.undefined.api.nms.v1_20_5.event
+package com.undefined.api.nms.v1_20_6.event
 
 import com.undefined.api.customEvents.*
 import com.undefined.api.event.event
 import com.undefined.api.nms.ClickType
 import com.undefined.api.nms.EntityInteract
 import com.undefined.api.nms.extensions.removeMetaData
-import com.undefined.api.nms.v1_20_5.NMSManager
-import com.undefined.api.nms.v1_20_5.extensions.*
+import com.undefined.api.nms.v1_20_6.extensions.*
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
@@ -207,7 +206,7 @@ class PacketListenerManager {
 
         val action = if(attacking) ClickType.LEFT_CLICK else ClickType.RIGHT_CLICK
 
-        NMSManager.entityInteraction.entries.forEach {
+        com.undefined.api.nms.v1_20_6.NMSManager.entityInteraction.entries.forEach {
             if (it.key.getEntityID() == msg.getEntityID()) {
                 it.value.invoke(EntityInteract(action, it.key, player))
             }

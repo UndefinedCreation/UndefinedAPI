@@ -1,12 +1,10 @@
-package com.undefined.api.nms.v1_20_5.entity
+package com.undefined.api.nms.v1_20_6.entity
 
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.Lists
 import com.undefined.api.nms.EntityInteract
 import com.undefined.api.nms.interfaces.NMSEntity
-import com.undefined.api.nms.v1_20_5.NMSManager
-import com.undefined.api.nms.v1_20_5.SpigotNMSMappings
-import com.undefined.api.nms.v1_20_5.extensions.sendPacket
+import com.undefined.api.nms.v1_20_6.extensions.sendPacket
 import net.minecraft.ChatFormatting
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -129,7 +127,7 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
         }
 
     init {
-        val field = Entity::class.java.getDeclaredField(SpigotNMSMappings.EntityNoGrafity)
+        val field = Entity::class.java.getDeclaredField(com.undefined.api.nms.v1_20_6.SpigotNMSMappings.EntityNoGrafity)
         field.isAccessible = true
         DATA_NO_GRAVITY = field.get(null) as EntityDataAccessor<Boolean>
     }
@@ -156,7 +154,7 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
 
         entity.setPos(newLocation.x, newLocation.y, newLocation.z)
 
-        val m = Entity::class.java.getDeclaredMethod(SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
+        val m = Entity::class.java.getDeclaredMethod(com.undefined.api.nms.v1_20_6.SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
         m.isAccessible = true
         m.invoke(entity, newLocation.yaw, newLocation.pitch)
 
@@ -180,7 +178,7 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
     override fun teleport(newLocation: Location) {
         entity?.let {
             entity!!.setPos(newLocation.x, newLocation.y, newLocation.z)
-            val m = Entity::class.java.getDeclaredMethod(SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
+            val m = Entity::class.java.getDeclaredMethod(com.undefined.api.nms.v1_20_6.SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
             m.isAccessible = true
             m.invoke(entity, newLocation.yaw, newLocation.pitch)
 
@@ -199,12 +197,12 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
     }
     override fun getEntityID(): Int = if (entity == null) 0 else entity!!.id
     override fun interact(interact: EntityInteract.() -> Unit) {
-        NMSManager.entityInteraction[this] = interact
+        com.undefined.api.nms.v1_20_6.NMSManager.entityInteraction[this] = interact
     }
 
     override fun addPassenger(nmsEntity: NMSEntity) {
         entity?.let {
-            val method = com.undefined.api.nms.v1_20_5.entity.NMSEntity::class.java.getDeclaredMethod("getEntityM")
+            val method = com.undefined.api.nms.v1_20_6.entity.NMSEntity::class.java.getDeclaredMethod("getEntityM")
             method.isAccessible = true
             val rider = method.invoke(nmsEntity) as Entity?
 
@@ -232,7 +230,7 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
 
     override fun removePassenger(nmsEntity: NMSEntity) {
         entity?.let {
-            val method = com.undefined.api.nms.v1_20_5.entity.NMSEntity::class.java.getDeclaredMethod("getEntityM")
+            val method = com.undefined.api.nms.v1_20_6.entity.NMSEntity::class.java.getDeclaredMethod("getEntityM")
             method.isAccessible = true
             val rider = method.invoke(nmsEntity) as Entity?
 
@@ -248,7 +246,8 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
         }
     }
 
-    open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = UndefinedEntity(entityType, level)
+    open fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity =
+        com.undefined.api.nms.v1_20_6.entity.UndefinedEntity(entityType, level)
     fun sendMetaPackets() {
         entity?.let { entity ->
             entity.entityData.nonDefaultValues?.let {

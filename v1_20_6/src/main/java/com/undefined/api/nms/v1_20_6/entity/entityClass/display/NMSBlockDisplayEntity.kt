@@ -1,4 +1,4 @@
-package com.undefined.api.nms.v1_20_5.entity.entityClass.display
+package com.undefined.api.nms.v1_20_6.entity.entityClass.display
 
 import com.undefined.api.nms.interfaces.NMSBlockDisplayEntity
 import net.minecraft.world.entity.Display.BlockDisplay
