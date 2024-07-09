@@ -1,11 +1,8 @@
 package com.undefined.api
 
-import com.undefined.api.builders.ItemBuilder
 import com.undefined.api.command.UndefinedCommand
 import com.undefined.api.event.event
 import com.undefined.api.extension.glow
-import com.undefined.api.extension.string.asInventory
-import com.undefined.api.extension.string.asString
 import com.undefined.api.extension.string.translateColor
 import com.undefined.api.nms.ItemSlot
 import com.undefined.api.nms.createFakeEntity
@@ -16,7 +13,6 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
@@ -34,19 +30,19 @@ class Main: JavaPlugin() {
 
         val main = UndefinedCommand("data", "developer.data.command", aliases =  listOf("d"))
 
-        main.addExecutePlayer {
+        main.addSubCommand("clearCache")
+            .addExecute {
+                return@addExecute false
+            }
 
-            val inv = Bukkit.createInventory(null, InventoryType.PLAYER)
-            inv.setItem(0, ItemBuilder(Material.SHIELD).build())
+        val userCommand = main.addSubCommand("userdata")
 
-            val s = inv.asString()
+        userCommand.addListSubCommand({ list }, { this.toString() } ,{ UUID.fromString(this) })
+            .addListExecute {
 
-            println(s)
 
-            player!!.inventory.contents = s.asInventory().contents
-
-            return@addExecutePlayer false
-        }
+                return@addListExecute false
+            }
 
     }
 
