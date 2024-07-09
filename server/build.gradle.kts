@@ -20,9 +20,8 @@ dependencies {
 
     implementation(project(":common"))
     implementation(project(":api"))
-    implementation(project(":v1_20_4"))
-    implementation(project(":v1_20_5"))
-    implementation(project(":v1_20_6"))
+    implementation(project(":v1_20_4:", "reobf"))
+    implementation(project(":v1_20_5:", "reobf"))
     implementation(project(":v1_21"))
     compileOnly(project(":v1_20_4"))
 }

@@ -3,7 +3,7 @@ package com.undefined.api.nms.v1_20_5.extensions
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ServerboundSwingPacket
 import net.minecraft.server.network.ServerGamePacketListenerImpl
-import org.bukkit.craftbukkit.v1_20_R4.entity.CraftPlayer
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 
 /**

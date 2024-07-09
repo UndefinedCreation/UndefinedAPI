@@ -18,7 +18,7 @@ fun ServerboundInteractPacket.getEntityID() = getPrivateField<Int>(SpigotNMSMapp
  */
 fun ServerboundInteractPacket.isAttacking(): Boolean {
     val firstChar = getActionFirstChar()
-    return firstChar == '1'
+    return firstChar[0] == '1'
 }
 
 /**
@@ -45,4 +45,4 @@ fun  ServerboundInteractPacket.isMainHand(): Boolean {
  *
  * @return The first character of the action identifier.
  */
-fun ServerboundInteractPacket.getActionFirstChar(): Char = getAction().toString().split("$")[1][0]
+fun ServerboundInteractPacket.getActionFirstChar(): String = getAction().toString().split("$")[1]

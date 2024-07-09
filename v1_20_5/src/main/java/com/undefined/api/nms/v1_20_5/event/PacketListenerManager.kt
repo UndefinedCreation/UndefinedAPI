@@ -11,9 +11,8 @@ import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
 import org.bukkit.Bukkit
-import org.bukkit.craftbukkit.v1_20_R4.CraftWorld
-import org.bukkit.craftbukkit.v1_20_R4.entity.CraftPlayer
-import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftItemStack
+import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -118,7 +117,7 @@ class PacketListenerManager {
         val itemStack = msg.getItemStack()
 
         com.undefined.api.scheduler.sync {
-            Bukkit.getPluginManager().callEvent(PlayerArmorChangeEvent(player, CraftItemStack.asBukkitCopy(itemStack), bukkitSlot))
+            Bukkit.getPluginManager().callEvent(PlayerArmorChangeEvent(player, itemStack.bukkitStack, bukkitSlot))
         }
 
     }

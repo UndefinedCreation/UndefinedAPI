@@ -10,20 +10,21 @@ import com.undefined.api.nms.v1_20_5.extensions.sendPacket
 import net.minecraft.ChatFormatting
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.server.level.ServerEntity
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import net.minecraft.world.scores.Scoreboard
 import net.minecraft.world.scores.Team
 import org.bukkit.ChatColor
 import org.bukkit.Location
-import org.bukkit.craftbukkit.v1_20_R4.CraftWorld
-import org.bukkit.craftbukkit.v1_20_R4.entity.CraftEntityType
-import org.bukkit.craftbukkit.v1_20_R4.util.CraftChatMessage
+import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.entity.CraftEntityType
+import org.bukkit.craftbukkit.util.CraftChatMessage
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import java.util.*
 
-open class NMSEntity(override val entityType: EntityType): NMSEntity {
+open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms.interfaces.NMSEntity {
     override val viewers: MutableList<Player> = mutableListOf()
     override var location: Location? = null
     var entity: Entity? = null
