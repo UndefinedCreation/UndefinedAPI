@@ -17,9 +17,9 @@ import net.minecraft.world.scores.Scoreboard
 import net.minecraft.world.scores.Team
 import org.bukkit.ChatColor
 import org.bukkit.Location
-import org.bukkit.craftbukkit.v1_21_R1.CraftWorld
-import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntityType
-import org.bukkit.craftbukkit.v1_21_R1.util.CraftChatMessage
+import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.entity.CraftEntityType
+import org.bukkit.craftbukkit.util.CraftChatMessage
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import java.util.*

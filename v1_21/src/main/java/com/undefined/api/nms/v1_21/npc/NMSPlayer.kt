@@ -24,10 +24,9 @@ import net.minecraft.world.entity.LivingEntity
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_21_R1.CraftServer
-import org.bukkit.craftbukkit.v1_21_R1.CraftWorld
-import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack
-import org.bukkit.entity.ArmorStand
+import org.bukkit.craftbukkit.CraftServer
+import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
