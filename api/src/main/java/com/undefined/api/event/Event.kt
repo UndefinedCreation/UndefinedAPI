@@ -1,6 +1,7 @@
 package com.undefined.api.event
 
 import com.undefined.api.API
+import org.bukkit.Bukkit
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
@@ -96,5 +97,7 @@ open class UndefinedEvent(async: Boolean = false): Event(async), Cancellable{
     override fun getHandlers(): HandlerList {
         return HANDLERS
     }
+
+    fun call() = Bukkit.getPluginManager().callEvent(this)
 
 }

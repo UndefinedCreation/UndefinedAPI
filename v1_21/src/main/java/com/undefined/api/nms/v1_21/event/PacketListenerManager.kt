@@ -1,19 +1,21 @@
 package com.undefined.api.nms.v1_21.event
 
-import com.undefined.api.customEvents.PlayerArmSwingEvent
-import com.undefined.api.customEvents.PlayerArmorChangeEvent
-import com.undefined.api.customEvents.PlayerMainHandSwitchEvent
-import com.undefined.api.customEvents.PlayerUseItemEvent
+import com.undefined.api.customEvents.*
 import com.undefined.api.event.event
 import com.undefined.api.nms.ClickType
 import com.undefined.api.nms.EntityInteract
 import com.undefined.api.nms.extensions.removeMetaData
 import com.undefined.api.nms.v1_21.NMSManager
 import com.undefined.api.nms.v1_21.extensions.*
+import com.undefined.api.scheduler.async
+import com.undefined.api.scheduler.sync
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
 import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.World
+import org.bukkit.craftbukkit.CraftParticle
 import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.craftbukkit.inventory.CraftItemStack
@@ -72,6 +74,7 @@ class PacketListenerManager {
                     when (this@UndefinedDuplexHandler) {
                         is ClientboundContainerSetSlotPacket -> handleArmorChange(player, this@UndefinedDuplexHandler)
                         is ClientboundSetEntityDataPacket -> handleDataPacket(player, this@UndefinedDuplexHandler)
+                        is ClientboundLevelParticlesPacket -> handleParticle(this, player.world, player)
                     }
 
                     return@UndefinedDuplexHandler false
@@ -91,6 +94,33 @@ class PacketListenerManager {
             }
         }
 
+    }
+
+    private fun handleParticle(msg: ClientboundLevelParticlesPacket, world: World, viewer: Player) {
+        async {
+            val location = Location(world, msg.x, msg.y, msg.z)
+            val particle = CraftParticle.minecraftToBukkit(msg.particle.type)
+            val option = msg.particle.getBukkitOptions()
+            val count = msg.count
+            val maxSpeed = msg.maxSpeed
+            val dirX = msg.xDist
+            val dirY = msg.yDist
+            val dirZ = msg.zDist
+
+            sync {
+                ParticleEvent(
+                    location,
+                    particle,
+                    option,
+                    count,
+                    maxSpeed,
+                    dirX,
+                    dirY,
+                    dirZ,
+                    viewer
+                ).call()
+            }
+        }
     }
 
     private fun handleMainHandSwitch(msg: ServerboundSetCarriedItemPacket, player: Player) {

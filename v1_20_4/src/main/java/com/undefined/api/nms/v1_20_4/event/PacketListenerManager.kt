@@ -1,9 +1,6 @@
 package com.undefined.api.nms.v1_20_4.event
 
-import com.undefined.api.customEvents.PlayerArmSwingEvent
-import com.undefined.api.customEvents.PlayerArmorChangeEvent
-import com.undefined.api.customEvents.PlayerMainHandSwitchEvent
-import com.undefined.api.customEvents.PlayerUseItemEvent
+import com.undefined.api.customEvents.*
 import com.undefined.api.event.event
 import com.undefined.api.nms.ClickType
 import com.undefined.api.nms.EntityInteract
@@ -12,18 +9,39 @@ import com.undefined.api.nms.extensions.getPrivateFieldFromSuper
 import com.undefined.api.nms.extensions.removeMetaData
 import com.undefined.api.nms.v1_20_4.NMSManager
 import com.undefined.api.nms.v1_20_4.extensions.*
+import com.undefined.api.scheduler.async
+import com.undefined.api.scheduler.delay
+import com.undefined.api.scheduler.repeatingTask
 import com.undefined.api.scheduler.sync
+import net.kyori.adventure.bossbar.BossBar
+import net.minecraft.core.particles.BlockParticleOption
+import net.minecraft.core.particles.DustColorTransitionOptions
+import net.minecraft.core.particles.DustParticleOptions
+import net.minecraft.core.particles.ItemParticleOption
+import net.minecraft.core.particles.ParticleOptions
+import net.minecraft.core.particles.SculkChargeParticleOptions
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.EntityType
 import org.bukkit.Bukkit
+import org.bukkit.Color
+import org.bukkit.Location
+import org.bukkit.Particle
+import org.bukkit.Particle.DustOptions
+import org.bukkit.Particle.DustTransition
+import org.bukkit.World
+import org.bukkit.block.BlockState
+import org.bukkit.craftbukkit.v1_20_R3.CraftParticle
+import org.bukkit.craftbukkit.v1_20_R3.CraftParticle.CraftParticleRegistry
 import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.inventory.ItemStack
 import java.util.*
 import kotlin.collections.ArrayDeque
 import kotlin.collections.HashMap
@@ -80,6 +98,7 @@ class PacketListenerManager {
                     when (this@UndefinedDuplexHandler) {
                         is ClientboundSetEntityDataPacket -> handleDataPacket(player, this@UndefinedDuplexHandler)
                         is ClientboundContainerSetSlotPacket -> handleArmorChange(player, this@UndefinedDuplexHandler)
+                        is ClientboundLevelParticlesPacket -> handleParticle(this, player.world, player)
                     }
                 return@UndefinedDuplexHandler false
             }
@@ -99,6 +118,35 @@ class PacketListenerManager {
         }
 
     }
+
+    private fun handleParticle(msg: ClientboundLevelParticlesPacket, world: World, viewer: Player) {
+        async {
+            val location = Location(world, msg.x, msg.y, msg.z)
+            val particle = CraftParticle.minecraftToBukkit(msg.particle.type)
+            val option = msg.particle.getBukkitOptions()
+            val count = msg.count
+            val maxSpeed = msg.maxSpeed
+            val dirX = msg.xDist
+            val dirY = msg.yDist
+            val dirZ = msg.zDist
+
+            sync {
+                ParticleEvent(
+                    location,
+                    particle,
+                    option,
+                    count,
+                    maxSpeed,
+                    dirX,
+                    dirY,
+                    dirZ,
+                    viewer
+                ).call()
+            }
+        }
+    }
+
+
 
     private fun handleMainHandSwitch(msg: ServerboundSetCarriedItemPacket, player: Player) {
 

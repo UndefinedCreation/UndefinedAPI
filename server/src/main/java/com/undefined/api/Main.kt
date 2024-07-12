@@ -1,6 +1,7 @@
 package com.undefined.api
 
 import com.undefined.api.command.UndefinedCommand
+import com.undefined.api.customEvents.ParticleEvent
 import com.undefined.api.event.event
 import com.undefined.api.extension.asBlockData
 import com.undefined.api.extension.getID
@@ -11,8 +12,13 @@ import com.undefined.api.nms.createFakeEntity
 import com.undefined.api.nms.createFakePlayer
 import com.undefined.api.nms.interfaces.NMSBlockDisplayEntity
 import com.undefined.api.scheduler.delay
+import com.undefined.api.scheduler.repeatingTask
 import org.bukkit.Bukkit
+import org.bukkit.Color
 import org.bukkit.Material
+import org.bukkit.Particle
+import org.bukkit.Particle.DustOptions
+import org.bukkit.Particle.DustTransition
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
@@ -27,19 +33,6 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-        val list: MutableList<UUID> = mutableListOf(UUID.randomUUID())
-
-        val data = Material.OAK_LEAVES.createBlockData()
-
-        println(data.asString)
-
-        val id = data.getID() + 1
-
-        println(id)
-
-        val a = id.asBlockData()
-
-        println(a.asString)
 
     }
 
