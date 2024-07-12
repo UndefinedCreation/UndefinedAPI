@@ -2,6 +2,8 @@ package com.undefined.api
 
 import com.undefined.api.command.UndefinedCommand
 import com.undefined.api.event.event
+import com.undefined.api.extension.asBlockData
+import com.undefined.api.extension.getID
 import com.undefined.api.extension.glow
 import com.undefined.api.extension.string.translateColor
 import com.undefined.api.nms.ItemSlot
@@ -27,22 +29,17 @@ class Main: JavaPlugin() {
 
         val list: MutableList<UUID> = mutableListOf(UUID.randomUUID())
 
+        val data = Material.OAK_LEAVES.createBlockData()
 
-        val main = UndefinedCommand("data", "developer.data.command", aliases =  listOf("d"))
+        println(data.asString)
 
-        main.addSubCommand("clearCache")
-            .addExecute {
-                return@addExecute false
-            }
+        val id = data.getID() + 1
 
-        val userCommand = main.addSubCommand("userdata")
+        println(id)
 
-        userCommand.addListSubCommand({ list }, { this.toString() } ,{ UUID.fromString(this) })
-            .addListExecute {
+        val a = id.asBlockData()
 
-
-                return@addListExecute false
-            }
+        println(a.asString)
 
     }
 

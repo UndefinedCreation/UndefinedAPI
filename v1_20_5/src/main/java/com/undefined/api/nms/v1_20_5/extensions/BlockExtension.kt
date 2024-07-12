@@ -4,9 +4,12 @@ import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.monster.Slime
+import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.ChatColor
 import org.bukkit.block.Block
+import org.bukkit.block.data.BlockData
 import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.block.data.CraftBlockData
 import org.bukkit.entity.Player
 
 object BlockExtension {
@@ -17,4 +20,9 @@ object BlockExtension {
 
         player.sendPacket(packet)
     }
+
+    fun getID(blockData: BlockData) : Int = net.minecraft.world.level.block.Block.getId((blockData as CraftBlockData).state)
+
+    fun getBlockDataFromID(id: Int) : BlockData = net.minecraft.world.level.block.Block.stateById(id).createCraftBlockData()
+
 }
