@@ -7,12 +7,16 @@ import com.undefined.api.customEvents.PlayerUseItemEvent
 import com.undefined.api.event.event
 import com.undefined.api.nms.ClickType
 import com.undefined.api.nms.EntityInteract
+import com.undefined.api.nms.extensions.getPrivateField
+import com.undefined.api.nms.extensions.getPrivateFieldFromSuper
 import com.undefined.api.nms.extensions.removeMetaData
 import com.undefined.api.nms.v1_20_4.NMSManager
 import com.undefined.api.nms.v1_20_4.extensions.*
+import com.undefined.api.scheduler.sync
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.EntityType
 import org.bukkit.Bukkit
 import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
@@ -44,9 +48,12 @@ class PacketListenerManager {
 
     private val que = ArrayDeque<Packet<*>>(6)
 
+    val list: MutableList<Int> = mutableListOf()
+
     init {
 
         event<PlayerJoinEvent> {
+            list.add(player.entityId)
             if (player.fireTicks > 0) {
                 onFire.add(player.uniqueId)
             }
@@ -70,12 +77,10 @@ class PacketListenerManager {
 
                 return@UndefinedDuplexHandler false
             },{
-
                     when (this@UndefinedDuplexHandler) {
                         is ClientboundSetEntityDataPacket -> handleDataPacket(player, this@UndefinedDuplexHandler)
                         is ClientboundContainerSetSlotPacket -> handleArmorChange(player, this@UndefinedDuplexHandler)
                     }
-
                 return@UndefinedDuplexHandler false
             }
             ))

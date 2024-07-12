@@ -22,7 +22,7 @@ dependencies {
     implementation(project(":api"))
     implementation(project(":v1_20_4:", "reobf"))
     implementation(project(":v1_20_5:", "reobf"))
-    implementation(project(":v1_21"))
+    implementation(project(":v1_21:", "reobf"))
     compileOnly(project(":v1_20_4"))
 }
 
@@ -43,7 +43,8 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.21")
+        minecraftVersion("1.20.4")
+        jvmArgs("-Xmx2G")
     }
 
 }

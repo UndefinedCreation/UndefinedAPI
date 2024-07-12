@@ -2,11 +2,6 @@ plugins {
     kotlin("jvm") version "1.9.22"
 }
 
-val versionVar = version
-val groupIdVar = "com.redmagic"
-val artifactIdVar = "UndefinedAPI"
-
-
 repositories {
 }
 
