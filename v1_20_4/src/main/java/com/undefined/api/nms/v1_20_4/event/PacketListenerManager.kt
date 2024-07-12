@@ -22,6 +22,7 @@ import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.SculkChargeParticleOptions
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.EntityType
 import org.bukkit.Bukkit
@@ -34,6 +35,7 @@ import org.bukkit.World
 import org.bukkit.block.BlockState
 import org.bukkit.craftbukkit.v1_20_R3.CraftParticle
 import org.bukkit.craftbukkit.v1_20_R3.CraftParticle.CraftParticleRegistry
+import org.bukkit.craftbukkit.v1_20_R3.CraftSound
 import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
@@ -99,6 +101,7 @@ class PacketListenerManager {
                         is ClientboundSetEntityDataPacket -> handleDataPacket(player, this@UndefinedDuplexHandler)
                         is ClientboundContainerSetSlotPacket -> handleArmorChange(player, this@UndefinedDuplexHandler)
                         is ClientboundLevelParticlesPacket -> handleParticle(this, player.world, player)
+                        is ClientboundSoundPacket -> handleSound(this, player)
                     }
                 return@UndefinedDuplexHandler false
             }
@@ -117,6 +120,28 @@ class PacketListenerManager {
             }
         }
 
+    }
+
+    private fun handleSound(msg: ClientboundSoundPacket, viewer: Player) {
+        async {
+            val sound = CraftSound.minecraftToBukkit(msg.sound.value())
+            val world = Location(viewer.world, msg.x, msg.y, msg.z)
+            val volume = msg.volume
+            val pitch = msg.pitch
+            val seed = msg.seed
+            val source = com.undefined.api.customEvents.SoundSource.valueOf(msg.source.name)
+            sync {
+                SoundEvent(
+                    viewer,
+                    sound,
+                    volume,
+                    pitch,
+                    world,
+                    seed,
+                    source
+                ).call()
+            }
+        }
     }
 
     private fun handleParticle(msg: ClientboundLevelParticlesPacket, world: World, viewer: Player) {
