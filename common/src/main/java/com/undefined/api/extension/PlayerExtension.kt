@@ -2,12 +2,13 @@ package com.undefined.api.extension
 
 import com.undefined.api.UndefinedAPI
 import com.undefined.api.scheduler.TimeUnit
-import com.undefined.api.scheduler.repeatingTask
 import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.attribute.Attribute
+import org.bukkit.block.data.BlockData
 import org.bukkit.entity.Player
 
 /**
@@ -121,3 +122,16 @@ fun Player.sendMessage(component: Component) = UndefinedAPI.adventure().player(t
  * @param component The message to be displayed as the action bar, represented as a [Component].
  */
 fun Player.sendActionBar(component: Component) = UndefinedAPI.adventure().player(this).sendActionBar(component)
+
+
+fun Player.sendBlockUpdateArray(hashMap: HashMap<Location, BlockData>) {
+    sendBlockUpdateArray(hashMap.keys.toList(), hashMap.values.toList())
+}
+
+fun Player.sendBlockUpdateArray(locs: List<Location>, data: List<BlockData>) {
+    when(getNMSVersion()) {
+        "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.BlockExtension.setBlockArray(data.toTypedArray(), locs, listOf(this))
+        "1.20.5", "1.20.6" -> com.undefined.api.nms.v1_20_5.extensions.BlockExtension.setBlockArray(data.toTypedArray(), locs, listOf(this))
+        "1.21" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.setBlockArray(data.toTypedArray(), locs, listOf(this))
+    }
+}
