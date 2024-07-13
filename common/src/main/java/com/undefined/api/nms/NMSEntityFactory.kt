@@ -110,7 +110,7 @@ class NMSEntityV1_21Factory : NMSEntityFactory {
 private val factories = mapOf(
     "1.20.4" to NMSEntityV1_20_4Factory(),
     "1.20.5" to NMSEntityV1_20_5Factory(),
-    "1.20.6" to NMSEntityV1_21Factory(),
+    "1.20.6" to NMSEntityV1_20_5Factory(),
     "1.21" to NMSEntityV1_21Factory()
 )
 

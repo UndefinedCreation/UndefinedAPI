@@ -293,6 +293,9 @@ class PacketListenerManager {
         com.undefined.api.scheduler.sync {
 
             craftWorld.handle.getEntity(entityID)?.let {
+
+                if (!net.minecraft.world.entity.LivingEntity::class.java.isAssignableFrom(it::class.java)) return@sync
+
                 if (value == 0.toByte() && onFire.contains(it.uuid)) {
                     Bukkit.getPluginManager()
                         .callEvent(com.undefined.api.customEvents.EntityExtinguishEvent(it.bukkitEntity))

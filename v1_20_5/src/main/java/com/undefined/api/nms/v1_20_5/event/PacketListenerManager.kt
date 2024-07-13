@@ -12,6 +12,7 @@ import com.undefined.api.scheduler.sync
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.EntityType
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
@@ -19,6 +20,7 @@ import org.bukkit.craftbukkit.CraftParticle
 import org.bukkit.craftbukkit.CraftSound
 import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.entity.CraftPlayer
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -266,16 +268,17 @@ class PacketListenerManager {
         val entityID = msg.getEntityID()
 
 
-
-        com.undefined.api.scheduler.sync {
+        sync {
 
             val entity = craftWorld.handle.getEntity(entityID)
 
-            if (value == 0.toByte() && onFire.contains(entity!!.uuid)) {
+            if (!net.minecraft.world.entity.LivingEntity::class.java.isAssignableFrom(entity!!::class.java)) return@sync
+
+            if (value == 0.toByte() && onFire.contains(entity.uuid)) {
                 Bukkit.getPluginManager()
                     .callEvent(com.undefined.api.customEvents.EntityExtinguishEvent(entity.bukkitEntity))
                 onFire.remove(entity.uuid)
-            } else if (value == 1.toByte() && !onFire.contains(entity!!.uuid)) {
+            } else if (value == 1.toByte() && !onFire.contains(entity.uuid)) {
                 Bukkit.getPluginManager()
                     .callEvent(com.undefined.api.customEvents.EntityIgniteEvent(entity.bukkitEntity))
                 onFire.add(entity.uuid)

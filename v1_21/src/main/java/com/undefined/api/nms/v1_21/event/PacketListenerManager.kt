@@ -269,11 +269,11 @@ class PacketListenerManager {
 
         val entityID = msg.getEntityID()
 
-
-
         com.undefined.api.scheduler.sync {
 
             val entity = craftWorld.handle.getEntity(entityID)
+
+            if (!net.minecraft.world.entity.LivingEntity::class.java.isAssignableFrom(entity!!::class.java)) return@sync
 
             if (value == 0.toByte() && onFire.contains(entity!!.uuid)) {
                 Bukkit.getPluginManager()
