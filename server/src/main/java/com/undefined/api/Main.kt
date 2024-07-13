@@ -2,6 +2,8 @@ package com.undefined.api
 
 import com.undefined.api.command.UndefinedCommand
 import com.undefined.api.customEvents.ParticleEvent
+import com.undefined.api.customEvents.SoundEvent
+import com.undefined.api.customEvents.SoundStopEvent
 import com.undefined.api.event.event
 import com.undefined.api.extension.asBlockData
 import com.undefined.api.extension.getID
@@ -33,6 +35,13 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
+        event<SoundStopEvent> {
+            println("stop ${sound.name}")
+        }
+
+        event<SoundEvent> {
+            println("start ${sound.name}")
+        }
 
     }
 

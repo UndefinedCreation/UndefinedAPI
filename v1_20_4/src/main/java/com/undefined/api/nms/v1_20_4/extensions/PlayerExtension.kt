@@ -1,9 +1,11 @@
 package com.undefined.api.nms.v1_20_4.extensions
 
 import com.mojang.authlib.GameProfile
+import com.undefined.api.customEvents.SoundSource
 import com.undefined.api.nms.extensions.getPrivateField
 import com.undefined.api.nms.v1_20_4.SpigotNMSMappings
 import net.minecraft.network.protocol.Packet
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket
 import net.minecraft.server.network.ServerGamePacketListenerImpl
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
@@ -33,6 +35,7 @@ fun Player.sendPacket(vararg packet: Packet<*>) = packet.forEach { getConnection
  * @param packet the array of packets to be sent
  */
 fun Player.sendPacketArray(packet: Array<out Packet<*>>) = packet.forEach { getConnection().send(it) }
+
 
 object PlayerExtension {
     /**

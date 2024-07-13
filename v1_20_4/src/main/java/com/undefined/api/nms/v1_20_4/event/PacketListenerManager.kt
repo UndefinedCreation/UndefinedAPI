@@ -22,9 +22,11 @@ import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.SculkChargeParticleOptions
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.level.block.SoundType
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Location
@@ -68,21 +70,23 @@ class PacketListenerManager {
 
     private val que = ArrayDeque<Packet<*>>(6)
 
-    val list: MutableList<Int> = mutableListOf()
+
+    private val lMap: HashMap<UUID, UUID> = hashMapOf()
 
     init {
 
         event<PlayerJoinEvent> {
-            list.add(player.entityId)
             if (player.fireTicks > 0) {
                 onFire.add(player.uniqueId)
             }
+
+            lMap[player.uniqueId] = UUID.randomUUID()
 
             val fakeConnection = player.getConnection().getConnection()
 
             val channel = fakeConnection.channel
             val pipeline = channel.pipeline()
-            pipeline.addBefore("packet_handler", "${player.uniqueId}_UNDEFINEDAPI", UndefinedDuplexHandler(
+            pipeline.addBefore("packet_handler", lMap[player.uniqueId]!!.toString(), UndefinedDuplexHandler(
                 {
 
                     when (this) {
@@ -102,6 +106,8 @@ class PacketListenerManager {
                         is ClientboundContainerSetSlotPacket -> handleArmorChange(player, this@UndefinedDuplexHandler)
                         is ClientboundLevelParticlesPacket -> handleParticle(this, player.world, player)
                         is ClientboundSoundPacket -> handleSound(this, player)
+                        is ClientboundSoundEntityPacket -> handleEntitySound(this, player)
+                        is ClientboundStopSoundPacket -> handleSoundStop(this, player)
                     }
                 return@UndefinedDuplexHandler false
             }
@@ -116,10 +122,47 @@ class PacketListenerManager {
             val connection = player.getConnection().getConnection()
             val channel = connection.channel
             channel.eventLoop().submit(){
-                channel.pipeline().remove("${player.uniqueId}_UNDEFINEDAPI")
+                channel.pipeline().remove(lMap[player.uniqueId]!!.toString())
             }
+
+            lMap.remove(player.uniqueId)
         }
 
+    }
+
+    private fun handleSoundStop(msg: ClientboundStopSoundPacket, viewer: Player) {
+        async {
+            msg.source?.let { source ->
+                msg.name?.let {
+                    SoundStopEvent(
+                        viewer,
+                        com.undefined.api.customEvents.SoundSource.valueOf(source.name),
+                        CraftSound.minecraftToBukkit(net.minecraft.sounds.SoundEvent.createVariableRangeEvent(it))
+                    ).call()
+                }
+            }
+        }
+    }
+
+    private fun handleEntitySound(msg: ClientboundSoundEntityPacket, viewer: Player) {
+        val cWorld = viewer.world as CraftWorld
+        cWorld.handle.getEntity(msg.id)?.let {
+            val sound = CraftSound.minecraftToBukkit(msg.sound.value())
+            val world = Location(viewer.world, it.x, it.y, it.z)
+            val volume = msg.volume
+            val pitch = msg.pitch
+            val seed = msg.seed
+            val source = com.undefined.api.customEvents.SoundSource.valueOf(msg.source.name)
+            SoundEvent(
+                viewer,
+                sound,
+                volume,
+                pitch,
+                world,
+                seed,
+                source
+            ).call()
+        }
     }
 
     private fun handleSound(msg: ClientboundSoundPacket, viewer: Player) {
