@@ -10,6 +10,8 @@ import com.undefined.api.nms.v1_21.extensions.sendPacket
 import net.minecraft.ChatFormatting
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerEntity
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
@@ -42,6 +44,37 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
             }
 
         }
+
+    override var onFire: Boolean = false
+        set(value){
+
+            val entity = entity ?: return
+            field = value
+            if (value){
+
+                entity.remainingFireTicks = 2000000
+
+                val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
+                    SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0x01)
+                )
+
+                val dataPacket = ClientboundSetEntityDataPacket(entity.id, dataList)
+
+                viewers.sendPacket(dataPacket)
+            }else{
+                entity.remainingFireTicks = 0
+
+                val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
+                    SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0)
+                )
+
+                val dataPacket = ClientboundSetEntityDataPacket(entity.id, dataList)
+
+                viewers.sendPacket(dataPacket)
+            }
+
+        }
+
     override var glowingColor: ChatColor = ChatColor.WHITE
         set(value) {
 

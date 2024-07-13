@@ -23,6 +23,8 @@ interface NMSEntity {
 
     val entityType: EntityType
 
+    var onFire: Boolean
+
     fun addViewer(player: Player)
 
     fun removeViewer(player: Player)

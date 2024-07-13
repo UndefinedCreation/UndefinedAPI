@@ -13,36 +13,6 @@ import org.bukkit.entity.EntityType
 
 open class NMSLivingEntity(override var entityType: EntityType): NMSLivingEntity, NMSEntity(entityType) {
 
-    override var onFire: Boolean = false
-        set(value){
-
-            val entity = entity ?: return
-            field = value
-            if (value){
-
-                entity.remainingFireTicks = 2000000
-
-                val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
-                    SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0x01)
-                )
-
-                val dataPacket = ClientboundSetEntityDataPacket(entity.id, dataList)
-
-                viewers.sendPacket(dataPacket)
-            }else{
-                entity.remainingFireTicks = 0
-
-                val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
-                    SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0)
-                )
-
-                val dataPacket = ClientboundSetEntityDataPacket(entity.id, dataList)
-
-                viewers.sendPacket(dataPacket)
-            }
-
-        }
-
     override fun moveTo(newLocation: Location) {
         val currentLocation = location ?: return
         val entity = entity ?: return

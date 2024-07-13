@@ -14,6 +14,8 @@ import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
 import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.gameevent.GameEvent
@@ -48,6 +50,37 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
             }
 
         }
+
+    override var onFire: Boolean = false
+        set(value){
+
+            val entity = entity ?: return
+            field = value
+            if (value){
+
+                entity.remainingFireTicks = 2000000
+
+                val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
+                    SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0x01)
+                )
+
+                val dataPacket = ClientboundSetEntityDataPacket(entity.id, dataList)
+
+                viewers.sendPacket(dataPacket)
+            }else{
+                entity.remainingFireTicks = 0
+
+                val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
+                    SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0)
+                )
+
+                val dataPacket = ClientboundSetEntityDataPacket(entity.id, dataList)
+
+                viewers.sendPacket(dataPacket)
+            }
+
+        }
+
     override var glowingColor: ChatColor = ChatColor.WHITE
         set(value) {
 

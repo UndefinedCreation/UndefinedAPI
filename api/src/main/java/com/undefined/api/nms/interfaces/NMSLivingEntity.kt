@@ -5,9 +5,6 @@ import org.bukkit.Location
 interface NMSLivingEntity: com.undefined.api.nms.interfaces.NMSEntity {
 
 
-    var onFire: Boolean
-
-
     /**
      * Moves the entity to the specified location.
      *
