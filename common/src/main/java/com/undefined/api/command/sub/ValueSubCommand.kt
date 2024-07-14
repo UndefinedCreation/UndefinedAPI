@@ -4,7 +4,6 @@ import com.undefined.api.command.info.BooleanSubCommandInfo
 import com.undefined.api.command.info.NumberSubCommandInfo
 import com.undefined.api.command.info.StringSubCommandInfo
 import org.bukkit.command.CommandSender
-import java.util.*
 
 class StringSubCommand: UndefinedSubCommand("undefined_api_value") {
 
@@ -61,7 +60,7 @@ class BooleanSubCommand: UndefinedSubCommand("undefined_api_boolean") {
 
     private val booleanExe: MutableList<BooleanSubCommandInfo.() -> Boolean> = mutableListOf()
 
-    fun addNumberExecute(c: BooleanSubCommandInfo.() -> Boolean): BooleanSubCommand {
+    fun addBooleanExecute(c: BooleanSubCommandInfo.() -> Boolean): BooleanSubCommand {
         booleanExe.add(c)
         return this
     }

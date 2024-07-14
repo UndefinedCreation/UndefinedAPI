@@ -9,6 +9,7 @@ import com.undefined.api.nms.v1_21.NMSManager
 import com.undefined.api.nms.v1_21.extensions.*
 import com.undefined.api.scheduler.async
 import com.undefined.api.scheduler.sync
+import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
@@ -43,6 +44,10 @@ class PacketListenerManager {
     private val que = ArrayDeque<Packet<*>>(6)
 
     private val lMap: HashMap<UUID, UUID> = hashMapOf()
+
+    companion object {
+        val fakeBlocks: HashMap<UUID, MutableList<BlockPos>> = hashMapOf()
+    }
 
     init {
 
@@ -83,6 +88,7 @@ class PacketListenerManager {
                         is ClientboundSoundPacket -> handleSound(this, player)
                         is ClientboundSoundEntityPacket -> handleEntitySound(this, player)
                         is ClientboundStopSoundPacket -> handleSoundStop(this, player)
+                        is ClientboundBlockUpdatePacket -> handleFakeBlock(this, player)
                     }
 
                     return@UndefinedDuplexHandler false
@@ -103,6 +109,15 @@ class PacketListenerManager {
             lMap.remove(player.uniqueId)
         }
 
+    }
+
+    private fun handleFakeBlock(msg: ClientboundBlockUpdatePacket, player: Player) : Boolean {
+
+        fakeBlocks[player.uniqueId]?.let {
+            return it.contains(msg.pos)
+        }
+
+        return false
     }
 
     private fun handleSoundStop(msg: ClientboundStopSoundPacket, viewer: Player) {
@@ -199,7 +214,7 @@ class PacketListenerManager {
 
         val item = player.inventory.getItem(slot)
 
-        com.undefined.api.scheduler.sync {
+        sync {
             Bukkit.getPluginManager().callEvent(PlayerMainHandSwitchEvent(player, item))
         }
 
@@ -221,7 +236,7 @@ class PacketListenerManager {
 
         val itemStack = msg.getItemStack()
 
-        com.undefined.api.scheduler.sync {
+        sync {
             Bukkit.getPluginManager().callEvent(PlayerArmorChangeEvent(player, CraftItemStack.asBukkitCopy(itemStack), bukkitSlot))
         }
 
@@ -252,7 +267,7 @@ class PacketListenerManager {
     }
 
     private fun handleUsingItem(player: Player, value: Int) {
-        com.undefined.api.scheduler.sync {
+        sync {
             Bukkit.getPluginManager().callEvent(
                 PlayerUseItemEvent(
                     player,
@@ -269,19 +284,19 @@ class PacketListenerManager {
 
         val entityID = msg.getEntityID()
 
-        com.undefined.api.scheduler.sync {
+        sync {
 
             val entity = craftWorld.handle.getEntity(entityID)
 
             if (!net.minecraft.world.entity.LivingEntity::class.java.isAssignableFrom(entity!!::class.java)) return@sync
 
-            if (value == 0.toByte() && onFire.contains(entity!!.uuid)) {
+            if (value == 0.toByte() && onFire.contains(entity.uuid)) {
                 Bukkit.getPluginManager()
-                    .callEvent(com.undefined.api.customEvents.EntityExtinguishEvent(entity.bukkitEntity))
+                    .callEvent(EntityExtinguishEvent(entity.bukkitEntity))
                 onFire.remove(entity.uuid)
-            } else if (value == 1.toByte() && !onFire.contains(entity!!.uuid)) {
+            } else if (value == 1.toByte() && !onFire.contains(entity.uuid)) {
                 Bukkit.getPluginManager()
-                    .callEvent(com.undefined.api.customEvents.EntityIgniteEvent(entity.bukkitEntity))
+                    .callEvent(EntityIgniteEvent(entity.bukkitEntity))
                 onFire.add(entity.uuid)
             }
         }

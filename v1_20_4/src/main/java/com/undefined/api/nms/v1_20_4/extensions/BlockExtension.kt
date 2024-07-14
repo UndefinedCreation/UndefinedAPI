@@ -1,19 +1,20 @@
 package com.undefined.api.nms.v1_20_4.extensions
 
-import com.undefined.api.scheduler.delay
+import com.undefined.api.nms.v1_20_4.event.PacketListenerManager
 import it.unimi.dsi.fastutil.shorts.ShortArraySet
 import it.unimi.dsi.fastutil.shorts.ShortSet
 import net.minecraft.core.BlockPos
 import net.minecraft.core.SectionPos
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket
+import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket
 import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket
 import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.block.data.BlockData
+import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
 import org.bukkit.craftbukkit.v1_20_R3.block.data.CraftBlockData
 import org.bukkit.entity.Player
-import org.bukkit.util.Vector
 
 object BlockExtension {
 
@@ -31,38 +32,49 @@ object BlockExtension {
 
     fun getBlockDataFromID(id: Int) : BlockData = net.minecraft.world.level.block.Block.stateById(id).createCraftBlockData()
 
-    fun setBlockArray(state: Array<BlockData>, posList: List<Location>, list: List<Player>) {
+    fun setBlockArray(state: Array<BlockData>, posList: List<Location>, list: List<Player>, persistent: Boolean) {
+        val changes = mutableMapOf<SectionPos, ChunkSectionChanges>()
 
-        val changes: HashMap<SectionPos, ChunkSectionChanges> = HashMap()
-
-        for (index in state.indices) {
-            val bPos = posList[index]
-
-            val pos = BlockPos(bPos.blockX, bPos.blockY, bPos.blockZ)
-
-            val sectionPos = SectionPos.of(pos)
-
+        state.indices.forEach { index ->
+            val bPos = posList[index].let { BlockPos(it.blockX, it.blockY, it.blockZ) }
+            val sectionPos = SectionPos.of(bPos)
             val sectionChanges = changes.getOrPut(sectionPos) { ChunkSectionChanges(ShortArraySet(), mutableListOf()) }
 
-            val var1 = SectionPos.sectionRelative(pos.x)
-            val var2 = SectionPos.sectionRelative(pos.y)
-            val var3 = SectionPos.sectionRelative(pos.z)
-            val po = (var1 shl 8 or (var3 shl 4) or (var2 shl 0)).toShort()
+            val varX = SectionPos.sectionRelative(bPos.x)
+            val varY = SectionPos.sectionRelative(bPos.y)
+            val varZ = SectionPos.sectionRelative(bPos.z)
+            val po = (varX shl 8 or (varZ shl 4) or varY).toShort()
+
+            if (persistent) list.forEach { PacketListenerManager.fakeBlocks.getOrPut(it.uniqueId) { mutableListOf() }.add(bPos) }
 
             sectionChanges.positions.add(po)
             sectionChanges.blockData.add(net.minecraft.world.level.block.Block.stateById(getID(state[index])))
         }
 
-
-        changes.entries.forEach {
-
-            val packet = ClientboundSectionBlocksUpdatePacket(
-                it.key, it.value.positions, it.value.blockData.toTypedArray()
-            )
-
+        changes.entries.forEach { (key, value) ->
+            val packet = ClientboundSectionBlocksUpdatePacket(key, value.positions, value.blockData.toTypedArray())
             list.sendPacket(packet)
         }
+    }
 
+    fun clearFakeBlocks(player: Player) {
+
+        val map: MutableMap<SectionPos, MutableList<BlockPos>> = PacketListenerManager.fakeBlocks[player.uniqueId]
+            ?.groupByTo(mutableMapOf(), { SectionPos.of(it) }, { it })
+            ?: mutableMapOf()
+
+        val cWorld = player.world as CraftWorld
+        val light = cWorld.handle.lightEngine
+
+        map.forEach { (key, _) ->
+            val chunk = cWorld.handle.getChunk(key.chunk().x, key.chunk().z)
+            val packet = ClientboundLevelChunkWithLightPacket(chunk, light, null, null, true)
+
+            player.sendPacket(packet)
+        }
+
+        map.clear()
+        PacketListenerManager.fakeBlocks.remove(player.uniqueId)
     }
 
 }
