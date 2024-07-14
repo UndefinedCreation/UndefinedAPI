@@ -12,7 +12,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.5.66"
+val versionVar = "0.5.67"
 val groupIdVar = "com.undefined"
 val artifactIdVar = "api"
 

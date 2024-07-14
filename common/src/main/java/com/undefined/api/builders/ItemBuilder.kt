@@ -1,7 +1,7 @@
 package com.undefined.api.builders
 
+import com.undefined.api.extension.getNMSVersion
 import com.undefined.api.extension.string.asItemStack
-import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -27,6 +27,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
     var enchants: HashMap<Enchantment, Int> = HashMap()
     var unbreakable: Boolean = false
     var skullowner: UUID? = null
+    var skullTexture: String? = null
     var flags: MutableList<ItemFlag> = mutableListOf()
 
     /**
@@ -50,7 +51,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
      * @param name the name to set for the ItemStack
      * @return the ItemBuilder instance
      */
-    fun setName(name: String): com.undefined.api.builders.ItemBuilder {
+    fun setName(name: String): ItemBuilder {
         this.name = name
         return this
     }
@@ -60,7 +61,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
      *
      * @param flag
      */
-    fun addFlags(flag: ItemFlag): com.undefined.api.builders.ItemBuilder {
+    fun addFlags(flag: ItemFlag): ItemBuilder {
         flags.add(flag)
         return this
     }
@@ -72,7 +73,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
      * @param level The level of the enchantment.
      * @return The updated item builder instance.
      */
-    fun addEnchant(enchantment: Enchantment, level: Int): com.undefined.api.builders.ItemBuilder {
+    fun addEnchant(enchantment: Enchantment, level: Int): ItemBuilder {
         this.enchants.set(enchantment, level)
         return this
     }
@@ -83,7 +84,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
      * @param enchantment A HashMap containing the Enchantment objects as keys and the level of the enchantments as values.
      * @return The current ItemBuilder object after setting the enchantments.
      */
-    fun setEnchants(enchantment: HashMap<Enchantment, Int>): com.undefined.api.builders.ItemBuilder {
+    fun setEnchants(enchantment: HashMap<Enchantment, Int>): ItemBuilder {
         this.enchants = enchantment
         return this
     }
@@ -94,7 +95,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
      * @param boolean true if the item should be unbreakable, false otherwise
      * @return the ItemBuilder instance
      */
-    fun setUnbreakable(boolean: Boolean): com.undefined.api.builders.ItemBuilder {
+    fun setUnbreakable(boolean: Boolean): ItemBuilder {
         unbreakable = boolean
         return this
     }
@@ -105,8 +106,19 @@ class ItemBuilder(private var itemStack: ItemStack) {
      * @param uuid The UUID of the skull owner.
      * @return The updated ItemBuilder instance.
      */
-    fun setSkullOwner(uuid: UUID): com.undefined.api.builders.ItemBuilder {
+    fun setSkullOwner(uuid: UUID): ItemBuilder {
         this.skullowner = uuid
+        return this
+    }
+
+    /**
+     * Sets the skull texture for the item.
+     *
+     * @param texture The texture to set for the skull.
+     * @return The ItemBuilder instance with the skull texture set.
+     */
+    fun setSkullTexture(texture: String): ItemBuilder {
+        this.skullTexture = texture
         return this
     }
 
@@ -116,12 +128,12 @@ class ItemBuilder(private var itemStack: ItemStack) {
      * @param lore The list of components representing the lore of the item.
      * @return The ItemBuilder instance.
      */
-    fun setLore(lore: MutableList<String>): com.undefined.api.builders.ItemBuilder {
+    fun setLore(lore: MutableList<String>): ItemBuilder {
         this.lore = lore
         return this
     }
 
-    fun addLine(line: String): com.undefined.api.builders.ItemBuilder {
+    fun addLine(line: String): ItemBuilder {
         this.lore.add(line)
         return this
     }
@@ -132,7 +144,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
      * @param amount the desired amount of the item
      * @return the ItemBuilder object for method chaining
      */
-    fun setAmount(amount: Int): com.undefined.api.builders.ItemBuilder {
+    fun setAmount(amount: Int): ItemBuilder {
         this.amount = amount
         return this
     }
@@ -143,7 +155,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
      * @param customModelData The custom model data value to set.
      * @return The ItemBuilder object.
      */
-    fun setCustomModelData(customModelData: Int): com.undefined.api.builders.ItemBuilder {
+    fun setCustomModelData(customModelData: Int): ItemBuilder {
         this.customModelData = customModelData
         return this
     }
@@ -154,7 +166,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
      * @param name The localized name to set.
      * @return The ItemBuilder instance.
      */
-    fun setLocalizedName(name: String): com.undefined.api.builders.ItemBuilder {
+    fun setLocalizedName(name: String): ItemBuilder {
         this.localizedName = name
         return this
     }
@@ -180,12 +192,28 @@ class ItemBuilder(private var itemStack: ItemStack) {
 
         itemMeta.isUnbreakable = unbreakable
 
-        if (skullowner != null)
-            if (itemStack.type == Material.PLAYER_HEAD){
-                val meta = itemMeta as SkullMeta
+        if (itemStack.type == Material.PLAYER_HEAD){
+            
+            val meta = itemMeta as SkullMeta
+            if (skullowner != null) {
                 meta.setOwningPlayer(Bukkit.getOfflinePlayer(skullowner!!))
                 itemMeta = meta
             }
+            if (skullTexture != null) {
+                val skullMeta = when (getNMSVersion()) {
+                    "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.ItemUtil.setSkullTexture(meta, skullTexture!!)
+                    "1.20.5", "1.20.6" -> com.undefined.api.nms.v1_20_5.extensions.ItemUtil.setSkullTexture(meta, skullTexture!!)
+                    "1.21" -> com.undefined.api.nms.v1_21.extensions.ItemUtil.setSkullTexture(meta, skullTexture!!)
+                    else -> null
+                }
+                skullMeta?.let { 
+                    itemMeta = it
+                }
+            }
+        }
+        
+        
+            
 
         flags.forEach {
             itemMeta.addItemFlags(it)
