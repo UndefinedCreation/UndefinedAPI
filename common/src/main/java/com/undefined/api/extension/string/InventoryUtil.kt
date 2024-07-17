@@ -22,8 +22,8 @@ fun Inventory.asString(): String{
 
     dataOutput.writeInt(this.size)
 
-    for (i in this.size downTo 0){
-        dataOutput.writeObject(this.getItem(i))
+    contents.forEach { itemStack ->
+        dataOutput.writeObject(itemStack)
     }
 
     dataOutput.close()
