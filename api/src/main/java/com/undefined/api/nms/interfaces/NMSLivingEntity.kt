@@ -37,6 +37,8 @@ interface NMSLivingEntity: com.undefined.api.nms.interfaces.NMSEntity {
      */
     fun damageAnimation()
 
+    fun setRotation(pitch: Float, yaw: Float)
+
     fun setHeadRotation(yaw: Float)
 
     /**

@@ -63,15 +63,17 @@ open class NMSLivingEntity(override var entityType: EntityType): NMSLivingEntity
 
     override fun setHeadRotation(yaw: Float) {
         entity?.let {
-            val packet = ClientboundMoveEntityPacket.Rot(
-                it.id,
-                toRotationValue(yaw),
-                toRotationValue(yaw),
-                false
+            val packet = ClientboundRotateHeadPacket(
+                it,
+                toRotationValue(yaw)
             )
-
-            location!!.yaw = yaw
             viewers.sendPacket(packet)
+        }
+    }
+
+    override fun setRotation(pitch: Float, yaw: Float) {
+        entity?.let {
+            viewers.sendPacket(ClientboundMoveEntityPacket.Rot(it.id, toRotationValue(yaw), toRotationValue(pitch), true))
         }
     }
 

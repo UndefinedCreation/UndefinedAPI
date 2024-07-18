@@ -74,6 +74,12 @@ open class NMSLivingEntity(override var entityType: EntityType): NMSLivingEntity
         }
     }
 
+    override fun setRotation(pitch: Float, yaw: Float) {
+        entity?.let {
+            viewers.sendPacket(ClientboundMoveEntityPacket.Rot(it.id, toRotationValue(yaw), toRotationValue(pitch), true))
+        }
+    }
+
     override fun isAlive(): Boolean = entity != null
 
     override fun deathAnimation() {
