@@ -3,7 +3,8 @@ package com.undefined.api.nms.v1_21.extensions
 import net.minecraft.core.particles.*
 import org.bukkit.Particle.DustOptions
 import org.bukkit.Particle.DustTransition
-import org.bukkit.craftbukkit.inventory.CraftItemStack
+import org.bukkit.craftbukkit.v1_21_R1.block.data.CraftBlockData
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack
 
 fun ParticleOptions.getBukkitOptions(): Any? =
     when(this) {
@@ -30,7 +31,7 @@ fun ParticleOptions.getBukkitOptions(): Any? =
         )
 
         is ItemParticleOption -> CraftItemStack.asBukkitCopy(item)
-        is BlockParticleOption -> state.createCraftBlockData()
+        is BlockParticleOption -> CraftBlockData.fromData(state)
         is SculkChargeParticleOptions -> roll
         else -> null
     }

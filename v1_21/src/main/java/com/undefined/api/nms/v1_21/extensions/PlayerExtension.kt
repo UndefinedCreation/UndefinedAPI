@@ -3,7 +3,7 @@ package com.undefined.api.nms.v1_21.extensions
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ServerboundSwingPacket
 import net.minecraft.server.network.ServerGamePacketListenerImpl
-import org.bukkit.craftbukkit.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
 
 /**
@@ -48,7 +48,7 @@ object PlayerExtension {
     fun getTextures(player: Player): Array<String> {
         val cPlayer = player as CraftPlayer
         val sPlayer = cPlayer.handle
-        val gameProfile = sPlayer.getGameProfile()
+        val gameProfile = sPlayer.gameProfile
         val property = gameProfile.properties["textures"].iterator().next()
         val texture = property.value as String
         val sign = property.signature as String

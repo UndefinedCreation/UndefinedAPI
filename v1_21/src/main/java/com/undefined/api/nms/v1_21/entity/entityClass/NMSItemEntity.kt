@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.level.Level
 import org.bukkit.Location
-import org.bukkit.craftbukkit.inventory.CraftItemStack
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.ItemStack
 

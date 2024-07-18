@@ -1,22 +1,28 @@
 plugins{
     kotlin("jvm") version "1.9.22"
-    id("io.papermc.paperweight.userdev") version "1.7.1"
+    id("com.undefinedcreation.mapper") version "0.0.4"
 }
-
-paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.REOBF_PRODUCTION
 
 
 dependencies {
 
-    paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot:1.21-R0.1-SNAPSHOT:remapped-mojang")
 
     compileOnly(project(":api"))
 }
 
 tasks {
 
+    build {
+        dependsOn(remap)
+    }
+
     compileKotlin {
         kotlinOptions.jvmTarget = "21"
+    }
+
+    remap {
+        mcVersion.set("1.21")
     }
 
 

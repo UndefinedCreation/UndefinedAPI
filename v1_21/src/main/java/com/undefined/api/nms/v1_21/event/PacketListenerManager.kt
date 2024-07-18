@@ -16,11 +16,11 @@ import net.minecraft.world.InteractionHand
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
-import org.bukkit.craftbukkit.CraftParticle
-import org.bukkit.craftbukkit.CraftSound
-import org.bukkit.craftbukkit.CraftWorld
-import org.bukkit.craftbukkit.entity.CraftPlayer
-import org.bukkit.craftbukkit.inventory.CraftItemStack
+import org.bukkit.craftbukkit.v1_21_R1.CraftParticle
+import org.bukkit.craftbukkit.v1_21_R1.CraftSound
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent

@@ -1,5 +1,6 @@
 package com.undefined.api.nms.v1_21.extensions
 
+import com.google.common.base.Function
 import com.undefined.api.nms.v1_21.event.PacketListenerManager
 import it.unimi.dsi.fastutil.shorts.ShortArraySet
 import it.unimi.dsi.fastutil.shorts.ShortSet
@@ -12,8 +13,8 @@ import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.block.data.BlockData
-import org.bukkit.craftbukkit.CraftWorld
-import org.bukkit.craftbukkit.block.data.CraftBlockData
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_21_R1.block.data.CraftBlockData
 import org.bukkit.entity.Player
 
 object BlockExtension {
@@ -27,7 +28,11 @@ object BlockExtension {
 
     fun getID(blockData: BlockData) : Int = net.minecraft.world.level.block.Block.getId((blockData as CraftBlockData).state)
 
-    fun getBlockDataFromID(id: Int) : BlockData = net.minecraft.world.level.block.Block.stateById(id).createCraftBlockData()
+    fun getBlockDataFromID(id: Int) : BlockData = createCraftBlockData(net.minecraft.world.level.block.Block.stateById(id))
+
+    fun createCraftBlockData(blockState: BlockState): CraftBlockData {
+        return CraftBlockData.fromData(blockState)
+    }
 
     fun setBlockArray(state: Array<BlockData>, posList: List<Location>, list: List<Player>, persistent: Boolean) {
         val changes = mutableMapOf<SectionPos, ChunkSectionChanges>()
@@ -65,7 +70,7 @@ object BlockExtension {
 
         map.forEach { (key, _) ->
             val chunk = cWorld.handle.getChunk(key.chunk().x, key.chunk().z)
-            val packet = ClientboundLevelChunkWithLightPacket(chunk, light, null, null, true)
+            val packet = ClientboundLevelChunkWithLightPacket(chunk, light, null, null)
 
             player.sendPacket(packet)
         }
