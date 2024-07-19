@@ -10,4 +10,4 @@ class BlockUpdateEvent(
     val location: Location,
     val block: Block,
     val toData: BlockData,
-): UndefinedEvent(false)
+): UndefinedEvent(true)
