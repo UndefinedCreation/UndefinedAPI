@@ -8,7 +8,7 @@ import java.util.*
 
 object ItemUtil {
     fun setSkullTexture(meta: SkullMeta, textures: String): SkullMeta {
-        val gameP = GameProfile(UUID.randomUUID(), null)
+        val gameP = GameProfile(UUID.randomUUID(), "texture")
         gameP.properties.put("textures", Property("textures", textures))
         val field = meta::class.java.getDeclaredField("profile")
         field.isAccessible = true
