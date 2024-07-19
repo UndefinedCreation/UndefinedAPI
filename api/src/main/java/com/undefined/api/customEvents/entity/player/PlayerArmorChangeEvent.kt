@@ -1,9 +1,8 @@
-package com.undefined.api.customEvents
+package com.undefined.api.customEvents.entity.player
 
 import com.undefined.api.event.UndefinedEvent
 import com.undefined.api.event.event
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent

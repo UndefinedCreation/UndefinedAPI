@@ -1,15 +1,25 @@
 package com.undefined.api.nms.v1_21.event
 
 import com.undefined.api.customEvents.*
+import com.undefined.api.customEvents.block.BlockGroupUpdateEvent
+import com.undefined.api.customEvents.block.BlockUpdateEvent
+import com.undefined.api.customEvents.entity.*
+import com.undefined.api.customEvents.entity.player.PlayerArmSwingEvent
+import com.undefined.api.customEvents.entity.player.PlayerArmorChangeEvent
+import com.undefined.api.customEvents.entity.player.PlayerMainHandSwitchEvent
+import com.undefined.api.customEvents.entity.player.PlayerUseItemEvent
 import com.undefined.api.event.event
 import com.undefined.api.nms.ClickType
 import com.undefined.api.nms.EntityInteract
+import com.undefined.api.nms.extensions.getPrivateField
 import com.undefined.api.nms.extensions.removeMetaData
 import com.undefined.api.nms.v1_21.NMSManager
+import com.undefined.api.nms.v1_21.SpigotNMSMappings
 import com.undefined.api.nms.v1_21.extensions.*
 import com.undefined.api.scheduler.async
 import com.undefined.api.scheduler.sync
 import net.minecraft.core.BlockPos
+import net.minecraft.core.SectionPos
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
@@ -19,6 +29,7 @@ import org.bukkit.World
 import org.bukkit.craftbukkit.CraftParticle
 import org.bukkit.craftbukkit.CraftSound
 import org.bukkit.craftbukkit.CraftWorld
+import org.bukkit.craftbukkit.block.data.CraftBlockData
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.entity.Player
@@ -89,6 +100,7 @@ class PacketListenerManager {
                         is ClientboundSoundEntityPacket -> handleEntitySound(this, player)
                         is ClientboundStopSoundPacket -> handleSoundStop(this, player)
                         is ClientboundBlockUpdatePacket -> handleFakeBlock(this, player)
+                        is ClientboundSectionBlocksUpdatePacket -> handleMultiBlockUpdate(this, player)
                     }
 
                     return@UndefinedDuplexHandler false
@@ -111,7 +123,39 @@ class PacketListenerManager {
 
     }
 
+    private fun handleMultiBlockUpdate(msg: ClientboundSectionBlocksUpdatePacket, player: Player) {
+
+        if (!checkQue(msg)) return
+
+        val section = msg.getPrivateField<SectionPos>(SpigotNMSMappings.ClientboundSectionBlocksUpdatePacketSection)
+        val shortArray = msg.getPrivateField<ShortArray>(SpigotNMSMappings.ClientboundSectionBlocksUpdatePacketShortArray)
+        val blockState = msg.getPrivateField<Array<net.minecraft.world.level.block.state.BlockState>>(SpigotNMSMappings.ClientboundSectionBlocksUpdatePacketBlockArray)
+
+        val list = shortArray.mapIndexed { index, sh ->
+            val blockPos = section.relativeToBlockPos(sh)
+            val location = Location(player.world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble())
+            val blockData = CraftBlockData.fromData(blockState[index])
+            Pair(location, blockData)
+        }
+
+        BlockGroupUpdateEvent(
+            list
+        ).call()
+    }
+
     private fun handleFakeBlock(msg: ClientboundBlockUpdatePacket, player: Player) : Boolean {
+
+        if (checkQue(msg)) {
+            val location = Location(player.world, msg.pos.x.toDouble(), msg.pos.y.toDouble(), msg.pos.z.toDouble())
+            val block = location.block
+            val toData = CraftBlockData.createData(msg.blockState)
+
+            BlockUpdateEvent(
+                location,
+                block,
+                toData
+            ).call()
+        }
 
         fakeBlocks[player.uniqueId]?.let {
             return it.contains(msg.pos)

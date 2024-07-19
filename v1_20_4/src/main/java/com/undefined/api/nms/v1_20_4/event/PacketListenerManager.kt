@@ -1,26 +1,40 @@
 package com.undefined.api.nms.v1_20_4.event
 
 import com.undefined.api.customEvents.*
+import com.undefined.api.customEvents.block.BlockGroupUpdateEvent
+import com.undefined.api.customEvents.block.BlockUpdateEvent
+import com.undefined.api.customEvents.entity.*
+import com.undefined.api.customEvents.entity.player.PlayerArmSwingEvent
+import com.undefined.api.customEvents.entity.player.PlayerArmorChangeEvent
+import com.undefined.api.customEvents.entity.player.PlayerMainHandSwitchEvent
+import com.undefined.api.customEvents.entity.player.PlayerUseItemEvent
 import com.undefined.api.event.event
 import com.undefined.api.nms.ClickType
 import com.undefined.api.nms.EntityInteract
+import com.undefined.api.nms.extensions.getPrivateField
 import com.undefined.api.nms.extensions.removeMetaData
 import com.undefined.api.nms.v1_20_4.NMSManager
+import com.undefined.api.nms.v1_20_4.SpigotNMSMappings
 import com.undefined.api.nms.v1_20_4.extensions.*
 import com.undefined.api.scheduler.async
 import com.undefined.api.scheduler.sync
 import net.minecraft.core.BlockPos
+import net.minecraft.core.SectionPos
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.world.InteractionHand
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.block.BlockState
 import org.bukkit.craftbukkit.v1_20_R3.CraftParticle
 import org.bukkit.craftbukkit.v1_20_R3.CraftSound
 import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
+import org.bukkit.craftbukkit.v1_20_R3.block.data.CraftBlockData
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
+import org.bukkit.event.block.BlockEvent
+import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.EquipmentSlot
@@ -86,6 +100,7 @@ class PacketListenerManager {
                         is ClientboundSoundEntityPacket -> handleEntitySound(this, player)
                         is ClientboundStopSoundPacket -> handleSoundStop(this, player)
                         is ClientboundBlockUpdatePacket -> return@UndefinedDuplexHandler handleFakeBlock(this, player)
+                        is ClientboundSectionBlocksUpdatePacket -> handleMultiBlockUpdate(this, player)
                     }
                 return@UndefinedDuplexHandler false
             }
@@ -108,7 +123,39 @@ class PacketListenerManager {
 
     }
 
+    private fun handleMultiBlockUpdate(msg: ClientboundSectionBlocksUpdatePacket, player: Player) {
+
+        if (!checkQue(msg)) return
+
+        val section = msg.getPrivateField<SectionPos>(SpigotNMSMappings.ClientboundSectionBlocksUpdatePacketSection)
+        val shortArray = msg.getPrivateField<ShortArray>(SpigotNMSMappings.ClientboundSectionBlocksUpdatePacketShortArray)
+        val blockState = msg.getPrivateField<Array<net.minecraft.world.level.block.state.BlockState>>(SpigotNMSMappings.ClientboundSectionBlocksUpdatePacketBlockArray)
+
+        val list = shortArray.mapIndexed { index, sh ->
+            val blockPos = section.relativeToBlockPos(sh)
+            val location = Location(player.world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble())
+            val blockData = CraftBlockData.fromData(blockState[index])
+            Pair(location, blockData)
+        }
+
+        BlockGroupUpdateEvent(
+            list
+        ).call()
+    }
+
     private fun handleFakeBlock(msg: ClientboundBlockUpdatePacket, player: Player) : Boolean {
+
+        if (checkQue(msg)) {
+            val location = Location(player.world, msg.pos.x.toDouble(), msg.pos.y.toDouble(), msg.pos.z.toDouble())
+            val block = location.block
+            val toData = CraftBlockData.createData(msg.blockState)
+
+            BlockUpdateEvent(
+                location,
+                block,
+                toData
+            ).call()
+        }
 
         fakeBlocks[player.uniqueId]?.let {
             return it.contains(msg.pos)

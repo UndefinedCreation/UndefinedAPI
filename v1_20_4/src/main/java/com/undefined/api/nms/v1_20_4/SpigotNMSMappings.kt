@@ -16,9 +16,11 @@ object SpigotNMSMappings {
     const val ClientboundContainerSetSlotPacketSlot = "e"
     const val ClientboundContainerSetSlotPacketItemStack = "f"
     const val ServerboundSetCarriedItemPacketSlot = "a"
-    const val ClientboundMoveEntityPacketEntityID = "a"
     const val ItemEntityAccessor = "c"
     const val EntityNoGrafity = "aX"
+    const val ClientboundSectionBlocksUpdatePacketSection = "b"
+    const val ClientboundSectionBlocksUpdatePacketShortArray = "c"
+    const val ClientboundSectionBlocksUpdatePacketBlockArray = "d"
 
     const val EntitySetRotMethod = "a"
 

@@ -164,7 +164,7 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
         }
 
     init {
-        val field = Entity::class.java.getDeclaredField("aT")
+        val field = Entity::class.java.getDeclaredField(SpigotNMSMappings.EntityNoGrafity)
         field.isAccessible = true
         DATA_NO_GRAVITY = field.get(null) as EntityDataAccessor<Boolean>
     }

@@ -1,8 +1,7 @@
-package com.undefined.api.customEvents
+package com.undefined.api.customEvents.block
 
 import com.undefined.api.event.UndefinedEvent
 import com.undefined.api.event.event
-import com.undefined.api.scheduler.repeatingTask
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location

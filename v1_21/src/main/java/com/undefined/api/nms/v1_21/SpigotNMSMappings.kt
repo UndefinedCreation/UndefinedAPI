@@ -16,6 +16,9 @@ object SpigotNMSMappings {
     const val ServerboundSetCarriedItemPacketSlot = "b"
     const val ItemEntityAccessor = "d"
     const val EntityNoGrafity = "aT"
+    const val ClientboundSectionBlocksUpdatePacketSection = "c"
+    const val ClientboundSectionBlocksUpdatePacketShortArray = "d"
+    const val ClientboundSectionBlocksUpdatePacketBlockArray = "e"
 
     const val EntitySetRotMethod = "a"
 
@@ -23,7 +26,4 @@ object SpigotNMSMappings {
     const val DisplayTransfrom = "t"
     const val DisplayLeftRot = "v"
     const val DisplayRightRot = "aD"
-    const val DisplayBillboard = "aE"
-
-    const val BlockDisplayBlockData = "q"
 }
