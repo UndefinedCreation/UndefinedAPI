@@ -328,9 +328,9 @@ class PacketListenerManager {
 
         sync {
 
-            val entity = craftWorld.handle.getEntity(entityID)
+            val entity = craftWorld.handle.getEntity(entityID) ?: return@sync
 
-            if (!net.minecraft.world.entity.LivingEntity::class.java.isAssignableFrom(entity!!::class.java)) return@sync
+            if (!net.minecraft.world.entity.LivingEntity::class.java.isAssignableFrom(entity::class.java)) return@sync
 
             if (value == 0.toByte() && onFire.contains(entity.uuid)) {
                 Bukkit.getPluginManager()
