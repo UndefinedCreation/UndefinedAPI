@@ -2,6 +2,7 @@ package com.undefined.api.extension.string
 
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.io.BukkitObjectInputStream
@@ -69,7 +70,9 @@ fun String.asInventory(): Inventory{
     val inputStream = ByteArrayInputStream(Base64Coder.decodeLines(this))
     val dataInput = BukkitObjectInputStream(inputStream)
 
-    val inv = Bukkit.createInventory(null, dataInput.readInt())
+    val size = dataInput.readInt()
+
+    val inv = if (size == 41) Bukkit.createInventory(null, InventoryType.PLAYER) else Bukkit.createInventory(null, size)
 
     for (i in inv.size downTo 0){
         inv.setItem(i, dataInput.readObject() as ItemStack)
