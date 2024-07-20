@@ -74,9 +74,11 @@ fun String.asInventory(): Inventory{
 
     val inv = if (size == 41) Bukkit.createInventory(null, InventoryType.PLAYER) else Bukkit.createInventory(null, size)
 
-    for (i in inv.size downTo 0){
-        inv.setItem(i, dataInput.readObject() as ItemStack)
+    inv.contents.forEachIndexed { index, _ ->
+        inv.setItem(index, dataInput.readObject() as ItemStack)
     }
+
+
 
     dataInput.close()
 
