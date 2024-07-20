@@ -202,24 +202,26 @@ class PacketListenerManager {
 
     private fun handleEntitySound(msg: ClientboundSoundEntityPacket, viewer: Player) {
         val cWorld = viewer.world as CraftWorld
-        cWorld.handle.getEntity(msg.id)?.let {
-            async {
-                val sound = CraftSound.minecraftToBukkit(msg.sound.value())
-                val world = Location(viewer.world, it.x, it.y, it.z)
-                val volume = msg.volume
-                val pitch = msg.pitch
-                val seed = msg.seed
-                val source = com.undefined.api.customEvents.SoundSource.valueOf(msg.source.name)
-                sync {
-                    SoundEvent(
-                        viewer,
-                        sound,
-                        volume,
-                        pitch,
-                        world,
-                        seed,
-                        source
-                    ).call()
+        sync {
+            cWorld.handle.getEntity(msg.id)?.let {
+                async {
+                    val sound = CraftSound.minecraftToBukkit(msg.sound.value())
+                    val world = Location(viewer.world, it.x, it.y, it.z)
+                    val volume = msg.volume
+                    val pitch = msg.pitch
+                    val seed = msg.seed
+                    val source = com.undefined.api.customEvents.SoundSource.valueOf(msg.source.name)
+                    sync {
+                        SoundEvent(
+                            viewer,
+                            sound,
+                            volume,
+                            pitch,
+                            world,
+                            seed,
+                            source
+                        ).call()
+                    }
                 }
             }
         }
