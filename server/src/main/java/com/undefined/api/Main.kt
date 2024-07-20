@@ -6,6 +6,8 @@ import com.undefined.api.customEvents.block.BlockUpdateEvent
 import com.undefined.api.event.event
 import com.undefined.api.extension.sendBlockUpdateArray
 import com.undefined.api.extension.sendClearFakeBlock
+import com.undefined.api.extension.string.asInventory
+import com.undefined.api.extension.string.asString
 import com.undefined.api.scheduler.delay
 import org.bukkit.Location
 import org.bukkit.Material
@@ -22,8 +24,12 @@ class Main: JavaPlugin() {
         api = UndefinedAPI(this)
 
 
-        event<BlockGroupUpdateEvent> {
-            println("BlockGroupUpdate $blocks")
+        event<PlayerJoinEvent> {
+
+            val invString = player.inventory.asString()
+
+            val inv = invString.asInventory()
+
         }
 
     }
