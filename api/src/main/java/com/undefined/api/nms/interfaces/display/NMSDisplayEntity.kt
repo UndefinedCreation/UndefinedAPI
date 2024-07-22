@@ -1,6 +1,7 @@
-package com.undefined.api.nms.interfaces
+package com.undefined.api.nms.interfaces.display
 
 import com.undefined.api.nms.Billboard
+import com.undefined.api.nms.interfaces.NMSEntity
 
 interface NMSDisplayEntity: NMSEntity {
 

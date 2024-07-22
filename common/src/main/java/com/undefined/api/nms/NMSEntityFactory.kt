@@ -3,6 +3,8 @@ package com.undefined.api.nms
 import com.undefined.api.UndefinedAPI
 import com.undefined.api.extension.getNMSVersion
 import com.undefined.api.nms.interfaces.*
+import com.undefined.api.nms.interfaces.display.NMSBlockDisplayEntity
+import com.undefined.api.nms.interfaces.display.NMSTextDisplay
 import org.bukkit.block.data.BlockData
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
@@ -15,6 +17,7 @@ interface NMSEntityFactory {
     fun createLivingEntity(entityType: EntityType): NMSLivingEntity
     fun createItemEntity(data: Array<out Any>): NMSItemEntity?
     fun createEntity(entityType: EntityType): NMSEntity
+    fun createTextDisplay(data: Array<out Any>): NMSTextDisplay?
 }
 
 class NMSEntityV1_20_4Factory : NMSEntityFactory {
@@ -45,6 +48,8 @@ class NMSEntityV1_20_4Factory : NMSEntityFactory {
     override fun createItemEntity(data: Array<out Any>): NMSItemEntity = com.undefined.api.nms.v1_20_4.entity.entityClasses.NMSItemEntity(data[0] as ItemStack)
 
     override fun createEntity(entityType: EntityType): NMSEntity = com.undefined.api.nms.v1_20_4.entity.NMSEntity(entityType)
+
+    override fun createTextDisplay(data: Array<out Any>): NMSTextDisplay = com.undefined.api.nms.v1_20_4.entity.entityClasses.display.NMSTextDisplayEntity(data[0] as String)
 }
 
 class NMSEntityV1_20_5Factory : NMSEntityFactory {
@@ -75,6 +80,8 @@ class NMSEntityV1_20_5Factory : NMSEntityFactory {
     override fun createItemEntity(data: Array<out Any>): NMSItemEntity = com.undefined.api.nms.v1_20_5.entity.entityClass.NMSItemEntity(data[0] as ItemStack)
 
     override fun createEntity(entityType: EntityType): NMSEntity = com.undefined.api.nms.v1_20_5.entity.NMSEntity(entityType)
+
+    override fun createTextDisplay(data: Array<out Any>): NMSTextDisplay = com.undefined.api.nms.v1_20_5.entity.entityClass.display.NMSTextDisplayEntity(data[0] as String)
 }
 
 class NMSEntityV1_21Factory : NMSEntityFactory {
@@ -105,6 +112,8 @@ class NMSEntityV1_21Factory : NMSEntityFactory {
     override fun createItemEntity(data: Array<out Any>): NMSItemEntity = com.undefined.api.nms.v1_21.entity.entityClass.NMSItemEntity(data[0] as ItemStack)
 
     override fun createEntity(entityType: EntityType): NMSEntity = com.undefined.api.nms.v1_21.entity.NMSEntity(entityType)
+
+    override fun createTextDisplay(data: Array<out Any>): NMSTextDisplay = com.undefined.api.nms.v1_21.entity.entityClass.display.NMSTextDisplayEntity(data[0] as String)
 }
 
 private val factories = mapOf(
@@ -121,6 +130,7 @@ fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMS
     val isPlayer = entityType == EntityType.PLAYER
     val isSlime = entityType == EntityType.SLIME
     val isItem = entityType == EntityType.DROPPED_ITEM
+    val isTextDisplay = entityType == EntityType.TEXT_DISPLAY
     val isBlockDisplay = entityType == EntityType.BLOCK_DISPLAY
     return when {
         isLivingEntity -> when {
@@ -129,6 +139,7 @@ fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMS
             else -> factory.createLivingEntity(entityType)
         }
         isBlockDisplay -> factory.createBlockDisplay(data)
+        isTextDisplay -> factory.createTextDisplay(data)
         isItem -> factory.createItemEntity(data)
         else -> factory.createEntity(entityType)
     }

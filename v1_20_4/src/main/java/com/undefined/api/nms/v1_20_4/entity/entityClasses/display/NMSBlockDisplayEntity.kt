@@ -1,6 +1,6 @@
 package com.undefined.api.nms.v1_20_4.entity.entityClasses.display
 
-import com.undefined.api.nms.interfaces.NMSBlockDisplayEntity
+import com.undefined.api.nms.interfaces.display.NMSBlockDisplayEntity
 import net.minecraft.world.entity.Display.BlockDisplay
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level

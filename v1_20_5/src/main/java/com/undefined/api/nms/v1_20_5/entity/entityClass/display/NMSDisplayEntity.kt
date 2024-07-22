@@ -1,7 +1,7 @@
 package com.undefined.api.nms.v1_20_5.entity.entityClass.display
 
 import com.undefined.api.nms.Billboard
-import com.undefined.api.nms.interfaces.NMSDisplayEntity
+import com.undefined.api.nms.interfaces.display.NMSDisplayEntity
 import com.undefined.api.nms.v1_20_5.entity.NMSEntity
 import com.undefined.api.nms.v1_20_5.extensions.*
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket

@@ -1,7 +1,7 @@
 package com.undefined.api.nms.v1_20_4.entity.entityClasses.display
 
 import com.undefined.api.nms.Billboard
-import com.undefined.api.nms.interfaces.NMSDisplayEntity
+import com.undefined.api.nms.interfaces.display.NMSDisplayEntity
 import com.undefined.api.nms.v1_20_4.entity.NMSEntity
 import com.undefined.api.nms.v1_20_4.extensions.*
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.Display
+import net.minecraft.world.entity.Display.TextDisplay
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 

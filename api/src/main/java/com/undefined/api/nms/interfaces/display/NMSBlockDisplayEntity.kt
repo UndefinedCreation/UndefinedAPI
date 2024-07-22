@@ -1,4 +1,4 @@
-package com.undefined.api.nms.interfaces
+package com.undefined.api.nms.interfaces.display
 
 import org.bukkit.block.data.BlockData
 
