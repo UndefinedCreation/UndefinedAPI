@@ -2,20 +2,18 @@ package com.undefined.api.nms.v1_20_4.entity.entityClasses.display
 
 import com.undefined.api.nms.interfaces.display.NMSTextDisplay
 import com.undefined.api.nms.v1_20_4.SpigotNMSMappings
+import com.undefined.api.nms.v1_20_4.extensions.DATA_BACKGROUND_COLOR_ID
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Display
+import net.minecraft.world.entity.Display.BlockDisplay
 import net.minecraft.world.entity.Display.TextDisplay
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.level.Level
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
 import java.lang.reflect.Method
 
 class NMSTextDisplayEntity(text: String) : NMSDisplayEntity(EntityType.TEXT_DISPLAY), NMSTextDisplay {
-
-    private val method: Method = Display.TextDisplay::class.java.getDeclaredMethod(SpigotNMSMappings.TextDisplaySetBackGroundColor)
-
-    init {
-        method.isAccessible = true
-    }
 
     override var text: String = text
         set(value) {
@@ -39,7 +37,7 @@ class NMSTextDisplayEntity(text: String) : NMSDisplayEntity(EntityType.TEXT_DISP
         set(value) {
             entity?.let {
                 val textEntity = it as Display.TextDisplay
-                method.invoke(textEntity, value)
+                textEntity.entityData.set(textEntity.DATA_BACKGROUND_COLOR_ID(), value)
                 sendMetaPackets()
                 field = value
             }
@@ -59,4 +57,6 @@ class NMSTextDisplayEntity(text: String) : NMSDisplayEntity(EntityType.TEXT_DISP
         super.spawn(newLocation)
         text = text
     }
+
+    override fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = TextDisplay(entityType, level)
 }

@@ -27,5 +27,5 @@ object SpigotNMSMappings {
     const val DisplayLeftRot = "v"
     const val DisplayRightRot = "aD"
 
-    const val TextDisplaySetBackGroundColor = "c"
+    const val TextDisplayBackgroundID = "aN"
 }
