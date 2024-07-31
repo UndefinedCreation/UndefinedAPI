@@ -6,7 +6,6 @@ import com.mojang.datafixers.util.Pair
 import com.undefined.api.nms.v1_20_4.extensions.getConnection
 import com.undefined.api.nms.*
 import com.undefined.api.nms.interfaces.NMSPlayer
-import com.undefined.api.scheduler.delay
 import com.undefined.api.nms.v1_20_4.NMSManager
 import com.undefined.api.nms.v1_20_4.SpigotNMSMappings
 import com.undefined.api.nms.v1_20_4.entity.NMSLivingEntity
@@ -339,7 +338,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
 
         val connection = ServerGamePacketListenerImpl(
             server,
-            com.undefined.api.nms.v1_20_4.npc.EmptyConnection(),
+            EmptyConnection(),
             fakeServerPlayer,
             CommonListenerCookie.createInitial(gameProfile)
         )

@@ -32,7 +32,6 @@ class EmptyConnection(flag: PacketFlow? = null): Connection(flag) {
     }
 
     override fun send(packet: Packet<*>) {
-
     }
 
     override fun send(packet: Packet<*>, genericfuturelistener: PacketSendListener?) {
