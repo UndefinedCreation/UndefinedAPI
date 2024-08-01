@@ -31,6 +31,7 @@ class NMSItemEntity(item: ItemStack): NMSEntity(EntityType.ITEM), com.undefined.
 
                 sendMetaPackets()
                 field = value
+
             }
 
         }

@@ -4,6 +4,8 @@ import com.undefined.api.UndefinedAPI
 import com.undefined.api.extension.getNMSVersion
 import com.undefined.api.nms.interfaces.*
 import com.undefined.api.nms.interfaces.display.NMSBlockDisplayEntity
+import com.undefined.api.nms.interfaces.display.NMSInteractionEntity
+import com.undefined.api.nms.interfaces.display.NMSItemDisplayEntity
 import com.undefined.api.nms.interfaces.display.NMSTextDisplay
 import org.bukkit.block.data.BlockData
 import org.bukkit.entity.EntityType
@@ -18,6 +20,8 @@ interface NMSEntityFactory {
     fun createItemEntity(data: Array<out Any>): NMSItemEntity?
     fun createEntity(entityType: EntityType): NMSEntity
     fun createTextDisplay(data: Array<out Any>): NMSTextDisplay?
+    fun createItemDisplay(data: Array<out Any>): NMSItemDisplayEntity?
+    fun createInteraction(): NMSInteractionEntity
 }
 
 class NMSEntityV1_20_4Factory : NMSEntityFactory {
@@ -50,6 +54,10 @@ class NMSEntityV1_20_4Factory : NMSEntityFactory {
     override fun createEntity(entityType: EntityType): NMSEntity = com.undefined.api.nms.v1_20_4.entity.NMSEntity(entityType)
 
     override fun createTextDisplay(data: Array<out Any>): NMSTextDisplay = com.undefined.api.nms.v1_20_4.entity.entityClasses.display.NMSTextDisplayEntity(data[0] as String)
+
+    override fun createItemDisplay(data: Array<out Any>): NMSItemDisplayEntity? = com.undefined.api.nms.v1_20_4.entity.entityClasses.display.NMSItemDisplayEntity(data[0] as ItemStack)
+
+    override fun createInteraction(): NMSInteractionEntity = com.undefined.api.nms.v1_20_4.entity.entityClasses.display.NMSInteractionEntity()
 }
 
 class NMSEntityV1_20_5Factory : NMSEntityFactory {
@@ -82,6 +90,10 @@ class NMSEntityV1_20_5Factory : NMSEntityFactory {
     override fun createEntity(entityType: EntityType): NMSEntity = com.undefined.api.nms.v1_20_5.entity.NMSEntity(entityType)
 
     override fun createTextDisplay(data: Array<out Any>): NMSTextDisplay = com.undefined.api.nms.v1_20_5.entity.entityClass.display.NMSTextDisplayEntity(data[0] as String)
+
+    override fun createItemDisplay(data: Array<out Any>): NMSItemDisplayEntity? = com.undefined.api.nms.v1_20_5.entity.entityClass.display.NMSItemDisplayEntity(data[0] as ItemStack)
+
+    override fun createInteraction(): NMSInteractionEntity = com.undefined.api.nms.v1_20_5.entity.entityClass.display.NMSInteractionEntity()
 }
 
 class NMSEntityV1_21Factory : NMSEntityFactory {
@@ -114,6 +126,10 @@ class NMSEntityV1_21Factory : NMSEntityFactory {
     override fun createEntity(entityType: EntityType): NMSEntity = com.undefined.api.nms.v1_21.entity.NMSEntity(entityType)
 
     override fun createTextDisplay(data: Array<out Any>): NMSTextDisplay = com.undefined.api.nms.v1_21.entity.entityClass.display.NMSTextDisplayEntity(data[0] as String)
+
+    override fun createItemDisplay(data: Array<out Any>): NMSItemDisplayEntity? = com.undefined.api.nms.v1_21.entity.entityClass.display.NMSItemDisplayEntity(data[0] as ItemStack)
+
+    override fun createInteraction(): NMSInteractionEntity = com.undefined.api.nms.v1_20_5.entity.entityClass.display.NMSInteractionEntity()
 }
 
 private val factories = mapOf(
@@ -132,15 +148,19 @@ fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMS
     val isItem = entityType == EntityType.DROPPED_ITEM
     val isTextDisplay = entityType == EntityType.TEXT_DISPLAY
     val isBlockDisplay = entityType == EntityType.BLOCK_DISPLAY
+    val isItemDisplay = entityType == EntityType.ITEM_DISPLAY
+    val isInteraction = entityType == EntityType.INTERACTION
     return when {
         isLivingEntity -> when {
             isSlime -> factory.createSlime()
             isPlayer -> factory.createPlayer(data)
             else -> factory.createLivingEntity(entityType)
         }
+        isItemDisplay -> factory.createItemDisplay(data)
         isBlockDisplay -> factory.createBlockDisplay(data)
         isTextDisplay -> factory.createTextDisplay(data)
         isItem -> factory.createItemEntity(data)
+        isInteraction -> factory.createInteraction()
         else -> factory.createEntity(entityType)
     }
 }

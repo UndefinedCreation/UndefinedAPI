@@ -10,7 +10,6 @@ import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.Display
-import net.minecraft.world.entity.Display.TextDisplay
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 
@@ -29,26 +28,20 @@ open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEn
         }
     override var scaleY: Float = 0.0F
         set(value) {
-
             entity?.let {
-
                 val e = it as Display
                 e.setScaleY(value)
                 updateScale()
                 field = value
-
             }
-
         }
     override var scaleZ: Float = 0.0F
         set(value) {
             entity?.let {
-
                 val e = it as Display
                 e.setScaleZ(value)
                 updateScale()
                 field = value
-
             }
         }
     override var billboard: Billboard = Billboard.CENTER

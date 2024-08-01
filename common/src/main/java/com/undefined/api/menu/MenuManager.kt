@@ -1,10 +1,9 @@
 package com.undefined.api.menu
 
+import com.undefined.api.menu.normal.UndefinedMenu
 import com.undefined.api.menu.normal.button.ClickData
 import com.undefined.api.menu.normal.button.MenuButton
-import com.undefined.api.menu.normal.UndefinedMenu
 import com.undefined.api.menu.page.UndefinedPageMenu
-import com.undefined.api.scheduler.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -15,7 +14,6 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
-import kotlin.collections.HashMap
 
 /**
  * Manages the functionality of menus in a plugin.
@@ -120,14 +118,12 @@ object MenuManager : Listener {
         if (!player.hasMenuOpen()) return
         if (e.clickedInventory == null) return
         if (e.clickedInventory!!.type != InventoryType.CHEST) return
-        e.view.title
         val menu = player.getMenu()!!
         if (menu is UndefinedPageMenu){
             runPageMenu(menu, e)
         }else{
             runDefaultMenu(menu, e)
         }
-
     }
 
     /**

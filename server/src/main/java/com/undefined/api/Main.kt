@@ -1,27 +1,10 @@
 package com.undefined.api
 
 import com.undefined.api.command.UndefinedCommand
-import com.undefined.api.customEvents.block.BlockGroupUpdateEvent
-import com.undefined.api.customEvents.block.BlockUpdateEvent
-import com.undefined.api.event.event
-import com.undefined.api.extension.sendBlockUpdateArray
-import com.undefined.api.extension.sendClearFakeBlock
-import com.undefined.api.extension.string.asInventory
-import com.undefined.api.extension.string.asString
-import com.undefined.api.menu.MenuSize
-import com.undefined.api.menu.normal.UndefinedMenu
 import com.undefined.api.nms.createFakeEntity
-import com.undefined.api.scheduler.delay
-import com.undefined.api.scoreboard.UndefinedScoreboard
-import org.bukkit.Bukkit
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.block.data.BlockData
+import com.undefined.api.nms.interfaces.display.NMSInteractionEntity
 import org.bukkit.entity.EntityType
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.inventory.Inventory
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.util.noise.PerlinNoiseGenerator
 
 class Main: JavaPlugin() {
 
@@ -31,13 +14,24 @@ class Main: JavaPlugin() {
         api = UndefinedAPI(this)
 
 
-        event<PlayerJoinEvent> {
+        UndefinedCommand("Items")
+            .addExecutePlayer {
 
-            val text = api.createFakeEntity(EntityType.TEXT_DISPLAY, "Testing")!!
-            text.addViewer(player)
-            text.spawn(player.location)
+                val player = player!!
 
-        }
+                val text = api.createFakeEntity(EntityType.INTERACTION)!! as NMSInteractionEntity
+                text.addViewer(player)
+                text.spawn(player.location)
+                text.height = 0.5f
+                text.width = 2f
+
+                text.interact {
+
+                    println("Interact")
+                }
+
+                return@addExecutePlayer false
+            }
 
     }
 }

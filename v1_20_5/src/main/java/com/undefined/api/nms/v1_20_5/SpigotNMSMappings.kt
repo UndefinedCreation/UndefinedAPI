@@ -28,4 +28,6 @@ object SpigotNMSMappings {
     const val DisplayRightRot = "aF"
 
     const val TextDisplayBackgroundID = "aP"
+
+    const val ItemDisplayID = "s"
 }
