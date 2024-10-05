@@ -4,7 +4,6 @@ import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
 import net.minecraft.network.protocol.Packet
-import org.bukkit.Material
 
 /**
  * A custom ChannelDuplexHandler that allows performing custom logic on incoming and outgoing channel events.

@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitTask
  * @param runnable the code to be executed synchronously
  * @return the BukkitTask that represents the scheduled task
  */
-fun sync(runnable: BukkitRunnable.() -> Unit): BukkitTask = com.undefined.api.scheduler.createRunnable(runnable)
+fun sync(runnable: BukkitRunnable.() -> Unit): BukkitTask = createRunnable(runnable)
     .runTask(com.undefined.api.API.plugin)
 
 /**
@@ -18,7 +18,7 @@ fun sync(runnable: BukkitRunnable.() -> Unit): BukkitTask = com.undefined.api.sc
  * @param runnable the code to be executed asynchronously.
  * @return the [BukkitTask] associated with the scheduled task.
  */
-fun async(runnable: BukkitRunnable.() -> Unit): BukkitTask = com.undefined.api.scheduler.createRunnable(runnable)
+fun async(runnable: BukkitRunnable.() -> Unit): BukkitTask = createRunnable(runnable)
     .runTaskAsynchronously(com.undefined.api.API.plugin)
 
 /**

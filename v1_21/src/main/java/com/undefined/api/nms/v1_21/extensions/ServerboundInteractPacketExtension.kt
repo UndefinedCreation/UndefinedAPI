@@ -18,7 +18,7 @@ fun ServerboundInteractPacket.getEntityID() = getPrivateField<Int>(SpigotNMSMapp
  */
 fun ServerboundInteractPacket.isAttacking(): Boolean {
     val firstChar = getActionFirstChar()
-    return firstChar[0] == '1'
+    return firstChar == '1'
 }
 
 /**

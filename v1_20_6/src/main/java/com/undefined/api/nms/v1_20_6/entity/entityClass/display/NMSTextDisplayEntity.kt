@@ -15,7 +15,7 @@ class NMSTextDisplayEntity(text: String) : NMSDisplayEntity(EntityType.TEXT_DISP
     override var text: String = text
         set(value) {
             entity?.let {
-                val textEntity = it as Display.TextDisplay
+                val textEntity = it as TextDisplay
                 textEntity.text = Component.literal(value)
                 sendMetaPackets()
                 field = value
@@ -25,7 +25,7 @@ class NMSTextDisplayEntity(text: String) : NMSDisplayEntity(EntityType.TEXT_DISP
     override var width: Float = 200F
         set(value) {
             entity?.let {
-                val textEntity = it as Display.TextDisplay
+                val textEntity = it as TextDisplay
                 textEntity.width = value
                 sendMetaPackets()
                 field = value
@@ -35,7 +35,7 @@ class NMSTextDisplayEntity(text: String) : NMSDisplayEntity(EntityType.TEXT_DISP
     override var backGroundColor: Int = 1073741824
         set(value) {
             entity?.let {
-                val textEntity = it as Display.TextDisplay
+                val textEntity = it as TextDisplay
                 textEntity.entityData.set(textEntity.DATA_BACKGROUND_COLOR_ID(), value)
                 sendMetaPackets()
                 field = value
@@ -45,7 +45,7 @@ class NMSTextDisplayEntity(text: String) : NMSDisplayEntity(EntityType.TEXT_DISP
     override var textOpacity: Byte = -1
         set(value) {
             entity?.let {
-                val textEntity = it as Display.TextDisplay
+                val textEntity = it as TextDisplay
                 textEntity.textOpacity = value
                 sendMetaPackets()
                 field = value

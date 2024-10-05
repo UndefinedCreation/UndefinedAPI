@@ -4,11 +4,10 @@ import com.undefined.api.nms.interfaces.NMSLivingEntity
 import com.undefined.api.nms.toDeltaValue
 import com.undefined.api.nms.toRotationValue
 import com.undefined.api.nms.v1_21.extensions.sendPacket
-import net.minecraft.network.protocol.game.*
-import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.network.syncher.EntityDataSerializers
-import net.minecraft.network.syncher.SynchedEntityData
-import org.bukkit.Bukkit
+import net.minecraft.network.protocol.game.ClientboundEntityEventPacket
+import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket
+import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket
+import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
 

@@ -5,8 +5,6 @@ import com.undefined.api.nms.interfaces.NMSItemEntity
 import com.undefined.api.nms.v1_20_4.SpigotNMSMappings
 import com.undefined.api.nms.v1_20_4.entity.NMSEntity
 import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.network.syncher.EntityDataSerializers
-import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.level.Level

@@ -1,16 +1,13 @@
 package com.undefined.api.nms.v1_21.entity.entityClass.display
 
 import com.undefined.api.nms.interfaces.display.NMSTextDisplay
-import com.undefined.api.nms.v1_21.SpigotNMSMappings
 import com.undefined.api.nms.v1_21.extensions.DATA_BACKGROUND_COLOR_ID
 import net.minecraft.network.chat.Component
-import net.minecraft.world.entity.Display
 import net.minecraft.world.entity.Display.TextDisplay
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
-import java.lang.reflect.Method
 
 
 class NMSTextDisplayEntity(text: String) : NMSDisplayEntity(EntityType.TEXT_DISPLAY), NMSTextDisplay {

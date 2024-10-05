@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.undefined.api.nms.v1_20_4.entity
 
 import com.google.common.collect.ImmutableList
@@ -144,7 +146,6 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
     override fun removeViewer(player: Player) {
         viewers.remove(player)
     }
-
 
     override fun spawn(newLocation: Location) {
         if (viewers.isEmpty()) return

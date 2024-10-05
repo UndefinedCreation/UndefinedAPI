@@ -2,7 +2,6 @@ package com.undefined.api.command.sub
 
 import com.undefined.api.command.info.EnumSubCommandInfo
 import org.bukkit.command.CommandSender
-import java.util.*
 
 class EnumSubCommand<T: Enum<T>>(
     val enumClass: Class<T>

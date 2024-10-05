@@ -254,8 +254,9 @@ class PacketListenerManager {
     private fun handleArmorChange(player: Player, msg: ClientboundContainerSetSlotPacket) {
         val sPlayer = (player as CraftPlayer).handle
         val windowID = sPlayer.containerMenu.containerId
+        val containerID = msg.getContainerID()
 
-        val containerID = msg.getContainerID().takeIf { windowID != it } ?: return
+        if (containerID != windowID) return
         val slot = msg.getContainerSlot()
 
         if (!armorSlots.containsKey(slot)) return

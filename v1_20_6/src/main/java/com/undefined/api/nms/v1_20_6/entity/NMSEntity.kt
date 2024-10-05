@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.undefined.api.nms.v1_20_6.entity
 
 import com.google.common.collect.ImmutableList

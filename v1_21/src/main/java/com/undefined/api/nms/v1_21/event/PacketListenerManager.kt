@@ -1,9 +1,12 @@
 package com.undefined.api.nms.v1_21.event
 
-import com.undefined.api.customEvents.*
+import com.undefined.api.customEvents.ParticleEvent
+import com.undefined.api.customEvents.SoundEvent
+import com.undefined.api.customEvents.SoundStopEvent
 import com.undefined.api.customEvents.block.BlockGroupUpdateEvent
 import com.undefined.api.customEvents.block.BlockUpdateEvent
-import com.undefined.api.customEvents.entity.*
+import com.undefined.api.customEvents.entity.EntityExtinguishEvent
+import com.undefined.api.customEvents.entity.EntityIgniteEvent
 import com.undefined.api.customEvents.entity.player.PlayerArmSwingEvent
 import com.undefined.api.customEvents.entity.player.PlayerArmorChangeEvent
 import com.undefined.api.customEvents.entity.player.PlayerMainHandSwitchEvent
@@ -31,7 +34,6 @@ import org.bukkit.craftbukkit.CraftSound
 import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.block.data.CraftBlockData
 import org.bukkit.craftbukkit.entity.CraftPlayer
-import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent

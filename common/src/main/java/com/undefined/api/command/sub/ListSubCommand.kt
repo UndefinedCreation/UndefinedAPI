@@ -2,7 +2,6 @@ package com.undefined.api.command.sub
 
 import com.undefined.api.command.info.ListSubCommandInfo
 import org.bukkit.command.CommandSender
-import java.util.UUID
 
 class ListSubCommand<T>(
     private val subList: CommandSender.() -> List<T>,

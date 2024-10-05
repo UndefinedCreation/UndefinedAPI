@@ -4,14 +4,12 @@ import com.undefined.api.command.info.AllCommand
 import com.undefined.api.command.sub.UndefinedSubCommand
 import com.undefined.api.nms.extensions.getPrivateField
 import org.bukkit.Bukkit
-import org.bukkit.command.Command
 import org.bukkit.command.CommandMap
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.command.defaults.BukkitCommand
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
-import java.util.*
 
 
 class UndefinedCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList()): BaseUndefinedCommand()  {
