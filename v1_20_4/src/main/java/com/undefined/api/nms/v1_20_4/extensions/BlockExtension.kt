@@ -19,13 +19,8 @@ import org.bukkit.entity.Player
 object BlockExtension {
 
     fun setBlockProgress(player: Player, block: Block, stage: Int) {
-
         val packet = ClientboundBlockDestructionPacket(player.entityId, BlockPos(block.x, block.y, block.z), stage)
-
         player.sendPacket(packet)
-
-
-
     }
 
     fun getID(blockData: BlockData) : Int = net.minecraft.world.level.block.Block.getId((blockData as CraftBlockData).state)
@@ -58,7 +53,6 @@ object BlockExtension {
     }
 
     fun clearFakeBlocks(player: Player) {
-
         val map: MutableMap<SectionPos, MutableList<BlockPos>> = PacketListenerManager.fakeBlocks[player.uniqueId]
             ?.groupByTo(mutableMapOf(), { SectionPos.of(it) }, { it })
             ?: mutableMapOf()
@@ -69,7 +63,6 @@ object BlockExtension {
         map.forEach { (key, _) ->
             val chunk = cWorld.handle.getChunk(key.chunk().x, key.chunk().z)
             val packet = ClientboundLevelChunkWithLightPacket(chunk, light, null, null, true)
-
             player.sendPacket(packet)
         }
 

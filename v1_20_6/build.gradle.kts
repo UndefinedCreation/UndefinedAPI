@@ -6,25 +6,21 @@ plugins{
 paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.REOBF_PRODUCTION
 
 dependencies {
-
     paperweight.paperDevBundle("1.20.6-R0.1-SNAPSHOT")
-
     compileOnly(project(":api"))
 }
 
 tasks {
-
     compileKotlin {
         kotlinOptions.jvmTarget = "21"
     }
-
 }
 
 java {
     disableAutoTargetJvm()
 }
 
-kotlin{
+kotlin {
     jvmToolchain(21)
 }
 

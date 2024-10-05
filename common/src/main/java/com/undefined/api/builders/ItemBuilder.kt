@@ -211,16 +211,9 @@ class ItemBuilder(private var itemStack: ItemStack) {
                 }
             }
         }
-        
-        
-            
 
-        flags.forEach {
-            itemMeta.addItemFlags(it)
-        }
-
+        flags.forEach { itemMeta.addItemFlags(it) }
         itemStack.itemMeta = itemMeta
-
         return itemStack
     }
 

@@ -41,7 +41,6 @@ class UndefinedScoreboard(private val title: String, private val  scoreboard: Sc
      */
     constructor(title: String): this(title, Bukkit.getScoreboardManager()!!.newScoreboard)
 
-
     /**
      * Represents the objective for a scoreboard.
      *
@@ -58,10 +57,12 @@ class UndefinedScoreboard(private val title: String, private val  scoreboard: Sc
      * @property index The current value of the index.
      */
     private var index: Int = 0
+
     /**
      * The number of spaces.
      */
     private var spaces: Int = 0
+
     /**
      * Represents a map of teams identified by an integer key.
      *
@@ -87,7 +88,6 @@ class UndefinedScoreboard(private val title: String, private val  scoreboard: Sc
      */
     fun addEmptyLine(): UndefinedScoreboard {
         val string = " ".repeat(spaces)
-
         val score = objective.getScore(order(index) + string)
         score.score = 0
 
@@ -128,7 +128,6 @@ class UndefinedScoreboard(private val title: String, private val  scoreboard: Sc
      * @return The UndefinedScoreboard instance after adding the value line.
      */
     fun addValueLine(id: Int, prefix: String, suffix: String): UndefinedScoreboard {
-
         val order = order(index)
         val team = scoreboard.registerNewTeam(id.toString())
 
@@ -152,14 +151,10 @@ class UndefinedScoreboard(private val title: String, private val  scoreboard: Sc
      * @return The undefined scoreboard object with the updated value line.
      */
     fun setValueLine(id: Int, prefix: String? = null, suffix: String? = null): UndefinedScoreboard {
-
         val team = teamMap[id] ?: return this
 
-        if (prefix != null)
-            team.prefix = prefix
-
-        if (suffix != null)
-            team.suffix = suffix
+        if (prefix != null) team.prefix = prefix
+        if (suffix != null) team.suffix = suffix
 
         return this
     }
@@ -174,4 +169,5 @@ class UndefinedScoreboard(private val title: String, private val  scoreboard: Sc
     private fun order(time: Int): String {
         return "§" + ('a'.code + time).toChar().toString() + ChatColor.RESET
     }
+
 }

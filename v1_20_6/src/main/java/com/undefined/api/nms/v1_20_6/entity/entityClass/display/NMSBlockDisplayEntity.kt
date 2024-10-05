@@ -13,12 +13,10 @@ class NMSBlockDisplayEntity(block: BlockData): NMSDisplayEntity(EntityType.BLOCK
     override var blockData: BlockData = block
         set(value) {
             entity?.let {
-
-                val b = it as BlockDisplay
-                b.blockState = (value as CraftBlockData).state
+                val blockDisplay = it as BlockDisplay
+                blockDisplay.blockState = (value as CraftBlockData).state
                 sendMetaPackets()
                 field = value
-
             }
         }
 

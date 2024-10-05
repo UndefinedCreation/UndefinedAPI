@@ -16,9 +16,7 @@ open class NMSLivingEntity(override var entityType: EntityType): NMSLivingEntity
     override fun moveTo(newLocation: Location) {
         val currentLocation = location ?: return
         val entity = entity ?: return
-
-        if (currentLocation.distance(newLocation) > 8.0)
-            return
+        if (currentLocation.distance(newLocation) > 8.0) return
 
         val deltaX = toDeltaValue(currentLocation.x, newLocation.x)
         val deltaY =  toDeltaValue(currentLocation.y, newLocation.y)
@@ -52,11 +50,7 @@ open class NMSLivingEntity(override var entityType: EntityType): NMSLivingEntity
     override fun moveOrTeleport(newLocation: Location) {
         entity?.let {
             location?.let {
-                if (it.distance(newLocation) > 8.0) {
-                    teleport(newLocation)
-                } else {
-                    moveTo(newLocation)
-                }
+                if (it.distance(newLocation) > 8.0) teleport(newLocation) else moveTo(newLocation)
             }
         }
     }
@@ -81,10 +75,8 @@ open class NMSLivingEntity(override var entityType: EntityType): NMSLivingEntity
 
     override fun deathAnimation() {
         val serverPlayer = entity ?: return
-
         val animatepacket1 = ClientboundEntityEventPacket(serverPlayer, 3)
         val animatePacket2 = ClientboundEntityEventPacket(serverPlayer, 60)
-
         viewers.sendPacket(animatepacket1, animatePacket2)
     }
 

@@ -10,6 +10,7 @@ import com.undefined.api.nms.v1_20_4.NMSManager
 import com.undefined.api.nms.v1_20_4.SpigotNMSMappings
 import com.undefined.api.nms.v1_20_4.entity.NMSLivingEntity
 import com.undefined.api.nms.v1_20_4.extensions.sendPacket
+import com.undefined.api.scheduler.delay
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -39,8 +40,10 @@ import java.util.*
  * such as moving, teleporting, setting items, changing pose, and more.
  */
 class NMSPlayer: NMSPlayer, NMSLivingEntity {
+
     override val viewers: MutableList<Player> = mutableListOf()
     private var serverPlayer: ServerPlayer? = null
+
     /**
      * Represents the location of an entity.
      *
@@ -48,6 +51,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      * and the necessary updates are sent to all the viewers of the entity.
      */
     override var location: Location? = null
+
     /**
      * The name property represents the name of the player. It is a mutable property of type String.
      * When the value of name is set, it performs some additional actions. If the serverPlayer is null, the method returns.
@@ -62,10 +66,12 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
             kill()
             spawn(tempLocation)
         }
+
     override var signature: String = ""
     override var texture: String = ""
 
     override val equipped: HashMap<Int, ItemStack?> = HashMap()
+
     /**
      * Represents whether the player is currently crouching or not.
      * When the value of this variable is set, it updates the player's pose accordingly.
@@ -73,17 +79,14 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      */
     override var isCrouching: Boolean = false
         set(value) {
-            if (value){
-                setPose(Pose.CROUCHING)
-            }else{
-                setPose(Pose.STANDING)
-            }
+            if (value) setPose(Pose.CROUCHING) else setPose(Pose.STANDING)
             field = value
         }
         get() {
             val player = serverPlayer ?: return false
             return player.pose.equals(net.minecraft.world.entity.Pose.CROUCHING)
         }
+
     /**
      * Gets or sets the swimming status of the player.
      * When setting to true, the player's pose is set to SWIMMING.
@@ -92,30 +95,23 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      * @property isSwimming true if the player is swimming, false otherwise.
      */
     override var isSwimming: Boolean = false
-        set(value){
-            if (value){
-                setPose(Pose.SWIMMING)
-            }else{
-                setPose(Pose.STANDING)
-            }
+        set(value) {
+            if (value) setPose(Pose.SWIMMING) else setPose(Pose.STANDING)
             field = value
         }
         get() {
             val player = serverPlayer ?: return false
             return player.pose.equals(net.minecraft.world.entity.Pose.SWIMMING)
         }
+
     /**
      * Determines whether the player is gliding or not.
      *
      * @return true if the player is gliding, false otherwise
      */
     override var isGliding: Boolean = false
-        set(value){
-            if (value){
-                setPose(Pose.FALL_FLYING)
-            }else{
-                setPose(Pose.STANDING)
-            }
+        set(value) {
+            if (value) setPose(Pose.FALL_FLYING) else setPose(Pose.STANDING)
             field = value
         }
         get() {
@@ -179,7 +175,6 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
     override fun setItem(slot: Int, itemStack: ItemStack) {
         val player = serverPlayer ?: return
         val nmsEquipment = ItemSlotObject.getItemSlotFromSlot(slot) ?: return
-
         val nmsItemStack = CraftItemStack.asNMSCopy(itemStack)
 
         player.inventory.setItem(slot, nmsItemStack)
@@ -190,9 +185,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
         )
 
         viewers.sendPacket(equipmentPacket)
-
         updateMetaDataPacket()
-
         equipped[slot] = itemStack
     }
     /**
@@ -218,7 +211,6 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
 
         val method = getLivingEntityFlagMethod()
         method.isAccessible = true
-
         method.invoke(player,1, true)
         method.invoke(player, 2, false)
 
@@ -236,17 +228,14 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
     override fun useOffHand() {
         val player = serverPlayer ?: return
 
-
         if (!equipped.containsKey(ItemSlot.OFFHAND.slot)) return
 
         val method = getLivingEntityFlagMethod()
         method.isAccessible = true
-
         method.invoke(player,1, true)
         method.invoke(player, 2, true)
 
         updateMetaDataPacket()
-
     }
 
     /**
@@ -263,9 +252,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      */
     override fun stopUsingMainHandItem() {
         val player = serverPlayer ?: return
-
         val item = if (equipped.containsKey(ItemSlot.MAINHAND.slot)) equipped[ItemSlot.MAINHAND.slot] else return
-
         val method = getLivingEntityFlagMethod()
         method.isAccessible = true
         method.invoke(player,1, false)
@@ -273,7 +260,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
 
         setItem(ItemSlot.MAINHAND, ItemStack(Material.AIR))
 
-        com.undefined.api.scheduler.delay(1) { setItem(ItemSlot.MAINHAND, item!!) }
+        delay(1) { setItem(ItemSlot.MAINHAND, item!!) }
     }
 
     /**
@@ -294,19 +281,14 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      */
     override fun stopUsingOffHandItem() {
         val player = serverPlayer ?: return
-
         val item = if (equipped.containsKey(ItemSlot.OFFHAND.slot)) equipped[ItemSlot.OFFHAND.slot] else return
-
         val method = getLivingEntityFlagMethod()
         method.isAccessible = true
         method.invoke(player,1, false)
         updateMetaDataPacket()
-
         player.stopUsingItem()
-
         setItem(ItemSlot.OFFHAND, ItemStack(Material.AIR))
-
-        com.undefined.api.scheduler.delay(1) { setItem(ItemSlot.OFFHAND, item!!) }
+        delay(1) { setItem(ItemSlot.OFFHAND, item!!) }
     }
 
     /**
@@ -316,17 +298,12 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      * @param done the action to be performed by the player after spawning
      */
     override fun spawn(newLocation: Location) {
-
-        if (viewers.isEmpty()) {
-            return
-        }
+        if (viewers.isEmpty()) return
 
         this.location = newLocation
-
         val sPlayer = viewers.random().getConnection()
 
         val gameProfile = GameProfile(UUID.randomUUID(), name)
-
         gameProfile.properties.put("textures", Property("textures", texture, signature))
 
         val server = (Bukkit.getServer() as CraftServer).server
@@ -348,10 +325,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
         serverPlayer = fakeServerPlayer
         entity = serverPlayer
 
-        viewers.forEach{
-            sendBasePackets(it)
-        }
-
+        viewers.forEach { sendBasePackets(it) }
     }
 
     /**
@@ -383,7 +357,6 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      * After killing the player, their serverPlayer and location properties are set to null.
      */
     override fun kill() {
-
         viewers.forEach { viewer ->
             removeBasePackets(viewer)
         }
@@ -425,7 +398,6 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
         val packet = player.entityData.nonDefaultValues?.let {
             ClientboundSetEntityDataPacket(player.bukkitEntity.entityId, it)
         }
-
         packet?.also { viewers.sendPacket(packet) }
     }
 
@@ -443,7 +415,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
         player.sendPacket(addPlayerPacket)
         player.sendPacket(addEntityPacket)
 
-        com.undefined.api.scheduler.delay(2) {
+        delay(2) {
             val data = serverPlayer.entityData
             val bitmask: Byte = (0x01 or 0x04 or 0x08 or 0x10 or 0x20 or 0x40 or 127).toByte()
             data.set(EntityDataAccessor(17, EntityDataSerializers.BYTE), bitmask)
@@ -459,14 +431,12 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      * @param player the player to remove the base packets from
      */
     override fun removeBasePackets(player: Player) {
-
         val serverPlayer = serverPlayer ?: return
 
         val infoRemovePacket = ClientboundPlayerInfoRemovePacket(listOf(serverPlayer.uuid))
         val entityRemovePacket = ClientboundRemoveEntitiesPacket(serverPlayer.id)
 
         player.sendPacket(infoRemovePacket, entityRemovePacket)
-
     }
 
     override fun interact(interact: EntityInteract.() -> Unit) {
@@ -486,6 +456,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      * @return true if the player is alive, false otherwise.
      */
     override fun isAlive(): Boolean = serverPlayer != null
+
     /**
      * Sets the pose of the player.
      *
@@ -493,9 +464,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      */
     override fun setPose(pose: Pose) {
         val serverPlayer = serverPlayer ?: return
-
         val nmsPose = net.minecraft.world.entity.Pose.valueOf(pose.name)
-
         serverPlayer.pose = nmsPose
 
         val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
@@ -503,7 +472,6 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
         )
 
         val dataPacket = ClientboundSetEntityDataPacket(serverPlayer.id, dataList)
-
         viewers.sendPacket(dataPacket)
     }
 
@@ -515,4 +483,5 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      * @return the Method object representing the "c" method in the LivingEntity class
      */
     override fun getLivingEntityFlagMethod(): Method = LivingEntity::class.java.getDeclaredMethod(SpigotNMSMappings.LivingEntitySetFlag, Int::class.java, Boolean::class.java)
+
 }

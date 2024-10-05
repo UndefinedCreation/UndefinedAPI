@@ -1,7 +1,5 @@
 package com.undefined.api.nms.interfaces
 
-interface NMSSlimeEntity: NMSLivingEntity {
-
+interface NMSSlimeEntity : NMSLivingEntity {
     var size: Int
-
 }

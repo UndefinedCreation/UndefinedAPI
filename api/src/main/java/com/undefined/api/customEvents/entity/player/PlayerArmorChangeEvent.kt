@@ -20,36 +20,21 @@ class PlayerArmorChangeManager {
         Pair("BOOTS", 36)
     )
 
-
     init {
-
         event<PlayerInteractEvent> {
-
             if (item == null) return@event
-
-            if (action == Action.RIGHT_CLICK_BLOCK) {
-                if (clickedBlock!!.state is InventoryHolder){
-                    return@event
-                }
-            }
-
+            if (action == Action.RIGHT_CLICK_BLOCK && clickedBlock!!.state is InventoryHolder) return@event
             if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return@event
 
             val name = item!!.type.name
+            val last = name.split("_").last()
 
             if (!name.contains("_")) return@event
-
-            val last = name.split("_").last
-
             if (!armorMap.containsKey(last)) return@event
 
             val slot = armorMap[last]!!
-
             Bukkit.getPluginManager().callEvent(PlayerArmorChangeEvent(player, item!!, slot))
-
         }
-
-
     }
 
 }

@@ -2,8 +2,5 @@ package com.undefined.api.extension
 
 import org.bukkit.Bukkit
 
-fun getNMSVersion(): String {
-    val v = Bukkit.getBukkitVersion()
-    return v.split("-")[0]
-}
+fun getNMSVersion(): String = Bukkit.getBukkitVersion().split("-")[0]
 

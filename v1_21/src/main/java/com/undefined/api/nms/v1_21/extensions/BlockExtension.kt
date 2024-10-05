@@ -19,9 +19,7 @@ import org.bukkit.entity.Player
 object BlockExtension {
 
     fun setBlockProgress(player: Player, block: Block, stage: Int) {
-
         val packet = ClientboundBlockDestructionPacket(player.entityId, BlockPos(block.x, block.y, block.z), stage)
-
         player.sendPacket(packet)
     }
 
@@ -55,7 +53,6 @@ object BlockExtension {
     }
 
     fun clearFakeBlocks(player: Player) {
-
         val map: MutableMap<SectionPos, MutableList<BlockPos>> = PacketListenerManager.fakeBlocks[player.uniqueId]
             ?.groupByTo(mutableMapOf(), { SectionPos.of(it) }, { it })
             ?: mutableMapOf()

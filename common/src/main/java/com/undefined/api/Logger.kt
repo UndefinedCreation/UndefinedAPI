@@ -9,6 +9,7 @@ import java.util.logging.Level
  * @param message the log message to send
  */
 fun sendLog(message: String) = Bukkit.getLogger().info(message)
+
 /**
  * Sends each string in the [list] as a log message.
  *
@@ -29,6 +30,7 @@ fun sendLog(vararg list: String) = list.forEach { sendLog(it) }
  * @param message The warning message to be logged.
  */
 fun sendWarning(message: String) = Bukkit.getLogger().warning(message)
+
 /**
  * Sends a warning message to the server's logger for each string in the specified list.
  *
@@ -44,12 +46,14 @@ fun sendWarning(list: List<String>) = list.forEach{ sendWarning(it) }
  * @param arg the warning messages to be logged.
  */
 fun sendWarning(vararg arg: String) = arg.forEach { sendWarning(it) }
+
 /**
  * Sends an error message to the server log.
  *
  * @param message the error message to be logged
  */
 fun sendError(message: String) = Bukkit.getLogger().log(Level.SEVERE, message)
+
 /**
  * Sends an error message for each string in the given list.
  *

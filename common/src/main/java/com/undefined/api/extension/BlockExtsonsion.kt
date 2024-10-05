@@ -13,7 +13,7 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitTask
 
-fun Block.getConnectedBlocks(): List<Block> = BlockFace.values()
+fun Block.getConnectedBlocks(): List<Block> = BlockFace.entries
     .filter { !it.name.contains("_") && it != BlockFace.SELF }
     .map { this.getRelative(it) }
 
@@ -44,9 +44,7 @@ fun Int.asBlockData(): BlockData =
 private val glowMap: HashMap<Block, NMSSlimeEntity> = hashMapOf()
 private val taskMap: HashMap<Block, BukkitTask> = hashMapOf()
 
-
 fun Block.glow(chatColor: ChatColor, viewers: List<Player>, tick: Int) {
-
     taskMap[this]?.let {
         taskMap[this]!!.cancel()
         taskMap.remove(this)
@@ -56,15 +54,11 @@ fun Block.glow(chatColor: ChatColor, viewers: List<Player>, tick: Int) {
     glowMap[this] = slime
 
     slime.size = 2
-
     slime.viewers.clear()
-
     viewers.forEach { slime.addViewer(it) }
 
-    val l = this.location.add(0.5,0.0,0.5)
-
-    slime.spawn(l)
-
+    val location = this.location.add(0.5,0.0,0.5)
+    slime.spawn(location)
     slime.setHeadRotation(0F)
     slime.isVisible = false
     slime.glowing = true

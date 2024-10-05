@@ -9,8 +9,7 @@ import java.lang.reflect.Method
 /**
  * Represents an NMS player.
  */
-interface NMSPlayer: NMSLivingEntity {
-
+interface NMSPlayer : NMSLivingEntity {
 
     var name: String
     var signature: String
@@ -19,8 +18,6 @@ interface NMSPlayer: NMSLivingEntity {
     var isCrouching: Boolean
     var isSwimming: Boolean
     var isGliding: Boolean
-
-
 
     /**
      * Sets the skin of the player character.
@@ -43,6 +40,7 @@ interface NMSPlayer: NMSLivingEntity {
      * Clears all items from the inventory of the NMSPlayer.
      */
     fun clearItems()
+
     /**
      * Sets the item in the specified slot of the inventory.
      *
@@ -50,6 +48,7 @@ interface NMSPlayer: NMSLivingEntity {
      * @param itemStack The item stack to be set in the slot.
      */
     fun setItem(slot: Int, itemStack: ItemStack)
+
     /**
      *
      */
@@ -59,6 +58,7 @@ interface NMSPlayer: NMSLivingEntity {
      * Sets the player's main hand for item interactions.
      */
     fun useMainHand()
+
     /**
      * Sets the player to use their off-hand for item interactions.
      * Any item interactions performed by the player after calling this method will use the off-hand slot.
@@ -95,13 +95,13 @@ interface NMSPlayer: NMSLivingEntity {
      * This method does not have a return value.
      */
     fun moveMainHand()
+
     /**
      * Moves the off-hand item to the main hand slot.
      * This method is used to switch the player's item from the off-hand to the main hand.
      * It does not return any value.
      */
     fun moveOffHand()
-
 
     /**
      * Resets the pose of the entity.
@@ -112,7 +112,6 @@ interface NMSPlayer: NMSLivingEntity {
      * Note: This method does not have any parameters or return values.
      */
     fun resetPose()
-
 
     /**
      * Updates the metadata packet for the entity.
@@ -132,7 +131,6 @@ interface NMSPlayer: NMSLivingEntity {
      * @param player The player for whom to remove the base packets.
      */
     fun removeBasePackets(player: Player)
-
 
     /**
      * Sets the pose of the entity.

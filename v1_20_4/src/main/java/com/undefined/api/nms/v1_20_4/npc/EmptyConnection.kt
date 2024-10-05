@@ -17,6 +17,7 @@ import java.net.SocketAddress
  * @param flag the packet flow flag for the connection
  */
 class EmptyConnection(flag: PacketFlow? = null): Connection(flag) {
+
     init {
         channel = EmptyChannel(null)
         address = object : SocketAddress() {
@@ -27,9 +28,7 @@ class EmptyConnection(flag: PacketFlow? = null): Connection(flag) {
     override fun flushChannel() {
     }
 
-    override fun isConnected(): Boolean {
-        return true
-    }
+    override fun isConnected(): Boolean = true
 
     override fun send(packet: Packet<*>) {
     }

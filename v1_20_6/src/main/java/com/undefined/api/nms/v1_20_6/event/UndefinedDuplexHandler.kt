@@ -18,7 +18,7 @@ class UndefinedDuplexHandler(private val read: Packet<*>.() -> Boolean, private 
             super.channelRead(ctx, msg)
             return
         }
-        if (msg is Packet<*>){
+        if (msg is Packet<*>) {
             val cancel = read.invoke(msg)
             if (cancel) return
         }

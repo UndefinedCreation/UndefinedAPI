@@ -15,23 +15,16 @@ import org.bukkit.Material
 class UndefinedDuplexHandler(private val read: Packet<*>.() -> Boolean, private val write: Any.() -> Boolean): ChannelDuplexHandler() {
 
     override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
-        if (msg == null) {
-            super.channelRead(ctx, msg)
-            return
-        }
-        if (msg is Packet<*>){
+        if (msg == null) return super.channelRead(ctx, msg)
+        if (msg is Packet<*>) {
             val cancel = read.invoke(msg)
             if (cancel) return
-
         }
         super.channelRead(ctx, msg)
     }
 
     override fun write(ctx: ChannelHandlerContext?, msg: Any?, promise: ChannelPromise?) {
-        if (msg == null) {
-            super.write(ctx, msg, promise)
-            return
-        }
+        if (msg == null) return super.write(ctx, msg, promise)
         val cancel = write.invoke(msg)
         if (cancel) return
 

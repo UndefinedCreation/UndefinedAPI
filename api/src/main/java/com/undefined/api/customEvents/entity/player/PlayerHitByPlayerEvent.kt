@@ -12,27 +12,26 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import java.util.UUID
 
-
 /**
  * @hidden
  */
-class PlayerHitByPlayerManager(){
-    init {
+class PlayerHitByPlayerManager {
 
+    init {
         val enderCrystalMap: HashMap<EnderCrystal, UUID> = hashMapOf()
 
         event<EntityDamageByEntityEvent> (priority = EventPriority.HIGHEST) {
             if (isCancelled) return@event
             val player = entity as? Player ?: return@event
             val damagerPlayer = damager as? Player
-            if (damagerPlayer != null){
+            if (damagerPlayer != null) {
                 if (damagerPlayer == player) return@event
                 Bukkit.getPluginManager().callEvent(PlayerHitByPlayerEvent(player, damagerPlayer, HitCause.HAND))
                 return@event
             }
 
             val projectile = damager as? Projectile
-            if (projectile != null){
+            if (projectile != null) {
                 if (projectile.shooter is Player) {
                     if (projectile.shooter as Player == player) return@event
                     Bukkit.getPluginManager().callEvent(PlayerHitByPlayerEvent(player, projectile.shooter as Player, HitCause.PROJECTILE))
@@ -40,14 +39,14 @@ class PlayerHitByPlayerManager(){
             }
 
             val tnt = damager as? TNTPrimed
-            if (tnt != null){
-                if (tnt.source is Player)
+            if (tnt != null) {
+                if (tnt.source is Player) {
                     if (tnt.source == player) return@event
                     Bukkit.getPluginManager().callEvent(PlayerHitByPlayerEvent(player, tnt.source as Player, HitCause.EXPLOSIVE))
+                }
             }
 
-            if (enderCrystalMap.containsKey(damager)){
-
+            if (enderCrystalMap.containsKey(damager)) {
                 val uuid = enderCrystalMap[damager]
 
                 if (uuid != null) {
@@ -64,17 +63,13 @@ class PlayerHitByPlayerManager(){
 
         event<EntityDamageByEntityEvent> (priority = EventPriority.HIGHEST) {
             if (isCancelled) return@event
+
             val player = damager as? Player ?: return@event
-
-            if (entity is EnderCrystal){
-
+            if (entity is EnderCrystal) {
                 enderCrystalMap[entity as EnderCrystal] = player.uniqueId
                 delay(2) { enderCrystalMap.remove(entity as EnderCrystal) }
-
             }
-
         }
-
 
     }
 
@@ -93,7 +88,7 @@ class PlayerHitByPlayerEvent(val hitPlayer: Player, val damager: Player, val hit
  * Enum class representing the cause of a hit.
  *
  */
-enum class HitCause(){
+enum class HitCause {
     HAND,
     PROJECTILE,
     END_CRYSTAL,

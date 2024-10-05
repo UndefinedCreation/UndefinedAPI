@@ -16,7 +16,6 @@ class SoundEvent(
 ) : UndefinedEvent()
 
 enum class SoundSource(name: String, id: Int) {
-
     MASTER("master",0),
     MUSIC("music",1),
     RECORDS("record",2),
@@ -27,5 +26,4 @@ enum class SoundSource(name: String, id: Int) {
     PLAYERS("players",7),
     AMBIENT("ambient",8),
     VOICE("voice",9)
-
 }

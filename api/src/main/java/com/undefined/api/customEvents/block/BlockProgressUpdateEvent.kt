@@ -15,22 +15,18 @@ import kotlin.math.round
 
 class BlockProgressUpdateEvent(val location: Location, val stage: Int): UndefinedEvent()
 
-class BlockProgressManager(){
+class BlockProgressManager {
 
     private val blockList: HashMap<Location, Int> = hashMapOf()
 
     init {
-
         event<BlockDamageEvent> {
-
             val breakTime = getTimeNeeded(block, player)
+            val timeDetween = ceil(breakTime / 10).toInt()
 
             if (breakTime < 2 || player.gameMode != GameMode.SURVIVAL) return@event
 
-            val timeDetween = ceil(breakTime / 10).toInt()
-
             blockList[block.location] = 0
-
             Bukkit.getPluginManager().callEvent(BlockProgressUpdateEvent(block.location, 0))
 
             com.undefined.api.scheduler.repeatingTask(timeDetween) {
@@ -48,7 +44,6 @@ class BlockProgressManager(){
                 blockList[block.location] = stage
                 Bukkit.getPluginManager().callEvent(BlockProgressUpdateEvent(block.location, stage))
             }
-
         }
 
         event<BlockBreakEvent> {

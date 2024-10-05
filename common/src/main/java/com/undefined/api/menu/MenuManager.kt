@@ -53,7 +53,6 @@ object MenuManager : Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin)
     }
 
-
     /**
      * Determines whether the player has a menu open.
      *
@@ -106,7 +105,6 @@ object MenuManager : Listener {
      */
     fun Player.getMenu() = openMenus[player!!.uniqueId]
 
-
     /**
      * Handles the click event in an inventory.
      *
@@ -119,11 +117,7 @@ object MenuManager : Listener {
         if (e.clickedInventory == null) return
         if (e.clickedInventory!!.type != InventoryType.CHEST) return
         val menu = player.getMenu()!!
-        if (menu is UndefinedPageMenu){
-            runPageMenu(menu, e)
-        }else{
-            runDefaultMenu(menu, e)
-        }
+        if (menu is UndefinedPageMenu) runPageMenu(menu, e) else runDefaultMenu(menu, e)
     }
 
     /**
@@ -132,25 +126,23 @@ object MenuManager : Listener {
      * @param menu The undefined page menu.
      * @param e The inventory click event.
      */
-    private fun runPageMenu(menu: UndefinedPageMenu, e: InventoryClickEvent){
+    private fun runPageMenu(menu: UndefinedPageMenu, e: InventoryClickEvent) {
         val player = e.whoClicked as Player
 
-        if (managerButtons(menu, e))
-            return
-
+        if (managerButtons(menu, e)) return
         if (e.currentItem == null) return
         if (e.currentItem!!.type.isAir) return
+
         e.isCancelled = true
-        when(e.rawSlot){
-            menu.bButton!!.slot ->{
-                menu.previousPage()
-                return
+        when(e.rawSlot) {
+            menu.bButton!!.slot -> {
+                return menu.previousPage()
             }
-            menu.nButton!!.slot ->{
-                menu.nextPage()
-                return
+            menu.nButton!!.slot -> {
+                return menu.nextPage()
             }
         }
+
         if (menu.itemsMap.containsKey(e.rawSlot)) return
         menu.clickData.invoke(ClickData(e.rawSlot, player, e.currentItem, e.click, e.action, e.clickedInventory!!))
     }
@@ -166,12 +158,8 @@ object MenuManager : Listener {
 
         menu.buttons.filter { it.slot == e.slot }.forEach { button ->
             e.isCancelled = true
-            button.consumer.invoke(
-                ClickData(e.rawSlot, e.whoClicked as Player, e.currentItem, e.click, e.action, e.clickedInventory!!)
-            )
-            if (button is MenuButton)
-                player.openMenu(button.undefinedMenu)
-
+            button.consumer.invoke(ClickData(e.rawSlot, e.whoClicked as Player, e.currentItem, e.click, e.action, e.clickedInventory!!))
+            if (button is MenuButton) player.openMenu(button.undefinedMenu)
             return true
         }
         return false
@@ -185,10 +173,7 @@ object MenuManager : Listener {
      */
     private fun runDefaultMenu(menu: UndefinedMenu, e: InventoryClickEvent){
         managerButtons(menu, e)
-
-        if (!menu.movables.contains(e.rawSlot)){
-            e.isCancelled = true
-        }
+        if (!menu.movables.contains(e.rawSlot)) e.isCancelled = true
     }
 
 
@@ -204,9 +189,8 @@ object MenuManager : Listener {
             com.undefined.api.scheduler.delay(5) {
                 if (e.player is Player) {
                     val player = e.player as Player
-                    if (player.openInventory.topInventory.type != InventoryType.CHEST && player.openInventory.topInventory.type != InventoryType.ANVIL) {
+                    if (player.openInventory.topInventory.type != InventoryType.CHEST && player.openInventory.topInventory.type != InventoryType.ANVIL)
                         player.closeMenu()
-                    }
                 }
             }
         }
@@ -221,4 +205,5 @@ object MenuManager : Listener {
     fun onLeave(e: PlayerQuitEvent) {
         e.player.closeMenu()
     }
+
 }

@@ -2,6 +2,7 @@ package com.undefined.api.extension
 
 import com.undefined.api.UndefinedAPI
 import com.undefined.api.scheduler.TimeUnit
+import com.undefined.api.scheduler.repeatingTask
 import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -21,7 +22,7 @@ import org.bukkit.entity.Player
  * @throws IllegalArgumentException if the provided `time` parameter is negative.
  */
 fun Player.sendActionBar(string: String, time: Int, timeUnit: TimeUnit = TimeUnit.TICKS) {
-    com.undefined.api.scheduler.repeatingTask(
+    repeatingTask(
         1,
         timeUnit.toTicks(time.toLong()).toInt()
     ) { this@sendActionBar.sendActionBar(string) }
@@ -32,9 +33,8 @@ fun Player.sendActionBar(string: String, time: Int, timeUnit: TimeUnit = TimeUni
  *
  * @param string The message to be displayed in the action bar.
  */
-fun Player.sendActionBar(string: String){
-    this.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(string
-    ))
+fun Player.sendActionBar(string: String) {
+    this.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(string))
 }
 /**
  * Sends an action bar message to the player.
@@ -43,7 +43,6 @@ fun Player.sendActionBar(string: String){
  * @param time The duration in ticks for which the message should be displayed.
  */
 fun Player.sendActionBar(string: String, time: Int) = sendActionBar(string, time, TimeUnit.TICKS)
-
 
 /**
  * Sets the food level of the player to the maximum value (20).
@@ -73,6 +72,7 @@ fun Player.heal() { health = this.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.v
  * ```
  */
 fun Player.resetWalkSpeed() { walkSpeed = 0.2F }
+
 /**
  * Resets the fly speed of the player to the default value.
  * The default fly speed is 0.1F.
@@ -93,15 +93,17 @@ fun Player.resetFlySpeed() { flySpeed = 0.1F }
  * player.hidePlayer()
  * ```
  */
-fun Player.hidePlayer() = Bukkit.getOnlinePlayers().forEach{
+fun Player.hidePlayer() = Bukkit.getOnlinePlayers().forEach {
     it.hidePlayer(UndefinedAPI.plugin, this)
 }
+
 /**
  * Displays the player to all online players.
  */
-fun Player.showPlayer() = Bukkit.getOnlinePlayers().forEach{
+fun Player.showPlayer() = Bukkit.getOnlinePlayers().forEach {
     it.showPlayer(UndefinedAPI.plugin, this)
 }
+
 /**
  * Removes all active potion effects from the player.
  */

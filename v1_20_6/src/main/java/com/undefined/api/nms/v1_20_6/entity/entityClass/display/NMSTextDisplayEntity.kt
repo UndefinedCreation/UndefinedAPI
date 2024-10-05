@@ -21,6 +21,7 @@ class NMSTextDisplayEntity(text: String) : NMSDisplayEntity(EntityType.TEXT_DISP
                 field = value
             }
         }
+
     override var width: Float = 200F
         set(value) {
             entity?.let {
@@ -30,6 +31,7 @@ class NMSTextDisplayEntity(text: String) : NMSDisplayEntity(EntityType.TEXT_DISP
                 field = value
             }
         }
+
     override var backGroundColor: Int = 1073741824
         set(value) {
             entity?.let {
@@ -39,6 +41,7 @@ class NMSTextDisplayEntity(text: String) : NMSDisplayEntity(EntityType.TEXT_DISP
                 field = value
             }
         }
+
     override var textOpacity: Byte = -1
         set(value) {
             entity?.let {

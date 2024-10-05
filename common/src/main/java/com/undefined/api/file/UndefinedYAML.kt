@@ -21,6 +21,7 @@ class UndefinedYAML(file: File, fromResources: Boolean = false): UndefinedFile(f
      * @param fromResources Flag indicating whether the file should be copied from a resource. Default is false.
      */
     constructor(path: String, fromResources: Boolean = false): this(File(path), fromResources)
+
     /**
      * This constructor creates an instance of the `UndefinedYAML` class.
      *
@@ -43,4 +44,5 @@ class UndefinedYAML(file: File, fromResources: Boolean = false): UndefinedFile(f
     override fun save() {
         configuration.save(file)
     }
+
 }

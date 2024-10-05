@@ -9,35 +9,30 @@ import org.joml.Vector3f
 
 
 fun Display.getScaleAccessor(): EntityDataAccessor<Vector3f> {
-
-    val f = Display::class.java.getDeclaredField(SpigotNMSMappings.DisplayScale)
-
-    f.isAccessible = true
-
-    return f.get(this) as EntityDataAccessor<Vector3f>
+    val field = Display::class.java.getDeclaredField(SpigotNMSMappings.DisplayScale)
+    field.isAccessible = true
+    return field.get(this) as EntityDataAccessor<Vector3f>
 }
 
 fun Display.getTranslationAccessor(): EntityDataAccessor<Vector3f> {
-    val f = Display::class.java.getDeclaredField(SpigotNMSMappings.DisplayTransfrom)
-    f.isAccessible = true
-    return f.get(this) as EntityDataAccessor<Vector3f>
+    val field = Display::class.java.getDeclaredField(SpigotNMSMappings.DisplayTransfrom)
+    field.isAccessible = true
+    return field.get(this) as EntityDataAccessor<Vector3f>
 }
 
 fun Display.getLeftRotation(): EntityDataAccessor<Quaternionf> {
-    val f = Display::class.java.getDeclaredField(SpigotNMSMappings.DisplayLeftRot)
-    f.isAccessible = true
-    return f.get(this) as EntityDataAccessor<Quaternionf>
+    val field = Display::class.java.getDeclaredField(SpigotNMSMappings.DisplayLeftRot)
+    field.isAccessible = true
+    return field.get(this) as EntityDataAccessor<Quaternionf>
 }
 
 fun Display.getRightRotation(): EntityDataAccessor<Quaternionf> {
-    val f = Display::class.java.getDeclaredField(SpigotNMSMappings.DisplayRightRot)
-    f.isAccessible = true
-    return f.get(this) as EntityDataAccessor<Quaternionf>
+    val field = Display::class.java.getDeclaredField(SpigotNMSMappings.DisplayRightRot)
+    field.isAccessible = true
+    return field.get(this) as EntityDataAccessor<Quaternionf>
 }
 
-
 fun Display.getScale(): Vector3f = entityData.get(getScaleAccessor())
-
 fun Display.getTranslation(): Vector3f = entityData.get(getTranslationAccessor())
 
 fun Display.setScaleX(scale: Float): SynchedEntityData {
@@ -60,35 +55,35 @@ fun Display.setScaleZ(scale: Float) {
 }
 
 fun Display.setTranslationX(x: Float) {
-    val v = getTranslation()
-    v.x = x
-    entityData.set(getTranslationAccessor(), v)
+    val translation = getTranslation()
+    translation.x = x
+    entityData.set(getTranslationAccessor(), translation)
 }
 
 fun Display.setTranslationY(y: Float) {
-    val v = getTranslation()
-    v.y = y
-    entityData.set(getTranslationAccessor(), v)
+    val translation = getTranslation()
+    translation.y = y
+    entityData.set(getTranslationAccessor(), translation)
 }
 
 fun Display.setTranslationZ(z: Float) {
-    val v = getTranslation()
-    v.z = z
-    entityData.set(getTranslationAccessor(), v)
+    val translation = getTranslation()
+    translation.z = z
+    entityData.set(getTranslationAccessor(), translation)
 }
 
 fun Display.setLeftRotation(x: Float, y: Float, z: Float): Quaternionf {
-    val l = getLeftRotation()
-    val q = Quaternionf().rotationXYZ(x, y, z)
-    entityData.set(l, q)
-    return q
+    val rotation = getLeftRotation()
+    val quaternionf = Quaternionf().rotationXYZ(x, y, z)
+    entityData.set(rotation, quaternionf)
+    return quaternionf
 }
 
 fun Display.setRightRotation(x: Float, y: Float, z: Float): Quaternionf {
-    val l = getRightRotation()
-    val q = Quaternionf().rotationXYZ(x, y, z)
-    entityData.set(l, q)
-    return q
+    val rotation = getRightRotation()
+    val quaternionf = Quaternionf().rotationXYZ(x, y, z)
+    entityData.set(rotation, quaternionf)
+    return quaternionf
 }
 
 

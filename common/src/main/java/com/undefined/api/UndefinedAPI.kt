@@ -35,7 +35,7 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
      *
      * @property plugin The `JavaPlugin` instance of the plugin.
      */
-    companion object{
+    companion object {
         lateinit var plugin: JavaPlugin
         lateinit var api: UndefinedAPI
 

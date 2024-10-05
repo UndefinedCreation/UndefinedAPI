@@ -13,6 +13,7 @@ import java.nio.file.Path
  * @param fromResources Flag indicating whether the JSON file should be copied from a resource.
  */
 class UndefinedJSON(file: File, fromResources: Boolean = false): UndefinedFile(file, fromResources) {
+
     /**
      * The constructor for the `UndefinedJSON` class.
      *
@@ -20,6 +21,7 @@ class UndefinedJSON(file: File, fromResources: Boolean = false): UndefinedFile(f
      * @param fromResources Flag indicating whether the file should be copied from a resource.
      */
     constructor(path: String, fromResources: Boolean = false): this(File(path), fromResources)
+
     /**
      * The `UndefinedJSON` class represents a JSON file that may or may not exist. It extends the `UndefinedFile` class and provides
      * functionality specific to JSON files.
@@ -46,4 +48,5 @@ class UndefinedJSON(file: File, fromResources: Boolean = false): UndefinedFile(f
          val jsonString = configuration.toString()
          file.writeText(jsonString)
      }
+
 }

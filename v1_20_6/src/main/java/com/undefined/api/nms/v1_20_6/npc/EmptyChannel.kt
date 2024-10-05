@@ -12,6 +12,7 @@ import java.net.SocketAddress
  * @param channel the underlying channel object
  */
 class EmptyChannel(channel: Channel?): AbstractChannel(channel) {
+
     private val config: ChannelConfig = DefaultChannelConfig(this)
 
     override fun config(): ChannelConfig {
@@ -39,31 +40,17 @@ class EmptyChannel(channel: Channel?): AbstractChannel(channel) {
     override fun doWrite(arg0: ChannelOutboundBuffer?) {
     }
 
-    override fun isActive(): Boolean {
-        return false
-    }
+    override fun isActive(): Boolean = false
 
-    override fun isCompatible(arg0: EventLoop?): Boolean {
-        return false
-    }
+    override fun isCompatible(arg0: EventLoop?): Boolean = false
 
-    override fun isOpen(): Boolean {
-        return false
-    }
+    override fun isOpen(): Boolean = false
 
-    override fun localAddress0(): SocketAddress? {
-        return null
-    }
+    override fun localAddress0(): SocketAddress? = null
 
-    override fun metadata(): ChannelMetadata {
-        return ChannelMetadata(true)
-    }
+    override fun metadata(): ChannelMetadata = ChannelMetadata(true)
 
-    override fun newUnsafe(): AbstractUnsafe? {
-        return null
-    }
+    override fun newUnsafe(): AbstractUnsafe? = null
 
-    override fun remoteAddress0(): SocketAddress? {
-        return null
-    }
+    override fun remoteAddress0(): SocketAddress? = null
 }

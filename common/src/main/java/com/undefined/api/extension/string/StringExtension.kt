@@ -108,6 +108,7 @@ private val replacements = mapOf(
  * This pattern is used for identifying and replacing hexadecimal color codes in strings.
  */
 private val hexPattern: Pattern = Pattern.compile("<#[A-Fa-f0-9]{6}>")
+
 /**
  * Translates color codes in a string to their corresponding ChatColor values.
  *
@@ -118,15 +119,13 @@ private val hexPattern: Pattern = Pattern.compile("<#[A-Fa-f0-9]{6}>")
  * @return The string with color codes translated to ChatColor values.
  */
 fun String.translateColor(): String {
-
     var string = replacements.entries.fold(this) { acc, (old, new) -> acc.replace(old, new, ignoreCase = true) }
-
     val matcher: Matcher = hexPattern.matcher(string)
+
     while (matcher.find()) {
         val color: String = matcher.group()
         string = string.replace(color, ChatColor.of(color.substring(1,8))!!.toString())
     }
-
 
     return string
 }

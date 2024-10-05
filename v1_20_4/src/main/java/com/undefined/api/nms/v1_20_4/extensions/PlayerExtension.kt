@@ -1,15 +1,9 @@
 package com.undefined.api.nms.v1_20_4.extensions
 
-import com.mojang.authlib.GameProfile
-import com.undefined.api.customEvents.SoundSource
-import com.undefined.api.nms.extensions.getPrivateField
-import com.undefined.api.nms.v1_20_4.SpigotNMSMappings
 import net.minecraft.network.protocol.Packet
-import net.minecraft.network.protocol.game.ClientboundStopSoundPacket
 import net.minecraft.server.network.ServerGamePacketListenerImpl
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
-
 
 /**
  * Sends a packet to each player in the list.
@@ -17,18 +11,21 @@ import org.bukkit.entity.Player
  * @param packet the packet to send
  */
 fun List<Player>.sendPacket(vararg packet: Packet<*>) = forEach { it.sendPacketArray(packet) }
+
 /**
  * Retrieves the connection associated with the player.
  *
  * @return the ServerGamePacketListenerImpl representing the player's connection
  */
 fun Player.getConnection(): ServerGamePacketListenerImpl = (this as CraftPlayer).handle.connection
+
 /**
  * Sends one or more packets to the player's connection.
  *
  * @param packet the packet(s) to send
  */
 fun Player.sendPacket(vararg packet: Packet<*>) = packet.forEach { getConnection().send(it) }
+
 /**
  * Sends an array of packets to the player.
  *
@@ -36,8 +33,8 @@ fun Player.sendPacket(vararg packet: Packet<*>) = packet.forEach { getConnection
  */
 fun Player.sendPacketArray(packet: Array<out Packet<*>>) = packet.forEach { getConnection().send(it) }
 
-
 object PlayerExtension {
+
     /**
      * Retrieves the textures of a player.
      *
@@ -54,8 +51,8 @@ object PlayerExtension {
 
         return arrayOf(texture, sign)
     }
-}
 
+}
 
 /**
  * Checks if the server is running on Paper.
@@ -64,6 +61,5 @@ object PlayerExtension {
  */
 fun isPaper(): Boolean {
     val hasClass = { name: String -> try { Class.forName(name); true } catch (e: ClassNotFoundException) { false } }
-
     return hasClass("com.destroystokyo.paper.PaperConfig") || hasClass("io.papermc.paper.configuration.Configuration")
 }

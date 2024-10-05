@@ -16,7 +16,7 @@ import java.io.ByteArrayOutputStream
  *
  * @return The Base64 encoded string representation of the inventory.
  */
-fun Inventory.asString(): String{
+fun Inventory.asString(): String {
 
     val outputStream = ByteArrayOutputStream()
     val dataOutput = BukkitObjectOutputStream(outputStream)
@@ -37,7 +37,7 @@ fun Inventory.asString(): String{
  *
  * @return The Base64 encoded string representation of the ItemStack.
  */
-fun ItemStack.asString(): String{
+fun ItemStack.asString(): String {
     val outputStream = ByteArrayOutputStream()
     val dataOutput = BukkitObjectOutputStream(outputStream)
 
@@ -46,13 +46,12 @@ fun ItemStack.asString(): String{
     return Base64Coder.encodeLines(outputStream.toByteArray())
 }
 
-
 /**
  * Converts a Base64 encoded String into an ItemStack.
  *
  * @return The ItemStack represented by the Base64 encoded String.
  */
-fun String.asItemStack(): ItemStack{
+fun String.asItemStack(): ItemStack {
     val inputStream = ByteArrayInputStream(Base64Coder.decodeLines(this))
     val dataInput = BukkitObjectInputStream(inputStream)
     val itemStack = dataInput.readObject() as ItemStack
@@ -60,31 +59,23 @@ fun String.asItemStack(): ItemStack{
     return itemStack
 }
 
-
 /**
  * Converts a Base64-encoded string to an inventory object.
  *
  * @return The converted inventory object.
  */
-fun String.asInventory(): Inventory{
+fun String.asInventory(): Inventory {
     val inputStream = ByteArrayInputStream(Base64Coder.decodeLines(this))
     val dataInput = BukkitObjectInputStream(inputStream)
-
     val size = dataInput.readInt()
+    val inventory = if (size == 41) Bukkit.createInventory(null, InventoryType.PLAYER) else Bukkit.createInventory(null, size)
 
-    val inv = if (size == 41) Bukkit.createInventory(null, InventoryType.PLAYER) else Bukkit.createInventory(null, size)
-
-    inv.contents.forEachIndexed { index, _ ->
-        dataInput.readObject()?.let {
-            inv.setItem(index, it as ItemStack)
-        }
+    inventory.contents.forEachIndexed { index, _ ->
+        dataInput.readObject()?.let { inventory.setItem(index, it as ItemStack) }
     }
 
-
-
     dataInput.close()
-
-    return inv
+    return inventory
 }
 
 /**
@@ -92,7 +83,7 @@ fun String.asInventory(): Inventory{
  *
  * @return The number of empty slots in the inventory.
  */
-fun Inventory.emptySlots(): Int{
+fun Inventory.emptySlots(): Int {
     return this.contents.count { it == null }
 }
 

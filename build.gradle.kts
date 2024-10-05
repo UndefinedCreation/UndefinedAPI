@@ -43,7 +43,6 @@ publishing {
 
 
 allprojects {
-
     apply(plugin = "java")
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
@@ -82,7 +81,6 @@ allprojects {
         implementation("org.json:json:20231013")
         implementation("com.googlecode.json-simple:json-simple:1.1.1")
     }
-
 }
 
 
@@ -95,8 +93,7 @@ dependencies {
 }
 
 tasks {
-
-    assemble{
+    assemble {
         dependsOn("shadowJar")
     }
 
@@ -116,6 +113,6 @@ tasks {
 }
 
 
-kotlin{
+kotlin {
     jvmToolchain(21)
 }

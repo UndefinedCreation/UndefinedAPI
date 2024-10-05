@@ -19,27 +19,28 @@ import org.bukkit.inventory.ItemStack
  * @property createInventoryCon The lambda function used to customize the inventory.
  * @property clickData The lambda function used to handle click events.
  */
-class UndefinedDefaultPageMenu(name: String, list: MutableList<ItemStack>, private val createInventoryCon: Inventory.() -> Unit,
-                               override var clickData: ClickData.() -> Unit
+class UndefinedDefaultPageMenu(
+    name: String,
+    list: MutableList<ItemStack>,
+    private val createInventoryCon: Inventory.() -> Unit,
+    override var clickData: ClickData.() -> Unit
 ): UndefinedPageMenu(name, MenuSize.LARGE, list) {
+
     /**
      * Generates an inventory for the menu.
      *
      * @return The generated inventory.
      */
     override fun generateInventory(): Inventory = createPageInventory {
-
-
         setBackButton(
-            PageButton(45, com.undefined.api.builders.ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+            PageButton(45, ItemBuilder(Material.RED_STAINED_GLASS_PANE)
                 .setName("<reset><#d92323>ʙᴀᴄᴋ ᴀ ᴘᴀɢᴇ".translateColor())
                 .addLine(" ")
                 .addLine("<reset><gray>ᴄʟɪᴄᴋ ᴛᴏ ɢᴏ ʙᴀᴄᴋ ᴀɴ ᴘᴀɢᴇ".translateColor()).build(),
-                com.undefined.api.builders.ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build())
+                ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build())
         )
-
         setNextButton(
-            PageButton(53, com.undefined.api.builders.ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
+            PageButton(53, ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
                 .setName("<reset><#32e67d>ɴᴇxᴛ ᴘᴀɢᴇ".translateColor())
                 .addLine(" ")
                 .addLine("<reset><gray>ᴄʟɪᴄᴋ ᴛᴏ ɢᴏ ᴛᴏ ᴛʜᴇ ɴᴇxᴛ ᴘᴀɢᴇ".translateColor()).build(), com.undefined.api.builders.ItemBuilder(
@@ -47,8 +48,7 @@ class UndefinedDefaultPageMenu(name: String, list: MutableList<ItemStack>, priva
             ).setName(" ").build())
         )
 
-        setRow(5, com.undefined.api.builders.ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build())
-
+        setRow(5, ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build())
         createInventoryCon.invoke(this)
     }
 

@@ -2,12 +2,9 @@ package com.undefined.api.nms.interfaces.display
 
 import org.bukkit.inventory.ItemStack
 
-interface NMSItemDisplayEntity: NMSDisplayEntity {
-
+interface NMSItemDisplayEntity : NMSDisplayEntity {
     var itemStack: ItemStack
-
     var itemDisplayContext: ItemDisplayContext
-
 }
 
 enum class ItemDisplayContext(val id: Int) {

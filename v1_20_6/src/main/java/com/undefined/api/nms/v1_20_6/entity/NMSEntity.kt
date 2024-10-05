@@ -25,7 +25,9 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import java.util.*
 
-open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms.interfaces.NMSEntity {
+@Suppress("DEPRECATION")
+open class NMSEntity(override val entityType: EntityType): NMSEntity {
+
     override val viewers: MutableList<Player> = mutableListOf()
     override var location: Location? = null
     var entity: Entity? = null
@@ -35,40 +37,31 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
     private val DATA_NO_GRAVITY: EntityDataAccessor<Boolean>
     override var gravity: Boolean = false
         set(value) {
-
             entity?.let {
                 entity!!.entityData.set(DATA_NO_GRAVITY, !value)
                 field = value
                 sendMetaPackets()
             }
-
         }
 
     override var onFire: Boolean = false
-        set(value){
-
-
-
+        set(value) {
             val entity = entity ?: return
             field = value
-            if (value){
 
+            if (value) {
                 entity.remainingFireTicks = 2000000
-
                 val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
                     SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0x01)
                 )
-
                 val dataPacket = ClientboundSetEntityDataPacket(entity.id, dataList)
 
                 viewers.sendPacket(dataPacket)
-            }else{
+            } else {
                 entity.remainingFireTicks = 0
-
                 val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
                     SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0)
                 )
-
                 val dataPacket = ClientboundSetEntityDataPacket(entity.id, dataList)
 
                 viewers.sendPacket(dataPacket)
@@ -78,9 +71,7 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
 
     override var glowingColor: ChatColor = ChatColor.WHITE
         set(value) {
-
             if (entity == null) return
-
             field = value
 
             val format = ChatFormatting.valueOf(value.name)
@@ -90,73 +81,47 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
                 ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true),
                 ClientboundSetPlayerTeamPacket.createPlayerPacket(team, entity!!.uuid.toString(), ClientboundSetPlayerTeamPacket.Action.ADD)
             )
-
         }
 
     override var glowing: Boolean = false
         set(value) {
-
             if (entity == null) return
-
             field = value
-
             entity!!.setGlowingTag(value)
-
             sendMetaPackets()
         }
 
 
     override var collibable: Boolean = false
         set(value) {
-
             if (entity == null) return
-
             field = value
-
             team.collisionRule = if (value) Team.CollisionRule.ALWAYS else Team.CollisionRule.NEVER
-
-            viewers.sendPacket(
-                ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true),
-            )
+            viewers.sendPacket(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true))
         }
     override var isVisible: Boolean = true
         set(value) {
-
             if (entity == null) return
-
             entity!!.isInvisible = !value
-
             sendMetaPackets()
-
             field = value
         }
 
     override var customName: String? = null
         get() = if (field == null) "" else field
         set(value) {
-
             if (entity == null) return
 
-            if (value == null){
-                //Hide Name
-
+            if (value == null) {
                 entity!!.isCustomNameVisible = false
-
                 sendMetaPackets()
 
-            }else{
-                //Show / Set name
-
+            } else {
                 var name = value
-
-                if (name.length > 256) {
-                    name = name.substring(0, 256)
-                }
+                if (name.length > 256) name = name.substring(0, 256)
 
                 entity!!.customName = CraftChatMessage.fromStringOrNull(name)
-
                 entity!!.isCustomNameVisible = true
-
                 sendMetaPackets()
             }
 
@@ -179,27 +144,21 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
 
 
     override fun spawn(newLocation: Location) {
-        if (viewers.isEmpty()) {
-            return
-        }
+        if (viewers.isEmpty()) return
 
         val nmsEntityType = CraftEntityType.bukkitToMinecraft(entityType)
-
         val craftWorld = newLocation.world as CraftWorld
-
         val entity = getUndefinedEntityClass(nmsEntityType, craftWorld.handle)
 
         entity.setPos(newLocation.x, newLocation.y, newLocation.z)
 
-        val m = Entity::class.java.getDeclaredMethod(SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
-        m.isAccessible = true
-        m.invoke(entity, newLocation.yaw, newLocation.pitch)
-
+        val method = Entity::class.java.getDeclaredMethod(SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
+        method.isAccessible = true
+        method.invoke(entity, newLocation.yaw, newLocation.pitch)
 
         scoreboard.addPlayerToTeam(entity.uuid.toString(), team)
 
         val packet = entity.addEntityPacket
-
         team.collisionRule = Team.CollisionRule.NEVER
         team.setSeeFriendlyInvisibles(false)
 
@@ -215,21 +174,18 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
     override fun teleport(newLocation: Location) {
         entity?.let {
             entity!!.setPos(newLocation.x, newLocation.y, newLocation.z)
-            val m = Entity::class.java.getDeclaredMethod(SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
-            m.isAccessible = true
-            m.invoke(entity, newLocation.yaw, newLocation.pitch)
+            val method = Entity::class.java.getDeclaredMethod(SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
+            method.isAccessible = true
+            method.invoke(entity, newLocation.yaw, newLocation.pitch)
 
             val packet = ClientboundTeleportEntityPacket(entity!!)
-
             viewers.sendPacket(packet)
             location = newLocation
         }
     }
     override fun kill() {
         if (entity == null) return
-
         val entityRemovePacket = ClientboundRemoveEntitiesPacket(entity!!.id)
-
         viewers.sendPacket(entityRemovePacket)
     }
     override fun getEntityID(): Int = if (entity == null) 0 else entity!!.id
@@ -244,20 +200,12 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
             val rider = method.invoke(nmsEntity) as Entity?
 
             rider?.let { rider ->
-
                 if (it.passengers.isEmpty()) {
                     it.passengers = ImmutableList.of(rider)
                 } else {
                     val list: MutableList<Entity> = Lists.newArrayList(it.passengers)
-
-                    if (!it.level().isClientSide && rider is Player && it.getPassengers() !is Player) {
-                        list.add(0, rider)
-                    } else {
-                        list.add(rider)
-                    }
-
+                    if (!it.level().isClientSide && rider is Player && it.getPassengers() !is Player) list.add(0, rider) else list.add(rider)
                     it.passengers = ImmutableList.copyOf(list)
-
                 }
 
                 viewers.sendPacket(ClientboundSetPassengersPacket(it))
@@ -272,7 +220,6 @@ open class NMSEntity(override val entityType: EntityType): com.undefined.api.nms
             val rider = method.invoke(nmsEntity) as Entity?
 
             rider?.let { rider ->
-
                 if (it.passengers.contains(rider)) {
                     val list: MutableList<Entity> = Lists.newArrayList(it.passengers)
                     list.remove(rider)

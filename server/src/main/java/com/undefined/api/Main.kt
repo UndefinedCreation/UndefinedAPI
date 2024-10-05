@@ -16,19 +16,14 @@ class Main: JavaPlugin() {
 
         UndefinedCommand("Items")
             .addExecutePlayer {
-
                 val player = player!!
-
                 val text = api.createFakeEntity(EntityType.INTERACTION)!! as NMSInteractionEntity
+
                 text.addViewer(player)
                 text.spawn(player.location)
                 text.height = 0.5f
                 text.width = 2f
-
-                text.interact {
-
-                    println("Interact")
-                }
+                text.interact { println("Interact") }
 
                 return@addExecutePlayer false
             }

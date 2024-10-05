@@ -13,16 +13,15 @@ import java.util.*
  * @param format the pattern to format the values (default is "0.##")
  * @return the formatted string representation of the Location object
  */
-fun Location.asString(format:String = "0.##"):String{
-
-    val df = DecimalFormat(format)
+fun Location.asString(format:String = "0.##"): String {
+    val decimalFormat = DecimalFormat(format)
 
     val uuid = this.world!!.uid
-    val x = df.format(this.x)
-    val y = df.format(this.y)
-    val z = df.format(this.z)
-    val pitch = df.format(this.pitch)
-    val yaw = df.format(this.yaw)
+    val x = decimalFormat.format(this.x)
+    val y = decimalFormat.format(this.y)
+    val z = decimalFormat.format(this.z)
+    val pitch = decimalFormat.format(this.pitch)
+    val yaw = decimalFormat.format(this.yaw)
 
     return "$uuid;$x;$y;$z;$pitch;$yaw"
 }

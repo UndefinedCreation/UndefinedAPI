@@ -1,6 +1,5 @@
 package com.undefined.api.scheduler
 
-import com.undefined.api.API
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
 
@@ -12,6 +11,7 @@ import org.bukkit.scheduler.BukkitTask
  */
 fun sync(runnable: BukkitRunnable.() -> Unit): BukkitTask = com.undefined.api.scheduler.createRunnable(runnable)
     .runTask(com.undefined.api.API.plugin)
+
 /**
  * Executes the given [runnable] asynchronously on a separate thread.
  *
@@ -30,11 +30,11 @@ fun async(runnable: BukkitRunnable.() -> Unit): BukkitTask = com.undefined.api.s
  * @param runnable The runnable task to be executed after the delay.
  * @return The BukkitTask representing the delayed task.
  */
-fun delay(ticks: Int, unit: com.undefined.api.scheduler.TimeUnit = com.undefined.api.scheduler.TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit):BukkitTask {
+fun delay(ticks: Int, unit: TimeUnit = TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask {
     return if (async) {
-        com.undefined.api.scheduler.createRunnable(runnable).runTaskLater(com.undefined.api.API.plugin, unit.toTicks(ticks.toLong()))
+        createRunnable(runnable).runTaskLaterAsynchronously(com.undefined.api.API.plugin, unit.toTicks(ticks.toLong()))
     } else {
-        com.undefined.api.scheduler.createRunnable(runnable).runTaskLater(com.undefined.api.API.plugin, unit.toTicks(ticks.toLong()))
+        createRunnable(runnable).runTaskLater(com.undefined.api.API.plugin, unit.toTicks(ticks.toLong()))
     }
 }
 
@@ -46,7 +46,8 @@ fun delay(ticks: Int, unit: com.undefined.api.scheduler.TimeUnit = com.undefined
  * @return The scheduled BukkitTask that can be used to cancel the delayed execution if needed.
  */
 fun delay(ticks: Int = 1, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.delay(ticks, com.undefined.api.scheduler.TimeUnit.TICKS, false, runnable)
+    delay(ticks, TimeUnit.TICKS, false, runnable)
+
 /**
  * Delays the execution of the specified function by the given number of ticks.
  *
@@ -56,8 +57,7 @@ fun delay(ticks: Int = 1, runnable: BukkitRunnable.() -> Unit): BukkitTask =
  * @return The Bukkit task representing the delayed execution.
  */
 fun delay(ticks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.delay(ticks, com.undefined.api.scheduler.TimeUnit.TICKS, async, runnable)
-
+    delay(ticks, TimeUnit.TICKS, async, runnable)
 
 /**
  * Schedules a repeating task with the given delay, period, and other optional parameters.
@@ -71,13 +71,11 @@ fun delay(ticks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): 
  *
  * @return The BukkitTask representing the scheduled repeating task.
  */
-fun repeatingTask(delay: Int, period: Int, times: Int = -1, unit: com.undefined.api.scheduler.TimeUnit = com.undefined.api.scheduler.TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask{
-    return if (async){
-        com.undefined.api.scheduler.createRunnable(times, runnable)
-            .runTaskTimerAsynchronously(com.undefined.api.API.plugin, unit.toTicks(delay.toLong()), unit.toTicks(period.toLong()))
-    }else{
-        com.undefined.api.scheduler.createRunnable(times, runnable)
-            .runTaskTimer(com.undefined.api.API.plugin, unit.toTicks(delay.toLong()), unit.toTicks(period.toLong()))
+fun repeatingTask(delay: Int, period: Int, times: Int = -1, unit: TimeUnit = TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+    return if (async) {
+        createRunnable(times, runnable).runTaskTimerAsynchronously(com.undefined.api.API.plugin, unit.toTicks(delay.toLong()), unit.toTicks(period.toLong()))
+    } else {
+        createRunnable(times, runnable).runTaskTimer(com.undefined.api.API.plugin, unit.toTicks(delay.toLong()), unit.toTicks(period.toLong()))
     }
 }
 /**
@@ -88,7 +86,8 @@ fun repeatingTask(delay: Int, period: Int, times: Int = -1, unit: com.undefined.
  * @return the BukkitTask representing the scheduled repeating task
  */
 fun repeatingTask(ticks: Int = 1, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(0, ticks, -1, com.undefined.api.scheduler.TimeUnit.TICKS, false, runnable)
+    repeatingTask(0, ticks, -1, TimeUnit.TICKS, false, runnable)
+
 /**
  * Schedules a repeating task with the specified options.
  *
@@ -98,11 +97,11 @@ fun repeatingTask(ticks: Int = 1, runnable: BukkitRunnable.() -> Unit): BukkitTa
  * @return the BukkitTask representing the scheduled repeating task
  */
 fun repeatingTask(ticks: Int = 1, times: Int = -1, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(
+    repeatingTask(
         0,
         ticks,
         times,
-        com.undefined.api.scheduler.TimeUnit.TICKS,
+        TimeUnit.TICKS,
         false,
         runnable
     )
@@ -115,14 +114,15 @@ fun repeatingTask(ticks: Int = 1, times: Int = -1, runnable: BukkitRunnable.() -
  * @return The scheduled BukkitTask instance representing the task.
  */
 fun repeatingTask(periodTicks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(
+    repeatingTask(
         periodTicks,
         periodTicks,
         -1,
-        com.undefined.api.scheduler.TimeUnit.TICKS,
+        TimeUnit.TICKS,
         async,
         runnable
     )
+
 /**
  * Executes a repeating task with the specified parameters.
  *
@@ -134,14 +134,15 @@ fun repeatingTask(periodTicks: Int = 1, async: Boolean, runnable: BukkitRunnable
  * @return The BukkitTask representing the scheduled repeating task.
  */
 fun repeatingTask(periodTicks: Int = 1, async: Boolean, times: Int = -1, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(
+    repeatingTask(
         periodTicks,
         periodTicks,
         times,
-        com.undefined.api.scheduler.TimeUnit.TICKS,
+        TimeUnit.TICKS,
         async,
         runnable
     )
+
 /**
  * Schedules a repeating task with the specified period and unit.
  *
@@ -150,8 +151,9 @@ fun repeatingTask(periodTicks: Int = 1, async: Boolean, times: Int = -1, runnabl
  * @param runnable the code to be executed by the task
  * @return the BukkitTask representing the scheduled task
  */
-fun repeatingTask(period: Int, unit: com.undefined.api.scheduler.TimeUnit, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(period, period, -1, unit, false, runnable)
+fun repeatingTask(period: Int, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): BukkitTask =
+    repeatingTask(period, period, -1, unit, false, runnable)
+
 /**
  * Executes a repeating task with the specified period and times.
  *
@@ -162,8 +164,9 @@ fun repeatingTask(period: Int, unit: com.undefined.api.scheduler.TimeUnit, runna
  *
  * @return The BukkitTask representing the repeating task.
  */
-fun repeatingTask(period: Int, unit: com.undefined.api.scheduler.TimeUnit, times: Int = -1, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(period, period, times, unit, false, runnable)
+fun repeatingTask(period: Int, unit: TimeUnit, times: Int = -1, runnable: BukkitRunnable.() -> Unit): BukkitTask =
+    repeatingTask(period, period, times, unit, false, runnable)
+
 /**
  * Schedule a repeating task with the specified period and unit.
  *
@@ -173,8 +176,9 @@ fun repeatingTask(period: Int, unit: com.undefined.api.scheduler.TimeUnit, times
  * @param runnable the code to be executed by the task
  * @return the BukkitTask representing the scheduled task
  */
-fun repeatingTask(period: Int, unit: com.undefined.api.scheduler.TimeUnit, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(period, period, -1, unit, async, runnable)
+fun repeatingTask(period: Int, unit: TimeUnit, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask =
+    repeatingTask(period, period, -1, unit, async, runnable)
+
 /**
  * Executes a repeating task asynchronously or synchronously in a Bukkit server.
  *
@@ -190,8 +194,9 @@ fun repeatingTask(period: Int, unit: com.undefined.api.scheduler.TimeUnit, async
  *
  * @return The BukkitTask representing the repeating task.
  */
-fun repeatingTask(period: Int, unit: com.undefined.api.scheduler.TimeUnit, times: Int = -1, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(period, period, times, unit, async, runnable)
+fun repeatingTask(period: Int, unit: TimeUnit, times: Int = -1, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask =
+    repeatingTask(period, period, times, unit, async, runnable)
+
 /**
  * Schedules a repeating task on the Bukkit scheduler.
  *
@@ -203,14 +208,15 @@ fun repeatingTask(period: Int, unit: com.undefined.api.scheduler.TimeUnit, times
  * @return The Bukkit task that has been scheduled.
  */
 fun repeatingTask(delayTicks: Int, periodTicks: Int, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(
+    repeatingTask(
         delayTicks,
         periodTicks,
         -1,
-        com.undefined.api.scheduler.TimeUnit.TICKS,
+        TimeUnit.TICKS,
         async,
         runnable
     )
+
 /**
  * Schedules a repeating task with the specified delay, period, and number of times to repeat.
  *
@@ -222,14 +228,15 @@ fun repeatingTask(delayTicks: Int, periodTicks: Int, async: Boolean, runnable: B
  * @return a BukkitTask representing the scheduled task
  */
 fun repeatingTask(delayTicks: Int, periodTicks: Int, times: Int = -1, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(
+    repeatingTask(
         delayTicks,
         periodTicks,
         times,
-        com.undefined.api.scheduler.TimeUnit.TICKS,
+        TimeUnit.TICKS,
         async,
         runnable
     )
+
 /**
  * Schedules a repeating task with the given delay, period, time unit, and runnable function.
  *
@@ -239,8 +246,9 @@ fun repeatingTask(delayTicks: Int, periodTicks: Int, times: Int = -1, async: Boo
  * @param runnable the function to be run repeatedly
  * @return the BukkitTask representing the scheduled task
  */
-fun repeatingTask(delay: Int, period: Int, unit: com.undefined.api.scheduler.TimeUnit, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(delay, period, -1, unit, false, runnable)
+fun repeatingTask(delay: Int, period: Int, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): BukkitTask =
+    repeatingTask(delay, period, -1, unit, false, runnable)
+
 /**
  * Schedules a repeating task with the given delay, period, times, unit, and runnable.
  *
@@ -251,8 +259,8 @@ fun repeatingTask(delay: Int, period: Int, unit: com.undefined.api.scheduler.Tim
  * @param runnable The code to be executed as part of the task. It is defined as a lambda expression with the BukkitRunnable as the receiver.
  * @return The BukkitTask object representing the scheduled repeating task.
  */
-fun repeatingTask(delay: Int, period: Int, times: Int = -1, unit: com.undefined.api.scheduler.TimeUnit, runnable: BukkitRunnable.() -> Unit): BukkitTask =
-    com.undefined.api.scheduler.repeatingTask(delay, period, times, unit, false, runnable)
+fun repeatingTask(delay: Int, period: Int, times: Int = -1, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): BukkitTask =
+    repeatingTask(delay, period, times, unit, false, runnable)
 
 /**
  * Creates a new instance of [BukkitRunnable] using the given lambda expression as the run method.
@@ -260,7 +268,7 @@ fun repeatingTask(delay: Int, period: Int, times: Int = -1, unit: com.undefined.
  * @param runnable the lambda expression to be executed when the [BukkitRunnable] runs.
  * @return a new instance of [BukkitRunnable] with the specified run method.
  */
-private fun createRunnable(runnable: BukkitRunnable.() -> Unit): BukkitRunnable{
+private fun createRunnable(runnable: BukkitRunnable.() -> Unit): BukkitRunnable {
     return object : BukkitRunnable(){
         override fun run() {
             runnable()
@@ -275,16 +283,14 @@ private fun createRunnable(runnable: BukkitRunnable.() -> Unit): BukkitRunnable{
  * @param runnable The lambda expression to execute when the `BukkitRunnable` is run.
  * @return The created `BukkitRunnable`.
  */
-private fun createRunnable(times: Int = -1, runnable: BukkitRunnable.() -> Unit): BukkitRunnable{
+private fun createRunnable(times: Int = -1, runnable: BukkitRunnable.() -> Unit): BukkitRunnable {
     var amount = 0
-    return object : BukkitRunnable(){
+    return object : BukkitRunnable() {
         override fun run() {
             runnable()
             if (times == -1) return
             amount++
-            if (amount >= times) {
-                cancel()
-            }
+            if (amount >= times) cancel()
         }
     }
 }

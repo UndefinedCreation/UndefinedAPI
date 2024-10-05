@@ -8,17 +8,13 @@ repositories {
 }
 
 dependencies {
-
     paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
-
-
     implementation(project(":api"))
 }
 
 
 
 tasks {
-
     assemble {
         dependsOn(reobfJar)
     }
@@ -28,6 +24,6 @@ tasks {
     }
 
 }
-kotlin{
+kotlin {
     jvmToolchain(21)
 }

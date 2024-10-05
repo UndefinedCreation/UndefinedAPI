@@ -10,15 +10,14 @@ import org.bukkit.craftbukkit.block.data.CraftBlockData
 import org.bukkit.entity.EntityType
 
 class NMSBlockDisplayEntity(block: BlockData): NMSDisplayEntity(EntityType.BLOCK_DISPLAY), NMSBlockDisplayEntity {
+
     override var blockData: BlockData = block
         set(value) {
             entity?.let {
-
-                val b = it as BlockDisplay
-                b.blockState = (value as CraftBlockData).state
+                val blockDisplay = it as BlockDisplay
+                blockDisplay.blockState = (value as CraftBlockData).state
                 sendMetaPackets()
                 field = value
-
             }
         }
 
@@ -28,4 +27,5 @@ class NMSBlockDisplayEntity(block: BlockData): NMSDisplayEntity(EntityType.BLOCK
     }
 
     override fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = BlockDisplay(entityType, level)
+
 }

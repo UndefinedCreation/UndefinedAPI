@@ -17,13 +17,9 @@ import java.util.*
 class UndefinedCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList()): BaseUndefinedCommand()  {
 
     init {
-
         UndefinedCoreCommand(name, permission, description, aliases, {
-
-
             val player: Player?
             val console: ConsoleCommandSender?
-
             when {
                 sender is Player -> {
                     player = sender
@@ -38,12 +34,9 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
             genExecute.forEach { execution -> if (!execution.invoke(sender)) return@UndefinedCoreCommand false }
             mainExecute.forEach { execution -> if (!execution.invoke(AllCommand(sender, arg))) return@UndefinedCoreCommand false}
 
-
-
             if (arg.isNullOrEmpty()) return@UndefinedCoreCommand false
 
             var lastSub: BaseUndefinedCommand = this@UndefinedCommand
-
             arg.forEach { arg ->
                 val sub = getAndRun(lastSub, arg, this.arg, sender is Player, sender, this.arg.indexOf(arg)) ?: return@UndefinedCoreCommand false
                 lastSub = sub
@@ -52,14 +45,10 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
             return@UndefinedCoreCommand true
 
         }, {
-
             if (this.second.isNullOrEmpty()) return@UndefinedCoreCommand mutableListOf()
             val index = this.second!!.size - 1
             return@UndefinedCoreCommand StringUtil.copyPartialMatches(this.second!![index], getAllSubCommandNames(this.second!!, this.first), mutableListOf())
-
-
         })
-
     }
 
     private fun getAllSubCommandNames(args: Array<out  String>, sender: CommandSender): List<String> {
@@ -69,10 +58,7 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
         val maxIndex = args.size - 1
 
         args.onEach {
-            if (index == maxIndex) {
-                return getNameList(lastSub.subCommandList, sender)
-            }
-
+            if (index == maxIndex) return getNameList(lastSub.subCommandList, sender)
             lastSub = lastSub.getSubCommand(args[index]) ?: return emptyList()
             index++
         }
@@ -89,7 +75,7 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
         isPlayer: Boolean,
         commandSender: CommandSender,
         indexOf: Int
-    ): UndefinedSubCommand? {
+    ) : UndefinedSubCommand? {
         val command = sub.getSubCommand(name)
         command?.let {
             if (isPlayer) {
@@ -115,27 +101,23 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
     }
 
     override fun getNames(sender: CommandSender): List<String> = listOf()
-
     override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean = true
 
 }
 
 class UndefinedCoreCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList(), private val c1: AllCommand.() -> Boolean, private val c2: Pair<CommandSender, Array<out String>?>.() -> MutableList<String> ): BukkitCommand(name) {
-    override fun execute(p0: CommandSender, p1: String, p2: Array<out String>?): Boolean = c1.invoke(AllCommand(p0, p2))
 
+    override fun execute(p0: CommandSender, p1: String, p2: Array<out String>?): Boolean = c1.invoke(AllCommand(p0, p2))
     override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>?): MutableList<String> = c2.invoke(Pair(sender, args))
 
     init {
-
         setDescription(description)
         setPermission(permission)
         setAliases(aliases)
-
         setField()
-
     }
 
-    private fun setField(){
+    private fun setField() {
         val commandMap = Bukkit.getServer().getPrivateField<CommandMap>("commandMap")
         commandMap.register(name, this)
     }

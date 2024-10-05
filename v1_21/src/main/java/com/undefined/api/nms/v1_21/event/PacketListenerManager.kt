@@ -32,6 +32,7 @@ import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.block.data.CraftBlockData
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.craftbukkit.inventory.CraftItemStack
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -49,11 +50,8 @@ import kotlin.collections.ArrayDeque
 class PacketListenerManager {
 
     private val armorSlots: HashMap<Int, Int> = hashMapOf(Pair(4, 39), Pair(5, 38), Pair(6, 37), Pair(7, 36))
-
     private val onFire: MutableList<UUID> = mutableListOf()
-
     private val que = ArrayDeque<Packet<*>>(6)
-
     private val lMap: HashMap<UUID, UUID> = hashMapOf()
 
     companion object {
@@ -61,19 +59,12 @@ class PacketListenerManager {
     }
 
     init {
-
         event<PlayerJoinEvent> {
-
-
-            if (player.fireTicks > 0) {
-                onFire.add(player.uniqueId)
-            }
-
-
-            val fakeConnection = player.getConnection().getConnection()
+            if (player.fireTicks > 0) onFire.add(player.uniqueId)
 
             lMap[player.uniqueId] = UUID.randomUUID()
 
+            val fakeConnection = player.getConnection().getConnection()
             val channel = fakeConnection.channel
             val pipeline = channel.pipeline()
             pipeline.addBefore("packet_handler", lMap[player.uniqueId]!!.toString(), UndefinedDuplexHandler(
@@ -81,7 +72,7 @@ class PacketListenerManager {
 
                     when (this) {
                         is ServerboundSwingPacket -> {
-                            val event = PlayerArmSwingEvent(player, if (this.hand == InteractionHand.MAIN_HAND) EquipmentSlot.HAND else EquipmentSlot.OFF_HAND)
+                            val event = PlayerArmSwingEvent(player, if (this.hand.equals(InteractionHand.MAIN_HAND)) EquipmentSlot.HAND else EquipmentSlot.OFF_HAND)
                             Bukkit.getPluginManager().callEvent(event)
                             if (event.isCancelled) return@UndefinedDuplexHandler true
                         }
@@ -90,19 +81,18 @@ class PacketListenerManager {
                     }
 
                     return@UndefinedDuplexHandler false
-                },{
+                }, {
 
                     when (this@UndefinedDuplexHandler) {
-                        is ClientboundContainerSetSlotPacket -> handleArmorChange(player, this@UndefinedDuplexHandler)
                         is ClientboundSetEntityDataPacket -> handleDataPacket(player, this@UndefinedDuplexHandler)
+                        is ClientboundContainerSetSlotPacket -> handleArmorChange(player, this@UndefinedDuplexHandler)
                         is ClientboundLevelParticlesPacket -> handleParticle(this, player.world, player)
                         is ClientboundSoundPacket -> handleSound(this, player)
                         is ClientboundSoundEntityPacket -> handleEntitySound(this, player)
                         is ClientboundStopSoundPacket -> handleSoundStop(this, player)
-                        is ClientboundBlockUpdatePacket -> handleFakeBlock(this, player)
+                        is ClientboundBlockUpdatePacket -> return@UndefinedDuplexHandler handleFakeBlock(this, player)
                         is ClientboundSectionBlocksUpdatePacket -> handleMultiBlockUpdate(this, player)
                     }
-
                     return@UndefinedDuplexHandler false
                 }
             ))
@@ -110,21 +100,21 @@ class PacketListenerManager {
         }
 
         event<PlayerQuitEvent> {
-
             player.removeMetaData("onFire")
 
             val connection = player.getConnection().getConnection()
             val channel = connection.channel
-            channel.eventLoop().submit {
+
+            channel.eventLoop().submit(){
                 channel.pipeline().remove(lMap[player.uniqueId]!!.toString())
             }
+
             lMap.remove(player.uniqueId)
         }
 
     }
 
     private fun handleMultiBlockUpdate(msg: ClientboundSectionBlocksUpdatePacket, player: Player) {
-
         if (!checkQue(msg)) return
 
         val section = msg.getPrivateField<SectionPos>(SpigotNMSMappings.ClientboundSectionBlocksUpdatePacketSection)
@@ -144,7 +134,6 @@ class PacketListenerManager {
     }
 
     private fun handleFakeBlock(msg: ClientboundBlockUpdatePacket, player: Player) : Boolean {
-
         if (checkQue(msg)) {
             val location = Location(player.world, msg.pos.x.toDouble(), msg.pos.y.toDouble(), msg.pos.z.toDouble())
             val block = location.block
@@ -179,28 +168,24 @@ class PacketListenerManager {
     }
 
     private fun handleEntitySound(msg: ClientboundSoundEntityPacket, viewer: Player) {
-        val cWorld = viewer.world as CraftWorld
+        val craftWorld = viewer.world as CraftWorld
         sync {
-            cWorld.handle.getEntity(msg.id)?.let {
-                async {
-                    val sound = CraftSound.minecraftToBukkit(msg.sound.value())
-                    val world = Location(viewer.world, it.x, it.y, it.z)
-                    val volume = msg.volume
-                    val pitch = msg.pitch
-                    val seed = msg.seed
-                    val source = com.undefined.api.customEvents.SoundSource.valueOf(msg.source.name)
-                    sync {
-                        SoundEvent(
-                            viewer,
-                            sound,
-                            volume,
-                            pitch,
-                            world,
-                            seed,
-                            source
-                        ).call()
-                    }
-                }
+            craftWorld.handle.getEntity(msg.id)?.let {
+                val sound = CraftSound.minecraftToBukkit(msg.sound.value())
+                val world = Location(viewer.world, it.x, it.y, it.z)
+                val volume = msg.volume
+                val pitch = msg.pitch
+                val seed = msg.seed
+                val source = com.undefined.api.customEvents.SoundSource.valueOf(msg.source.name)
+                SoundEvent(
+                    viewer,
+                    sound,
+                    volume,
+                    pitch,
+                    world,
+                    seed,
+                    source
+                ).call()
             }
         }
     }
@@ -254,10 +239,11 @@ class PacketListenerManager {
         }
     }
 
+
+
     private fun handleMainHandSwitch(msg: ServerboundSetCarriedItemPacket, player: Player) {
 
         val slot = msg.getEntityID()
-
         val item = player.inventory.getItem(slot)
 
         sync {
@@ -270,43 +256,31 @@ class PacketListenerManager {
         val sPlayer = (player as CraftPlayer).handle
         val windowID = sPlayer.containerMenu.containerId
 
-        val contairID = msg.getContainerID()
-
-        if (windowID != contairID) return
-
+        if (msg.getContainerID() != windowID) return
         val slot = msg.getContainerSlot()
 
         if (!armorSlots.containsKey(slot)) return
 
         val bukkitSlot = armorSlots[slot]!!
-
         val itemStack = msg.getItemStack()
 
-        sync {
-            Bukkit.getPluginManager().callEvent(PlayerArmorChangeEvent(player, CraftItemStack.asBukkitCopy(itemStack), bukkitSlot))
-        }
-
+        sync { Bukkit.getPluginManager().callEvent(PlayerArmorChangeEvent(player, itemStack.bukkitStack, bukkitSlot)) }
     }
 
     /**
-     * Handles the fire event for a player based on a given packet.
-     * If the player is on fire, it triggers the PlayerIgniteEvent. If the player's fire is extinguished,
-     * it triggers the PlayerExtinguishEvent.
+     * Handles the interaction between a player and fire.
      *
-     * @param player The player affected by the fire event.
-     * @param msg The packet containing the fire event data.
+     * @param player The player involved in the interaction.
+     * @param msg The ClientboundSetEntityDataPacket containing the data of the interaction.
      */
     private fun handleDataPacket(player: Player, msg: ClientboundSetEntityDataPacket) {
-
-        val id = msg.getEntityID()
-
+        val entityID = msg.getEntityID()
         val list = msg.getSynchedEntityDataList()
 
         list.filter { it.value is Byte }.forEach {
-
             when (it.id) {
                 0 -> handleFire(msg, it.value as Byte, player.world as CraftWorld)
-                8 -> if (player.entityId == id) handleUsingItem(player, (it.value as Byte).toInt())
+                8 -> if (player.entityId == entityID) handleUsingItem(player, (it.value as Byte).toInt())
             }
         }
         return
@@ -324,67 +298,46 @@ class PacketListenerManager {
         }
     }
 
-    private fun handleFire(msg: ClientboundSetEntityDataPacket, value: Byte, craftWorld: CraftWorld){
-
+    private fun handleFire(msg: ClientboundSetEntityDataPacket, value: Byte, craftWorld: CraftWorld) {
         if (!checkQue(msg)) return
-
         val entityID = msg.getEntityID()
 
         sync {
+            craftWorld.handle.getEntity(entityID)?.let {
+                if (!LivingEntity::class.java.isAssignableFrom(it::class.java)) return@sync
 
-            val entity = craftWorld.handle.getEntity(entityID) ?: return@sync
-
-            if (!net.minecraft.world.entity.LivingEntity::class.java.isAssignableFrom(entity::class.java)) return@sync
-
-            if (value == 0.toByte() && onFire.contains(entity.uuid)) {
-                Bukkit.getPluginManager()
-                    .callEvent(EntityExtinguishEvent(entity.bukkitEntity))
-                onFire.remove(entity.uuid)
-            } else if (value == 1.toByte() && !onFire.contains(entity.uuid)) {
-                Bukkit.getPluginManager()
-                    .callEvent(EntityIgniteEvent(entity.bukkitEntity))
-                onFire.add(entity.uuid)
+                if (value == 0.toByte() && onFire.contains(it.uuid)) {
+                    Bukkit.getPluginManager().callEvent(EntityExtinguishEvent(it.bukkitEntity))
+                    onFire.remove(it.uuid)
+                } else if (value == 1.toByte() && !onFire.contains(it.uuid)) {
+                    Bukkit.getPluginManager().callEvent(EntityIgniteEvent(it.bukkitEntity))
+                    onFire.add(it.uuid)
+                }
             }
         }
     }
 
     /**
-     * Handles the interaction between an NPC and a player.
+     * Handles the interaction between a player and an NPC.
      *
-     * @param msg The ServerboundInteractPacket representing the interaction message.
+     * @param msg The ServerboundInteractPacket containing the interaction data.
      */
     private fun handleNPCInteract(msg: ServerboundInteractPacket, player: Player){
-
-        val actionN = msg.getAction()
-        val firstChar = actionN.toString().split("$")[1][0]
-
-
-        if(isRemapped()){
-            if (actionN.toString().contains("InteractionAction")) { return }
-        }else{
-            if (firstChar != 'e' && firstChar != '1') { return }
-        }
+        val firstChar = msg.getActionFirstChar()
+        if (firstChar == 'e') return
 
         val attacking = msg.isAttacking()
+        if (!attacking && !msg.isMainHand()) return
 
-
-
-        if (!attacking){
-            if (!msg.isMainHand()) return
-        }
-
-        val action = if(attacking) ClickType.LEFT_CLICK else ClickType.RIGHT_CLICK
+        val action = if (attacking) ClickType.LEFT_CLICK else ClickType.RIGHT_CLICK
 
         NMSManager.entityInteraction.entries.forEach {
-            if (it.key.getEntityID() == msg.getEntityID()) {
-                it.value.invoke(EntityInteract(action, it.key, player))
-            }
+            if (it.key.getEntityID() == msg.getEntityID()) it.value.invoke(EntityInteract(action, it.key, player))
         }
     }
 
     private fun checkQue(packet: Packet<*>): Boolean {
         if (que.size == 6)  que.removeLast()
-
         for (p in que) {
             if (p == packet) return false
         }

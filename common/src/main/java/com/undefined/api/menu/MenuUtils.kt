@@ -17,7 +17,7 @@ fun Inventory.isFull() = firstEmpty() == -1
  *
  * @return The number of rows in the inventory.
  */
-fun Inventory.getRows() = size/9
+fun Inventory.getRows() = size / 9
 
 /**
  * Sets the items in a specified row of the inventory.
@@ -26,6 +26,7 @@ fun Inventory.getRows() = size/9
  * @param item The item to be set in the row.
  */
 fun Inventory.setRow(row: Int, item: ItemStack) = setItems(item, ((9*row)until (9*row+9)))
+
 /**
  * Sets the given item to all the specified rows in the inventory.
  *

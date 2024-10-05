@@ -10,7 +10,5 @@ import com.undefined.api.nms.EntityInteract
  * - [entityInteraction]: A hashmap that maps `NMSPlayer` instances to a lambda function representing the player's interaction action.
  */
 object NMSManager {
-
     val entityInteraction: HashMap<com.undefined.api.nms.interfaces.NMSEntity, EntityInteract.() -> Unit> = hashMapOf()
-
 }

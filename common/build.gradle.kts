@@ -6,11 +6,6 @@ val versionVar = version
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
-
-repositories {
-}
-
-
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
 
@@ -22,12 +17,11 @@ dependencies {
 
 
 tasks {
-
     compileKotlin {
         kotlinOptions.jvmTarget = "21"
     }
-
 }
-kotlin{
+
+kotlin {
     jvmToolchain(21)
 }

@@ -45,4 +45,4 @@ fun  ServerboundInteractPacket.isMainHand(): Boolean {
  *
  * @return The first character of the action identifier.
  */
-fun ServerboundInteractPacket.getActionFirstChar(): String = getAction().toString().split("$")[1]
+fun ServerboundInteractPacket.getActionFirstChar(): Char = getAction().toString().split("$")[1][0]

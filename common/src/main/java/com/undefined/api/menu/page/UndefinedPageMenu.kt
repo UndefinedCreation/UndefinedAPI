@@ -26,16 +26,19 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
      * @property bButton The PageButton object associated with this variable.
      */
     var bButton: PageButton? = null
+
     /**
      * Represents a nullable variable of type `PageButton`.
      *
      * @property nButton The value of the variable.
      */
     var nButton: PageButton? = null
+
     /**
      * Represents a map of items with integer keys.
      */
     var itemsMap = HashMap<Int, ItemStack>()
+
     /**
      * Represents a nullable variable that holds a reference to a PageList object.
      *
@@ -68,6 +71,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
      * @property page The current page index.
      */
     private var page = 1
+
     /**
      * Represents the total number of pages in a menu.
      *
@@ -99,30 +103,23 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
      * This method retrieves the items of the next page from the [PageList] and sets them in the inventory.
      * It also updates the page number, clears the inventory, and sets the buttons in the menu.
      */
-    fun nextPage(){
-
+    fun nextPage() {
         val items = pageList?.getPage(page + 1) ?: return
         page++
         inventory!!.clear()
 
-        itemsMap.forEach{
-            inventory?.setItem(it.key, it.value)
-        }
+        itemsMap.forEach { inventory?.setItem(it.key, it.value) }
 
         setButtons()
         setItems(items)
-
     }
 
     /**
      * Navigates to the previous page in the menu.
      */
     fun previousPage() {
-
-
         val items: List<ItemStack> = pageList?.getPage(page - 1) ?: return
         page--
-
         inventory!!.clear()
 
         itemsMap.forEach { it: Map.Entry<Int, ItemStack> ->
@@ -140,10 +137,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
      * @return The created inventory.
      */
     fun createPageInventory(display: Inventory.() -> Unit): Inventory{
-
-
         inventory = Bukkit.createInventory(null, size, title).apply(display)
-
         var index = 0
 
         inventory!!.contents.forEach {
@@ -175,27 +169,22 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
      * @param items The list of ItemStacks to set in the inventory.
      */
     private fun setItems(items: List<ItemStack>){
-
-        items.forEach{
-            inventory!!.setItem(inventory!!.firstEmpty(), it)
-        }
+        items.forEach { inventory!!.setItem(inventory!!.firstEmpty(), it) }
     }
 
     /**
      * Sets the buttons for the menu inventory based on the current page and total number of pages.
      */
-    private fun setButtons(){
-        if (page + 1 > totalPages){
+    private fun setButtons() {
+        if (page + 1 > totalPages)
             inventory!!.setItem(nButton!!.slot, nButton!!.emptyButton)
-        }else {
+        else
             inventory!!.setItem(nButton!!.slot, nButton!!.activeButton)
-        }
 
-        if (page - 1 <= 0){
+        if (page - 1 <= 0)
             inventory!!.setItem(bButton!!.slot, bButton!!.emptyButton)
-        }else{
+        else
             inventory!!.setItem(bButton!!.slot, bButton!!.activeButton)
-        }
     }
 
     /**
@@ -209,6 +198,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
         bButton = PageButton(slot, backButton, emptyButton)
         this.itemsMap[slot] = ItemStack(Material.AIR)
     }
+
     /**
      * Sets the back button for the menu.
      *
@@ -218,6 +208,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
         bButton = pageButton
         this.itemsMap[pageButton.slot] = ItemStack(Material.AIR)
     }
+
     /**
      * Sets the next button for the menu at the specified slot.
      *
@@ -229,6 +220,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
         nButton = PageButton(slot, nextButton, emptyButton)
         this.itemsMap[slot] = ItemStack(Material.AIR)
     }
+
     /**
      * Sets the next button of the UndefinedPageMenu.
      *
@@ -241,4 +233,5 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
         nButton = pageButton
         this.itemsMap[pageButton.slot] = ItemStack(Material.AIR)
     }
+
 }

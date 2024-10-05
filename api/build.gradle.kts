@@ -2,22 +2,17 @@ plugins {
     kotlin("jvm") version "1.9.22"
 }
 
-repositories {
-}
-
-
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT")
 }
 
 
 tasks {
-
     compileKotlin {
         kotlinOptions.jvmTarget = "21"
     }
-
 }
-kotlin{
+
+kotlin {
     jvmToolchain(21)
 }

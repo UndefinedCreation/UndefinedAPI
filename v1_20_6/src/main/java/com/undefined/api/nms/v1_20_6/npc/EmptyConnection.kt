@@ -7,8 +7,6 @@ import net.minecraft.network.protocol.PacketFlow
 
 import java.net.SocketAddress
 
-
-
 /**
  * This class represents an empty connection that extends the Connection class.
  * An empty connection does not perform any actual network operations and is always considered to be connected.
@@ -16,6 +14,7 @@ import java.net.SocketAddress
  * @param flag the packet flow flag for the connection
  */
 class EmptyConnection(flag: PacketFlow? = null): Connection(flag) {
+
     init {
         channel = EmptyChannel(null)
         address = object : SocketAddress() {
@@ -26,12 +25,9 @@ class EmptyConnection(flag: PacketFlow? = null): Connection(flag) {
     override fun flushChannel() {
     }
 
-    override fun isConnected(): Boolean {
-        return true
-    }
+    override fun isConnected(): Boolean = true
 
     override fun send(packet: Packet<*>) {
-
     }
 
     override fun send(packet: Packet<*>, genericfuturelistener: PacketSendListener?) {

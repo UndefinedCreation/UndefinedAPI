@@ -13,6 +13,7 @@ import java.nio.file.Path
  * @param fromResources Flag indicating whether the file should be copied from a resource.
  */
 open class UndefinedFile(val file: File, private val fromResources: Boolean = false) {
+
     /**
      * Constructs an instance of the UndefinedFile class.
      *
@@ -20,6 +21,7 @@ open class UndefinedFile(val file: File, private val fromResources: Boolean = fa
      * @param fromResources Flag indicating whether the file should be copied from a resource.
      */
     constructor(path: String, fromResources: Boolean = false): this(File(UndefinedAPI.plugin.dataFolder, path), fromResources)
+
     /**
      * Constructs a new `UndefinedFile` object with the specified `path` and `fromResources` flag.
      *
@@ -38,27 +40,25 @@ open class UndefinedFile(val file: File, private val fromResources: Boolean = fa
     /**
      * Creates the parent folders for the file.
      */
-    private fun createParentFolders(){
+    private fun createParentFolders() {
         file.parentFile.mkdirs()
     }
 
     /**
      * Creates the file if it doesn't exist.
      */
-    private fun createIfDoesntExist(){
-        if (!file.exists()){
-            file.createNewFile()
-        }
+    private fun createIfDoesntExist() {
+        if (!file.exists()) file.createNewFile()
     }
     /**
      * Copies the file from a resource.
      */
-    private fun copyFromResource(){
+    private fun copyFromResource() {
         UndefinedAPI.plugin.saveResource(file.toString(), false)
     }
 
      /**
       * Saves the file. Subclasses can override this method to provide custom saving functionality specific to their file type.
       */
-     open fun save(){}
+     open fun save() {}
 }

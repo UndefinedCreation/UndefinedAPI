@@ -46,40 +46,32 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
         }
 
     override var onFire: Boolean = false
-        set(value){
-
+        set(value) {
             val entity = entity ?: return
             field = value
-            if (value){
 
+            if (value) {
                 entity.remainingFireTicks = 2000000
-
                 val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
                     SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0x01)
                 )
-
                 val dataPacket = ClientboundSetEntityDataPacket(entity.id, dataList)
 
                 viewers.sendPacket(dataPacket)
-            }else{
+            } else {
                 entity.remainingFireTicks = 0
-
                 val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
                     SynchedEntityData.DataValue.create(EntityDataAccessor(0, EntityDataSerializers.BYTE), 0)
                 )
-
                 val dataPacket = ClientboundSetEntityDataPacket(entity.id, dataList)
 
                 viewers.sendPacket(dataPacket)
             }
-
         }
 
     override var glowingColor: ChatColor = ChatColor.WHITE
         set(value) {
-
             if (entity == null) return
-
             field = value
 
             val format = ChatFormatting.valueOf(value.name)
@@ -91,40 +83,32 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
                 ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true),
                 ClientboundSetPlayerTeamPacket.createPlayerPacket(team, entity!!.uuid.toString(), ClientboundSetPlayerTeamPacket.Action.ADD)
             )
-
         }
+
     override var glowing: Boolean = false
         set(value) {
-
             if (entity == null) return
+            field = value
 
             entity!!.setSharedFlag(5, value)
-
             sendMetaPackets()
-
-            field = value
         }
+
     override var isVisible: Boolean = true
         set(value) {
-
             if (entity == null) return
+            field = value
 
             entity!!.setSharedFlag(6, value)
-
             sendMetaPackets()
-
-            field = value
         }
 
     override var collibable: Boolean = false
         set(value) {
-
             if (entity == null) return
-
             field = value
 
             team.collisionRule = if (value) Team.CollisionRule.ALWAYS else Team.CollisionRule.NEVER
-
             viewers.sendPacket(
                 ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true),
             )
@@ -133,31 +117,18 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
     override var customName: String? = null
         get() = if (field == null) "" else field
         set(value) {
-
             if (entity == null) return
 
-            if (value == null){
-                //Hide Name
-
+            if (value == null) {
                 entity!!.isCustomNameVisible = false
-
                 sendMetaPackets()
-
-            }else{
-                //Show / Set name
-
+            } else {
                 var name = value
-
-                if (name.length > 256) {
-                    name = name.substring(0, 256)
-                }
+                if (name.length > 256) name = name.substring(0, 256)
 
                 entity!!.customName = CraftChatMessage.fromStringOrNull(name)
-
                 entity!!.isCustomNameVisible = true
-
                 sendMetaPackets()
-
             }
 
             field = value
@@ -179,14 +150,10 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
 
 
     override fun spawn(newLocation: Location) {
-        if (viewers.isEmpty()) {
-            return
-        }
+        if (viewers.isEmpty()) return
 
         val nmsEntityType = CraftEntityType.bukkitToMinecraft(entityType)
-
         val craftWorld = newLocation.world as CraftWorld
-
         val entity = getUndefinedEntityClass(nmsEntityType, craftWorld.handle)
 
         entity.setPos(newLocation.x, newLocation.y, newLocation.z)
@@ -217,12 +184,11 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
     override fun teleport(newLocation: Location) {
         entity?.let {
             entity!!.setPos(newLocation.x, newLocation.y, newLocation.z)
-            val m = Entity::class.java.getDeclaredMethod(SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
-            m.isAccessible = true
-            m.invoke(entity, newLocation.yaw, newLocation.pitch)
+            val method = Entity::class.java.getDeclaredMethod(SpigotNMSMappings.EntitySetRotMethod, Float::class.java, Float::class.java)
+            method.isAccessible = true
+            method.invoke(entity, newLocation.yaw, newLocation.pitch)
 
             val packet = ClientboundTeleportEntityPacket(entity!!)
-
             viewers.sendPacket(packet)
             location = newLocation
         }
@@ -230,9 +196,7 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
 
     override fun kill() {
         if (entity == null) return
-
         val entityRemovePacket = ClientboundRemoveEntitiesPacket(entity!!.id)
-
         viewers.sendPacket(entityRemovePacket)
     }
 
@@ -249,7 +213,6 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
             val rider = method.invoke(nmsEntity) as Entity?
 
             rider?.let { rider ->
-
                 if (it.passengers.isEmpty()) {
                     it.passengers = ImmutableList.of(rider)
                 } else {
@@ -262,7 +225,6 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
                     }
 
                     it.passengers = ImmutableList.copyOf(list)
-
                 }
 
                 viewers.sendPacket(ClientboundSetPassengersPacket(it))
@@ -274,10 +236,9 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
         entity?.let {
             val method = com.undefined.api.nms.v1_21.entity.NMSEntity::class.java.getDeclaredMethod("getEntityM")
             method.isAccessible = true
+
             val rider = method.invoke(nmsEntity) as Entity?
-
             rider?.let { rider ->
-
                 if (it.passengers.contains(rider)) {
                     val list: MutableList<Entity> = Lists.newArrayList(it.passengers)
                     list.remove(rider)
@@ -293,14 +254,11 @@ open class NMSEntity(override val entityType: EntityType): NMSEntity {
     fun sendMetaPackets() {
         entity?.let { entity ->
             entity.entityData.nonDefaultValues?.let {
-
-                ClientboundSetEntityDataPacket(
-                    entity.id,
-                    it
-                )
+                ClientboundSetEntityDataPacket(entity.id, it)
             }?.let { viewers.sendPacket(it) }
         }
     }
 
     fun getEntityM(): Entity? = entity
+
 }

@@ -21,19 +21,16 @@ class NMSItemEntity(item: ItemStack): NMSEntity(EntityType.ITEM), com.undefined.
             }
             return null
         }
+
     override var itemStack: ItemStack = item
         set(value) {
             entity?.let {
-
                 val itemEntity = entity as ItemEntity
-
                 itemEntity.entityData.set(ITEM_DATA!!, CraftItemStack.asNMSCopy(value))
 
                 sendMetaPackets()
                 field = value
-
             }
-
         }
 
     override fun spawn(newLocation: Location) {
@@ -46,4 +43,5 @@ class NMSItemEntity(item: ItemStack): NMSEntity(EntityType.ITEM), com.undefined.
     }
 
     override fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = ItemEntity(level, 0.0,0.0,0.0, CraftItemStack.asNMSCopy(itemStack))
+
 }

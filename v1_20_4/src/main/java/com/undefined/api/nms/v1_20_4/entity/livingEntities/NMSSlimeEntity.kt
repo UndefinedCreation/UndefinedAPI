@@ -16,15 +16,12 @@ class NMSSlimeEntity: NMSLivingEntity(EntityType.SLIME), NMSSlimeEntity {
             field = value
 
             val slimeEntity = entity!! as Slime
-
             slimeEntity.setSize(value, true)
-
             sendMetaPackets()
         }
 
     override fun spawn(newLocation: Location) {
         super.spawn(newLocation)
-
         this.size = size
     }
 

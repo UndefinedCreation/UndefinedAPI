@@ -1,18 +1,19 @@
 package com.undefined.api.nms.v1_20_4.extensions
 
 import net.minecraft.core.particles.*
+import org.bukkit.Color
 import org.bukkit.Particle.DustOptions
 import org.bukkit.Particle.DustTransition
 
 fun ParticleOptions.getBukkitOptions(): Any? =
     when(this) {
         is DustColorTransitionOptions -> DustTransition(
-            org.bukkit.Color.fromBGR(
+            Color.fromBGR(
                 fromColor.x.toInt() * 255,
                 fromColor.y.toInt() * 255,
                 fromColor.z.toInt() * 255
             ),
-            org.bukkit.Color.fromBGR(
+            Color.fromBGR(
                 toColor.x.toInt() * 255,
                 toColor.y.toInt() * 255,
                 toColor.z.toInt() * 255
@@ -20,7 +21,7 @@ fun ParticleOptions.getBukkitOptions(): Any? =
         )
 
         is DustParticleOptions -> DustOptions(
-            org.bukkit.Color.fromBGR(
+            Color.fromBGR(
                 color.x.toInt() * 255,
                 color.y.toInt() * 255,
                 color.z.toInt() * 255

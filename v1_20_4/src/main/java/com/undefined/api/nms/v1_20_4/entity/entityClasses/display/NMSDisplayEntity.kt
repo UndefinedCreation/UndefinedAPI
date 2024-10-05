@@ -13,16 +13,13 @@ import net.minecraft.world.entity.Display
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 
-open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEntity {
+open class NMSDisplayEntity(entity: EntityType) : NMSEntity(entity), NMSDisplayEntity {
     override var scaleX: Float = 0.0F
         set(value) {
             entity?.let {
-
-                val d = it as Display
-                d.setScaleX(scaleX)
-
+                val display = it as Display
+                display.setScaleX(scaleX)
                 updateScale()
-
                 field = value
             }
         }
@@ -71,21 +68,20 @@ open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEn
 
     override fun scale(scale: Float) {
         entity?.let {
-
-            val d = it as Display
-            d.setScaleX(scale)
-            d.setScaleY(scale)
-            d.setScaleZ(scale)
+            val display = it as Display
+            display.setScaleX(scale)
+            display.setScaleY(scale)
+            display.setScaleZ(scale)
             updateScale()
         }
     }
 
     override fun offset(x: Float, y: Float, z: Float) {
         entity?.let {
-            val d = it as Display
-            d.setTranslationX(x)
-            d.setTranslationY(y)
-            d.setTranslationZ(z)
+            val display = it as Display
+            display.setTranslationX(x)
+            display.setTranslationY(y)
+            display.setTranslationZ(z)
             updateTranslation()
         }
     }
@@ -93,59 +89,49 @@ open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEn
     override var offsetX: Float = 0F
         set(value) {
             entity?.let {
-
-                val e = it as Display
-                e.setTranslationX(value)
+                val display = it as Display
+                display.setTranslationX(value)
                 updateTranslation()
                 field = value
-
             }
         }
     override var offsetY: Float = 0F
         set(value) {
             entity?.let {
-
-                val e = it as Display
-                e.setTranslationY(value)
+                val display = it as Display
+                display.setTranslationY(value)
                 updateTranslation()
                 field = value
-
             }
         }
     override var offsetZ: Float = 0F
         set(value) {
             entity?.let {
-
-                val e = it as Display
-                e.setTranslationZ(value)
+                val display = it as Display
+                display.setTranslationZ(value)
                 updateTranslation()
                 field = value
-
             }
         }
 
     override var viewRange: Float = 1f
         set(value) {
             entity?.let {
-                val e = it as Display
-
                 val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
                     SynchedEntityData.DataValue.create(EntityDataAccessor(17, EntityDataSerializers.FLOAT), value)
                 )
-
                 viewers.sendPacket(ClientboundSetEntityDataPacket(it.id, dataList))
-
                 field = value
             }
         }
 
     override fun leftRotation(x: Float, y: Float, z: Float) {
         entity?.let {
-            val e = it as Display
-            val q = e.setLeftRotation(x, y, z)
+            val display = it as Display
+            val quaternionf = display.setLeftRotation(x, y, z)
 
             val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
-                SynchedEntityData.DataValue.create(EntityDataAccessor(13, EntityDataSerializers.QUATERNION), q)
+                SynchedEntityData.DataValue.create(EntityDataAccessor(13, EntityDataSerializers.QUATERNION), quaternionf)
             )
 
             viewers.sendPacket(ClientboundSetEntityDataPacket(it.id, dataList))
@@ -154,11 +140,11 @@ open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEn
 
     override fun rightRotation(x: Float, y: Float, z: Float) {
         entity?.let {
-            val e = it as Display
-            val q = e.setRightRotation(x, y, z)
+            val display = it as Display
+            val quaternionf = display.setRightRotation(x, y, z)
 
             val dataList: MutableList<SynchedEntityData.DataValue<*>> = mutableListOf(
-                SynchedEntityData.DataValue.create(EntityDataAccessor(14, EntityDataSerializers.QUATERNION), q)
+                SynchedEntityData.DataValue.create(EntityDataAccessor(14, EntityDataSerializers.QUATERNION), quaternionf)
             )
 
             viewers.sendPacket(ClientboundSetEntityDataPacket(it.id, dataList))
@@ -178,21 +164,15 @@ open class NMSDisplayEntity(entity: EntityType): NMSEntity(entity), NMSDisplayEn
 
     override fun updateScale() {
         entity?.let {
-
-            val d = it as Display
-
-            updateEntityData(12, d.getScale(), EntityDataSerializers.VECTOR3)
-
+            val display = it as Display
+            updateEntityData(12, display.getScale(), EntityDataSerializers.VECTOR3)
         }
     }
 
     override fun updateTranslation() {
         entity?.let {
-
-            val d = it as Display
-
-            updateEntityData(11, d.getTranslation(), EntityDataSerializers.VECTOR3)
-
+            val display = it as Display
+            updateEntityData(11, display.getTranslation(), EntityDataSerializers.VECTOR3)
         }
     }
 

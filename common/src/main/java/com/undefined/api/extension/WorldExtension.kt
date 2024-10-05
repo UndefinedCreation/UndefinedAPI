@@ -15,9 +15,7 @@ fun World.randomLocation(xRange: Double, zRange: Double): Location = Location(th
     x = Random().nextDouble(xRange * -1, xRange)
     z = Random().nextDouble(zRange * -1, zRange)
     y = when(environment){
-        World.Environment.NETHER -> {
-            (0..127).firstOrNull { getBlockAt(x.toInt(), it, z.toInt()).type.isAir }?.toDouble() ?: 0.0
-        }
+        World.Environment.NETHER -> (0..127).firstOrNull { getBlockAt(x.toInt(), it, z.toInt()).type.isAir }?.toDouble() ?: 0.0
         else -> getHighestBlockAt(x.toInt(), z.toInt()).y.toDouble()
     }
 }
@@ -29,6 +27,7 @@ fun World.randomLocation(xRange: Double, zRange: Double): Location = Location(th
  * @return A randomly generated Location object.
  */
 fun World.randomLocation(range: Double): Location = randomLocation(range, range)
+
 /**
  * Generates a random location within the world.
  *

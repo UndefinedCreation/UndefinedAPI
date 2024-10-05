@@ -43,16 +43,13 @@ abstract class UndefinedMenu(private val title: String, private val size: Int) {
      */
     val movables: MutableList<Int> = mutableListOf()
 
-
-
-
     /**
      * Constructs a Menu object with the given title and menu size.
      *
      * @param title the title of the menu
      * @param menuSize the size of the menu, default value is MenuSize.LARGE
      */
-    constructor(title: String, menuSize: MenuSize = MenuSize.LARGE):this(title, menuSize.size)
+    constructor(title: String, menuSize: MenuSize = MenuSize.LARGE) : this(title, menuSize.size)
 
     /**
      * Sets an item in the inventory at the specified slot. If the slot is outside the
@@ -63,19 +60,11 @@ abstract class UndefinedMenu(private val title: String, private val size: Int) {
      * @param itemStack The ItemStack to set in the slot.
      * @param movable Whether the item is movable or not. Defaults to false.
      */
-    fun Inventory.setItem(slot: Int, itemStack:ItemStack, movable: Boolean = false){
-        if (slot > size){
-            Bukkit.getLogger().warning("Menu : $title item outside of menu. Slot : $slot")
-            return
-        }
-
+    fun Inventory.setItem(slot: Int, itemStack:ItemStack, movable: Boolean = false) {
+        if (slot > size) return Bukkit.getLogger().warning("Menu : $title item outside of menu. Slot : $slot")
         movables.remove(slot)
-
         this.setItem(slot, itemStack)
-
-        if (!movable)
-            movables.add(slot)
-
+        if (!movable) movables.add(slot)
     }
 
     /**
@@ -83,11 +72,11 @@ abstract class UndefinedMenu(private val title: String, private val size: Int) {
      *
      * @param button the button to be added.
      */
-    fun Inventory.addButton(button: Button){
+    fun Inventory.addButton(button: Button) {
         buttons.add(button)
     }
 
-    fun Inventory.addButtons(slot: List<Int>, consumer: ClickData.() -> Unit){
+    fun Inventory.addButtons(slot: List<Int>, consumer: ClickData.() -> Unit) {
         slot.forEach { addButton(Button(it, consumer)) }
     }
 
@@ -97,8 +86,8 @@ abstract class UndefinedMenu(private val title: String, private val size: Int) {
      * @param itemStack The item stack to fill the empty slots with.
      * @param movable Indicates whether the filled slots should be movable.
      */
-    fun Inventory.fillEmpty(itemStack: ItemStack, movable: Boolean = true){
-        while (firstEmpty() != -1){
+    fun Inventory.fillEmpty(itemStack: ItemStack, movable: Boolean = true) {
+        while (firstEmpty() != -1) {
             setItem(firstEmpty(), itemStack, movable)
         }
     }
@@ -114,8 +103,7 @@ abstract class UndefinedMenu(private val title: String, private val size: Int) {
     open fun createInventory(display: Inventory.() -> Unit) : Inventory {
         buttons.clear()
         movables.clear()
-        val inventory = Bukkit.createInventory(null, size, title).apply(display)
-        return inventory
+        return Bukkit.createInventory(null, size, title).apply(display)
     }
 
     /**

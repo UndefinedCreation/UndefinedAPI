@@ -7,6 +7,7 @@ import net.minecraft.world.level.Level
 import org.bukkit.entity.EntityType
 
 class NMSInteractionEntity: NMSInteractionEntity, NMSDisplayEntity(EntityType.INTERACTION) {
+
     override var width: Float = 1f
         set(value) {
             entity?.let {
@@ -16,6 +17,7 @@ class NMSInteractionEntity: NMSInteractionEntity, NMSDisplayEntity(EntityType.IN
                 field = value
             }
         }
+
     override var height: Float = 1f
         set(value) {
             entity?.let {
@@ -27,4 +29,5 @@ class NMSInteractionEntity: NMSInteractionEntity, NMSDisplayEntity(EntityType.IN
         }
 
     override fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = Interaction(net.minecraft.world.entity.EntityType.INTERACTION, level)
+
 }

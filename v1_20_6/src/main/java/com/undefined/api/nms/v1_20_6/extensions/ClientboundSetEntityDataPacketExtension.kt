@@ -17,5 +17,4 @@ fun ClientboundSetEntityDataPacket.getEntityID() = getPrivateField<Int>(SpigotNM
  *
  * @return The list of synchronized entity data.
  */
-fun ClientboundSetEntityDataPacket.getSynchedEntityDataList() = getPrivateField<List<SynchedEntityData.DataValue<*>>>(
-    SpigotNMSMappings.ClientboundSetEntityDataPacketSyncedEntityList)
+fun ClientboundSetEntityDataPacket.getSynchedEntityDataList() = getPrivateField<List<SynchedEntityData.DataValue<*>>>(SpigotNMSMappings.ClientboundSetEntityDataPacketSyncedEntityList)

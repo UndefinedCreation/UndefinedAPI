@@ -41,4 +41,5 @@ enum class MenuSize(val size: Int) {
      * @param size the size of the menu.
      */
     LARGE(54)
+
 }

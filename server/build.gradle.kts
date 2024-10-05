@@ -8,14 +8,7 @@ val versionVar = version
 val groupIdVar = "com.redmagic"
 val artifactIdVar = "UndefinedAPI"
 
-
-repositories {
-}
-
-
-
 dependencies {
-
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
 
     implementation(project(":common"))
@@ -26,10 +19,7 @@ dependencies {
     compileOnly(project(":v1_20_4"))
 }
 
-
-
 tasks {
-
     assemble {
         dependsOn(shadowJar)
     }
@@ -46,14 +36,12 @@ tasks {
         minecraftVersion("1.20.4")
         jvmArgs("-Xmx2G")
     }
-
 }
 
 java {
     disableAutoTargetJvm()
 }
 
-kotlin{
-
+kotlin {
     jvmToolchain(21)
 }

@@ -21,6 +21,7 @@ class PageList<ItemStack>(collection: Collection<ItemStack>, val maxElement: Int
      * @return The number of pages.
      */
     fun pageCount(): Int = ceil(size.toDouble() / maxElement).toInt()
+
     /**
      * Retrieves a page of items from a page list.
      *
@@ -43,4 +44,5 @@ class PageList<ItemStack>(collection: Collection<ItemStack>, val maxElement: Int
     fun addAll(t: Array<ItemStack>) {
         Collections.addAll(this, *t)
     }
+
 }

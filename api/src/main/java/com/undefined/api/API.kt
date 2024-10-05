@@ -1,6 +1,5 @@
 package com.undefined.api
 
-
 import org.bukkit.plugin.java.JavaPlugin
 
 class API(javaPlugin: JavaPlugin) {
@@ -10,8 +9,7 @@ class API(javaPlugin: JavaPlugin) {
     }
 
     init {
-        com.undefined.api.API.Companion.plugin = javaPlugin
-
+        plugin = javaPlugin
     }
 
 }

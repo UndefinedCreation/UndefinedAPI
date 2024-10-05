@@ -34,7 +34,7 @@ fun ServerboundInteractPacket.getAction() = getPrivateField<Any>(SpigotNMSMappin
  *
  * @return true if the action is MAIN_HAND, false otherwise.
  */
-fun  ServerboundInteractPacket.isMainHand(): Boolean {
+fun ServerboundInteractPacket.isMainHand(): Boolean {
     val action = getAction()
     val string = action.getPrivateField<Any>(SpigotNMSMappings.ServerboundInteractPacketActionHand).toString()
     return string == "MAIN_HAND"

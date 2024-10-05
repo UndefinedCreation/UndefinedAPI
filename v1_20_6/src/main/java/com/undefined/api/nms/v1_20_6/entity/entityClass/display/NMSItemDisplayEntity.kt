@@ -40,6 +40,5 @@ class NMSItemDisplayEntity(itemStack: ItemStack) : NMSItemDisplayEntity, NMSDisp
         itemDisplayContext = itemDisplayContext
     }
 
-    override fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = ItemDisplay(
-        net.minecraft.world.entity.EntityType.ITEM_DISPLAY, level)
+    override fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = ItemDisplay(net.minecraft.world.entity.EntityType.ITEM_DISPLAY, level)
 }

@@ -5,7 +5,6 @@ import com.undefined.api.extension.getNMSVersion
 import com.undefined.api.nms.interfaces.NMSPlayer
 import org.bukkit.entity.Player
 
-
 @Deprecated("Use createFakeEntity instead")
 fun UndefinedAPI.createFakePlayer(name: String, skinName: String = name): NMSPlayer?{
     val version = getNMSVersion()
@@ -27,7 +26,6 @@ fun UndefinedAPI.createFakePlayer(name: String, texture: String, sign: String): 
         else -> null
     }
 }
-
 
 fun Player.getTexture(): Array<String> {
     val version = getNMSVersion()

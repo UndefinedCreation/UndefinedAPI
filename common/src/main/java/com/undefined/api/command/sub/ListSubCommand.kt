@@ -26,7 +26,8 @@ class ListSubCommand<T>(
         try {
             val t = deserialize.invoke(stringValue)
             listExe.forEach { it.invoke(ListSubCommandInfo(commandSender, t)) }
-        }catch (_: Exception){}
+        } catch (_: Exception) {
+        }
 
         return true
     }

@@ -19,18 +19,21 @@ import org.bukkit.entity.Player
  * @see Player.getConnection
  */
 fun List<Player>.sendPacket(vararg packet: Packet<*>) = forEach { it.sendPacketArray(packet) }
+
 /**
  * Returns the connection to the server for the player.
  *
  * @return the ServerGamePacketListenerImpl object representing the player's connection
  */
 fun Player.getConnection(): ServerGamePacketListenerImpl = (this as CraftPlayer).handle.connection
+
 /**
  * Sends the specified packets to the player's connection.
  *
  * @param packet the packets to send
  */
 fun Player.sendPacket(vararg packet: Packet<*>) = packet.forEach { getConnection().sendPacket(it) }
+
 /**
  * Sends packets to the player.
  *
@@ -39,6 +42,7 @@ fun Player.sendPacket(vararg packet: Packet<*>) = packet.forEach { getConnection
 fun Player.sendPacketArray(packet: Array<out Packet<*>>) = packet.forEach { getConnection().sendPacket(it) }
 
 object PlayerExtension {
+
     /**
      * Retrieves the textures of a player.
      *
@@ -54,6 +58,7 @@ object PlayerExtension {
         val sign = property.signature as String
         return arrayOf(texture, sign)
     }
+
 }
 
 /**

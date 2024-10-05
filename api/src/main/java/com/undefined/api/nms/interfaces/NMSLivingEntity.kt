@@ -2,8 +2,7 @@ package com.undefined.api.nms.interfaces
 
 import org.bukkit.Location
 
-interface NMSLivingEntity: com.undefined.api.nms.interfaces.NMSEntity {
-
+interface NMSLivingEntity : NMSEntity {
 
     /**
      * Moves the entity to the specified location.
@@ -11,12 +10,14 @@ interface NMSLivingEntity: com.undefined.api.nms.interfaces.NMSEntity {
      * @param newLocation The destination location to move the entity to.
      */
     fun moveTo(newLocation: Location)
+
     /**
      * Moves or teleports the entity to the specified location.
      *
      * @param newLocation the destination location to move or teleport the entity to
      */
     fun moveOrTeleport(newLocation: Location)
+
     /**
      * Triggers a death animation for the entity.
      *
@@ -38,7 +39,6 @@ interface NMSLivingEntity: com.undefined.api.nms.interfaces.NMSEntity {
     fun damageAnimation()
 
     fun setRotation(pitch: Float, yaw: Float)
-
     fun setHeadRotation(yaw: Float)
 
     /**

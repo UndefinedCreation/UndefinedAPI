@@ -10,23 +10,22 @@ import org.bukkit.entity.EntityType
 
 
 class NMSSlimeEntity: NMSLivingEntity(EntityType.SLIME), NMSSlimeEntity {
+
     override var size: Int = 2
         set(value) {
             if (entity == null) return
             field = value
 
             val slimeEntity = entity!! as Slime
-
             slimeEntity.setSize(value, true)
-
             sendMetaPackets()
         }
 
     override fun spawn(newLocation: Location) {
         super.spawn(newLocation)
-
         this.size = size
     }
 
     override fun getUndefinedEntityClass(entityType: net.minecraft.world.entity.EntityType<*>, level: Level): Entity = Slime(net.minecraft.world.entity.EntityType.SLIME, level)
+
 }

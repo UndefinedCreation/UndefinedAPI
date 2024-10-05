@@ -1,6 +1,5 @@
 package com.undefined.api.event
 
-import com.undefined.api.API
 import org.bukkit.Bukkit
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
@@ -28,7 +27,6 @@ inline fun <reified T : Event> event(
         priority,
         { _, event ->
             if (event is T) callback(event)
-
         },
         com.undefined.api.API.plugin,
         ignoreCancelled
@@ -38,7 +36,7 @@ inline fun <reified T : Event> event(
 /**
  * Implementation of the [Listener] interface that provides a method to unregister the listener from the [HandlerList].
  */
-class UndefinedListener: Listener{
+class UndefinedListener: Listener {
     fun unregister() = HandlerList.unregisterAll(this)
 }
 
@@ -47,7 +45,7 @@ class UndefinedListener: Listener{
  *
  * @property async Specifies whether the event should be handled asynchronously or not. Default value is false.
  */
-open class UndefinedEvent(async: Boolean = false): Event(async), Cancellable{
+open class UndefinedEvent(async: Boolean = false): Event(async), Cancellable {
 
     /**
      * Represents the cancellation status of an event.
@@ -63,6 +61,7 @@ open class UndefinedEvent(async: Boolean = false): Event(async), Cancellable{
      * @return true if the event has been cancelled, false otherwise
      */
     override fun isCancelled() = cancelled
+
     /**
      * Sets the cancellation state of the event. A cancelled event will not be called
      * by event handlers, and will not propagate to other event listeners.
@@ -72,6 +71,7 @@ open class UndefinedEvent(async: Boolean = false): Event(async), Cancellable{
     override fun setCancelled(cancel: Boolean) {
         cancelled = cancel
     }
+
     /**
      *
      * @hidden

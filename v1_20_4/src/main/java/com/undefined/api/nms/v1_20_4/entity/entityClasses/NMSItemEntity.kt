@@ -15,8 +15,7 @@ import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.ItemStack
 
-class NMSItemEntity(item: ItemStack): NMSEntity(EntityType.DROPPED_ITEM),
-    com.undefined.api.nms.interfaces.NMSItemEntity {
+class NMSItemEntity(item: ItemStack) : NMSEntity(EntityType.DROPPED_ITEM), NMSItemEntity {
 
     private val ITEM_DATA: EntityDataAccessor<net.minecraft.world.item.ItemStack>?
         get() {
@@ -28,15 +27,11 @@ class NMSItemEntity(item: ItemStack): NMSEntity(EntityType.DROPPED_ITEM),
     override var itemStack: ItemStack = item
         set(value) {
             entity?.let {
-
                 val itemEntity = entity as ItemEntity
-
                 itemEntity.entityData.set(ITEM_DATA!!, CraftItemStack.asNMSCopy(value))
-
                 sendMetaPackets()
                 field = value
             }
-
         }
 
     override fun spawn(newLocation: Location) {
