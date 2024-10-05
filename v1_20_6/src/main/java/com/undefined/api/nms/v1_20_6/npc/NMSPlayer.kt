@@ -1,32 +1,29 @@
-package com.undefined.api.nms.v1_21.npc
+package com.undefined.api.nms.v1_20_6.npc
 
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import com.mojang.datafixers.util.Pair
+import com.undefined.api.nms.v1_20_6.NMSManager
+import com.undefined.api.nms.v1_20_6.SpigotNMSMappings
+import com.undefined.api.nms.v1_20_6.extensions.getConnection
 import com.undefined.api.nms.*
 import com.undefined.api.nms.interfaces.NMSPlayer
-import com.undefined.api.nms.v1_21.NMSManager
-import com.undefined.api.nms.v1_21.SpigotNMSMappings
-import com.undefined.api.nms.v1_21.entity.NMSLivingEntity
-import com.undefined.api.nms.v1_21.extensions.getConnection
-import com.undefined.api.nms.v1_21.extensions.sendPacket
+import com.undefined.api.nms.v1_20_6.entity.NMSLivingEntity
+import com.undefined.api.nms.v1_20_6.extensions.sendPacket
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ClientInformation
-import net.minecraft.server.level.ServerEntity
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.CommonListenerCookie
 import net.minecraft.server.network.ServerGamePacketListenerImpl
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.level.chunk.LevelChunk
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.craftbukkit.CraftServer
-import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -36,7 +33,7 @@ import java.util.*
 
 
 /**
- * Represents a player in NMS version 1.21.
+ * Represents a player in NMS version 1.20.6.
  *
  * This class provides methods to manipulate and interact with a player,
  * such as moving, teleporting, setting items, changing pose, and more.
@@ -137,7 +134,6 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
         val skinString = getSkinTexture(skin)
         texture = skinString[0]
         signature = skinString[1]
-
     }
 
 
@@ -321,7 +317,6 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      */
     override fun spawn(newLocation: Location) {
 
-
         if (viewers.isEmpty()) {
             return
         }
@@ -442,14 +437,8 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
     override fun sendBasePackets(player: Player) {
         val serverPlayer = serverPlayer ?: return
 
-        val cWorld = player.world as CraftWorld
-
-        val serverE = ServerEntity(cWorld.handle,
-            serverPlayer,0 ,false, {}, mutableSetOf()
-        )
-
         val addPlayerPacket = ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, serverPlayer)
-        val addEntityPacket = ClientboundAddEntityPacket(serverPlayer, serverE)
+        val addEntityPacket = ClientboundAddEntityPacket(serverPlayer)
 
         player.sendPacket(addPlayerPacket)
         player.sendPacket(addEntityPacket)

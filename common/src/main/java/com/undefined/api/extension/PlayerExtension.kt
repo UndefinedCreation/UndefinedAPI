@@ -135,7 +135,7 @@ fun Player.sendBlockUpdateArray(locs: List<Location>, data: List<BlockData>, per
 fun List<Player>.sendBlockUpdateArray(locs: List<Location>, data: List<BlockData>, persistent: Boolean) {
     when(getNMSVersion()) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.BlockExtension.setBlockArray(data.toTypedArray(), locs, this, persistent)
-        "1.20.5", "1.20.6" -> com.undefined.api.nms.v1_20_5.extensions.BlockExtension.setBlockArray(data.toTypedArray(), locs, this, persistent)
+        "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.BlockExtension.setBlockArray(data.toTypedArray(), locs, this, persistent)
         "1.21" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.setBlockArray(data.toTypedArray(), locs, this, persistent)
     }
 }
@@ -143,7 +143,7 @@ fun List<Player>.sendBlockUpdateArray(locs: List<Location>, data: List<BlockData
 fun Player.sendClearFakeBlock() {
     when(getNMSVersion()) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.BlockExtension.clearFakeBlocks(this)
-        "1.20.5", "1.20.6" -> com.undefined.api.nms.v1_20_5.extensions.BlockExtension.clearFakeBlocks(this)
+        "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.BlockExtension.clearFakeBlocks(this)
         "1.21" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.clearFakeBlocks(this)
     }
 }

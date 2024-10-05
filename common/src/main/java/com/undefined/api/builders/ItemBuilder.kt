@@ -202,7 +202,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
             if (skullTexture != null) {
                 val skullMeta = when (getNMSVersion()) {
                     "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.ItemUtil.setSkullTexture(meta, skullTexture!!)
-                    "1.20.5", "1.20.6" -> com.undefined.api.nms.v1_20_5.extensions.ItemUtil.setSkullTexture(meta, skullTexture!!)
+                    "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.ItemUtil.setSkullTexture(meta, skullTexture!!)
                     "1.21" -> com.undefined.api.nms.v1_21.extensions.ItemUtil.setSkullTexture(meta, skullTexture!!)
                     else -> null
                 }

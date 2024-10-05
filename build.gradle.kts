@@ -89,7 +89,7 @@ allprojects {
 dependencies {
     implementation(project(":common"))
     implementation(project(":v1_20_4:", "reobf"))
-    implementation(project(":v1_20_5:", "reobf"))
+    implementation(project(":v1_20_6:", "reobf"))
     implementation(project(":v1_21:", "reobf"))
     implementation(project(":api"))
 }

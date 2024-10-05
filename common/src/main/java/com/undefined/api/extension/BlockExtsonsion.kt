@@ -2,15 +2,12 @@ package com.undefined.api.extension
 
 import com.undefined.api.UndefinedAPI
 import com.undefined.api.nms.createFakeEntity
-import com.undefined.api.nms.interfaces.NMSLivingEntity
 import com.undefined.api.nms.interfaces.NMSSlimeEntity
 import com.undefined.api.scheduler.TimeUnit
-import com.undefined.api.scheduler.delay
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
-import org.bukkit.block.BlockState
 import org.bukkit.block.data.BlockData
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -23,7 +20,7 @@ fun Block.getConnectedBlocks(): List<Block> = BlockFace.values()
 fun Block.sendBreakProgress(player: Player, stage: Int) {
     when(getNMSVersion()){
         "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.BlockExtension.setBlockProgress(player, this, stage)
-        "1.20.5", "1.20.6" -> com.undefined.api.nms.v1_20_5.extensions.BlockExtension.setBlockProgress(player, this, stage)
+        "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.BlockExtension.setBlockProgress(player, this, stage)
         "1.21" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.setBlockProgress(player, this, stage)
     }
 }
@@ -31,7 +28,7 @@ fun Block.sendBreakProgress(player: Player, stage: Int) {
 fun BlockData.getID(): Int =
     when(getNMSVersion()) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.BlockExtension.getID(this)
-        "1.20.5", "1.20.6" -> com.undefined.api.nms.v1_20_5.extensions.BlockExtension.getID(this)
+        "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.BlockExtension.getID(this)
         "1.21" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.getID(this)
         else -> 0
     }
@@ -39,7 +36,7 @@ fun BlockData.getID(): Int =
 fun Int.asBlockData(): BlockData =
     when(getNMSVersion()) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.BlockExtension.getBlockDataFromID(this)
-        "1.20.5", "1.20.6" -> com.undefined.api.nms.v1_20_5.extensions.BlockExtension.getBlockDataFromID(this)
+        "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.BlockExtension.getBlockDataFromID(this)
         "1.21" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.getBlockDataFromID(this)
         else -> Material.STONE.createBlockData()
     }

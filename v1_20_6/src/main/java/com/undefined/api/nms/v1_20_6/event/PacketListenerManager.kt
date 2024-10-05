@@ -1,4 +1,4 @@
-package com.undefined.api.nms.v1_21.event
+package com.undefined.api.nms.v1_20_6.event
 
 import com.undefined.api.customEvents.*
 import com.undefined.api.customEvents.block.BlockGroupUpdateEvent
@@ -13,9 +13,9 @@ import com.undefined.api.nms.ClickType
 import com.undefined.api.nms.EntityInteract
 import com.undefined.api.nms.extensions.getPrivateField
 import com.undefined.api.nms.extensions.removeMetaData
-import com.undefined.api.nms.v1_21.NMSManager
-import com.undefined.api.nms.v1_21.SpigotNMSMappings
-import com.undefined.api.nms.v1_21.extensions.*
+import com.undefined.api.nms.v1_20_6.NMSManager
+import com.undefined.api.nms.v1_20_6.SpigotNMSMappings
+import com.undefined.api.nms.v1_20_6.extensions.*
 import com.undefined.api.scheduler.async
 import com.undefined.api.scheduler.sync
 import net.minecraft.core.BlockPos
@@ -31,7 +31,6 @@ import org.bukkit.craftbukkit.CraftSound
 import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.block.data.CraftBlockData
 import org.bukkit.craftbukkit.entity.CraftPlayer
-import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -40,7 +39,7 @@ import java.util.*
 import kotlin.collections.ArrayDeque
 
 /**
- * This class represents a packet listener for Minecraft version 1.20.6.
+ * This class represents a packet listener for Minecraft version .
  * It listens for specific events, such as when a player joins or quits the server,
  * and performs certain actions when those events occur.
  *
@@ -64,15 +63,12 @@ class PacketListenerManager {
 
         event<PlayerJoinEvent> {
 
-
             if (player.fireTicks > 0) {
                 onFire.add(player.uniqueId)
             }
 
-
-            val fakeConnection = player.getConnection().getConnection()
-
             lMap[player.uniqueId] = UUID.randomUUID()
+            val fakeConnection = player.getConnection().getConnection()
 
             val channel = fakeConnection.channel
             val pipeline = channel.pipeline()
@@ -115,7 +111,7 @@ class PacketListenerManager {
 
             val connection = player.getConnection().getConnection()
             val channel = connection.channel
-            channel.eventLoop().submit {
+            channel.eventLoop().submit(){
                 channel.pipeline().remove(lMap[player.uniqueId]!!.toString())
             }
             lMap.remove(player.uniqueId)
@@ -149,7 +145,6 @@ class PacketListenerManager {
             val location = Location(player.world, msg.pos.x.toDouble(), msg.pos.y.toDouble(), msg.pos.z.toDouble())
             val block = location.block
             val toData = CraftBlockData.createData(msg.blockState)
-
             BlockUpdateEvent(
                 location,
                 block,
@@ -162,6 +157,33 @@ class PacketListenerManager {
         }
 
         return false
+    }
+
+    private fun handleParticle(msg: ClientboundLevelParticlesPacket, world: World, viewer: Player) {
+        async {
+            val location = Location(world, msg.x, msg.y, msg.z)
+            val particle = CraftParticle.minecraftToBukkit(msg.particle.type)
+            val option = msg.particle.getBukkitOptions()
+            val count = msg.count
+            val maxSpeed = msg.maxSpeed
+            val dirX = msg.xDist
+            val dirY = msg.yDist
+            val dirZ = msg.zDist
+
+            sync {
+                ParticleEvent(
+                    location,
+                    particle,
+                    option,
+                    count,
+                    maxSpeed,
+                    dirX,
+                    dirY,
+                    dirZ,
+                    viewer
+                ).call()
+            }
+        }
     }
 
     private fun handleSoundStop(msg: ClientboundStopSoundPacket, viewer: Player) {
@@ -227,33 +249,6 @@ class PacketListenerManager {
         }
     }
 
-    private fun handleParticle(msg: ClientboundLevelParticlesPacket, world: World, viewer: Player) {
-        async {
-            val location = Location(world, msg.x, msg.y, msg.z)
-            val particle = CraftParticle.minecraftToBukkit(msg.particle.type)
-            val option = msg.particle.getBukkitOptions()
-            val count = msg.count
-            val maxSpeed = msg.maxSpeed
-            val dirX = msg.xDist
-            val dirY = msg.yDist
-            val dirZ = msg.zDist
-
-            sync {
-                ParticleEvent(
-                    location,
-                    particle,
-                    option,
-                    count,
-                    maxSpeed,
-                    dirX,
-                    dirY,
-                    dirZ,
-                    viewer
-                ).call()
-            }
-        }
-    }
-
     private fun handleMainHandSwitch(msg: ServerboundSetCarriedItemPacket, player: Player) {
 
         val slot = msg.getEntityID()
@@ -283,7 +278,7 @@ class PacketListenerManager {
         val itemStack = msg.getItemStack()
 
         sync {
-            Bukkit.getPluginManager().callEvent(PlayerArmorChangeEvent(player, CraftItemStack.asBukkitCopy(itemStack), bukkitSlot))
+            Bukkit.getPluginManager().callEvent(PlayerArmorChangeEvent(player, itemStack.bukkitStack, bukkitSlot))
         }
 
     }
@@ -330,6 +325,7 @@ class PacketListenerManager {
 
         val entityID = msg.getEntityID()
 
+
         sync {
 
             val entity = craftWorld.handle.getEntity(entityID) ?: return@sync
@@ -358,7 +354,6 @@ class PacketListenerManager {
         val actionN = msg.getAction()
         val firstChar = actionN.toString().split("$")[1][0]
 
-
         if(isRemapped()){
             if (actionN.toString().contains("InteractionAction")) { return }
         }else{
@@ -366,8 +361,6 @@ class PacketListenerManager {
         }
 
         val attacking = msg.isAttacking()
-
-
 
         if (!attacking){
             if (!msg.isMainHand()) return
