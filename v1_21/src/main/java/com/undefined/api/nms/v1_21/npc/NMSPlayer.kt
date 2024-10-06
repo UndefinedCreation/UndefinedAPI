@@ -97,7 +97,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      * @property isSwimming true if the player is swimming, false otherwise.
      */
     override var isSwimming: Boolean = false
-        set(value){
+        set(value) {
             if (value) setPose(Pose.SWIMMING) else setPose(Pose.STANDING)
             field = value
         }
@@ -112,7 +112,7 @@ class NMSPlayer: NMSPlayer, NMSLivingEntity {
      * @return true if the player is gliding, false otherwise
      */
     override var isGliding: Boolean = false
-        set(value){
+        set(value) {
             if (value) setPose(Pose.FALL_FLYING) else setPose(Pose.STANDING)
             field = value
         }

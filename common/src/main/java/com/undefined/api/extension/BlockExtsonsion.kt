@@ -18,7 +18,7 @@ fun Block.getConnectedBlocks(): List<Block> = BlockFace.entries
     .map { this.getRelative(it) }
 
 fun Block.sendBreakProgress(player: Player, stage: Int) {
-    when(getNMSVersion()){
+    when(getNMSVersion()) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.BlockExtension.setBlockProgress(player, this, stage)
         "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.BlockExtension.setBlockProgress(player, this, stage)
         "1.21" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.setBlockProgress(player, this, stage)

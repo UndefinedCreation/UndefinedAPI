@@ -14,7 +14,7 @@ import java.util.Random
 fun World.randomLocation(xRange: Double, zRange: Double): Location = Location(this, 0.0, 0.0, 0.0).apply {
     x = Random().nextDouble(xRange * -1, xRange)
     z = Random().nextDouble(zRange * -1, zRange)
-    y = when(environment){
+    y = when(environment) {
         World.Environment.NETHER -> (0..127).firstOrNull { getBlockAt(x.toInt(), it, z.toInt()).type.isAir }?.toDouble() ?: 0.0
         else -> getHighestBlockAt(x.toInt(), z.toInt()).y.toDouble()
     }

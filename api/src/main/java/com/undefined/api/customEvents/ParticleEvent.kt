@@ -15,4 +15,4 @@ class ParticleEvent(
     val yDist: Float,
     val zDist: Float,
     player: Player
-): UndefinedEvent()
+) : UndefinedEvent()

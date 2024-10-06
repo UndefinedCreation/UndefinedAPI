@@ -104,7 +104,7 @@ class PacketListenerManager {
             val connection = player.getConnection().getConnection()
             val channel = connection.channel
 
-            channel.eventLoop().submit(){
+            channel.eventLoop().submit {
                 channel.pipeline().remove(lMap[player.uniqueId]!!.toString())
             }
 
@@ -322,13 +322,11 @@ class PacketListenerManager {
      *
      * @param msg The ServerboundInteractPacket containing the interaction data.
      */
-    private fun handleNPCInteract(msg: ServerboundInteractPacket, player: Player){
+    private fun handleNPCInteract(msg: ServerboundInteractPacket, player: Player) {
         val firstChar = msg.getActionFirstChar()
-
         if (firstChar == 'e') return
 
         val attacking = msg.isAttacking()
-
         if (!attacking && !msg.isMainHand()) return
 
         val action = if (attacking) ClickType.LEFT_CLICK else ClickType.RIGHT_CLICK

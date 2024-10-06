@@ -88,10 +88,10 @@ object MenuManager : Listener {
      * @see onClose
      * @see onLeave
      */
-    fun Player.closeMenu(){
+    fun Player.closeMenu() {
         if (!hasMenuOpen()) return
         val menu = getMenu()!!
-        if (menu.inventory?.viewers?.size!! >= 0){
+        if (menu.inventory?.viewers?.size!! >= 0) {
             menu.inventory = null
         }
         openMenus.remove(uniqueId)
@@ -171,7 +171,7 @@ object MenuManager : Listener {
      * @param menu The undefined menu that the button belongs to.
      * @param e The InventoryClickEvent triggered by the button click.
      */
-    private fun runDefaultMenu(menu: UndefinedMenu, e: InventoryClickEvent){
+    private fun runDefaultMenu(menu: UndefinedMenu, e: InventoryClickEvent) {
         managerButtons(menu, e)
         if (!menu.movables.contains(e.rawSlot)) e.isCancelled = true
     }

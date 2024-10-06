@@ -192,8 +192,7 @@ class ItemBuilder(private var itemStack: ItemStack) {
 
         itemMeta.isUnbreakable = unbreakable
 
-        if (itemStack.type == Material.PLAYER_HEAD){
-            
+        if (itemStack.type == Material.PLAYER_HEAD) {
             val meta = itemMeta as SkullMeta
             if (skullowner != null) {
                 meta.setOwningPlayer(Bukkit.getOfflinePlayer(skullowner!!))

@@ -168,7 +168,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
      *
      * @param items The list of ItemStacks to set in the inventory.
      */
-    private fun setItems(items: List<ItemStack>){
+    private fun setItems(items: List<ItemStack>) {
         items.forEach { inventory!!.setItem(inventory!!.firstEmpty(), it) }
     }
 
@@ -194,7 +194,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
      * @param backButton The back button ItemStack.
      * @param emptyButton The empty button ItemStack to replace the existing item at the slot.
      */
-    fun setBackButton(slot: Int, backButton: ItemStack, emptyButton: ItemStack){
+    fun setBackButton(slot: Int, backButton: ItemStack, emptyButton: ItemStack) {
         bButton = PageButton(slot, backButton, emptyButton)
         this.itemsMap[slot] = ItemStack(Material.AIR)
     }
@@ -216,7 +216,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
      * @param nextButton The ItemStack representing the next button.
      * @param emptyButton The ItemStack representing the empty button.
      */
-    fun setNextButton(slot: Int, nextButton: ItemStack, emptyButton: ItemStack){
+    fun setNextButton(slot: Int, nextButton: ItemStack, emptyButton: ItemStack) {
         nButton = PageButton(slot, nextButton, emptyButton)
         this.itemsMap[slot] = ItemStack(Material.AIR)
     }

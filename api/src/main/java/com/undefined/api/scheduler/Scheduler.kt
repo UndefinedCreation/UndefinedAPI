@@ -269,7 +269,7 @@ fun repeatingTask(delay: Int, period: Int, times: Int = -1, unit: TimeUnit, runn
  * @return a new instance of [BukkitRunnable] with the specified run method.
  */
 private fun createRunnable(runnable: BukkitRunnable.() -> Unit): BukkitRunnable {
-    return object : BukkitRunnable(){
+    return object : BukkitRunnable() {
         override fun run() {
             runnable()
         }
