@@ -15,34 +15,35 @@ import org.bukkit.entity.Player
 /**
  * Sends an action bar message to the player.
  *
- * @param string The action bar message to be sent.
+ * @param message The action bar message to be sent.
  * @param time The duration for which the action bar message should be displayed.
  * @param timeUnit The time unit in which the duration is measured. (Default: [TimeUnit.TICKS])
  *
  * @throws IllegalArgumentException if the provided `time` parameter is negative.
  */
-fun Player.sendActionBar(string: String, time: Int, timeUnit: TimeUnit = TimeUnit.TICKS) {
+fun Player.sendActionBar(message: String, time: Int, timeUnit: TimeUnit = TimeUnit.TICKS) {
     repeatingTask(
         1,
         timeUnit.toTicks(time.toLong()).toInt()
-    ) { this@sendActionBar.sendActionBar(string) }
+    ) { this@sendActionBar.sendActionBar(message) }
 }
 
 /**
  * Sends an action bar message to the player.
  *
- * @param string The message to be displayed in the action bar.
+ * @param message The message to be displayed in the action bar.
  */
-fun Player.sendActionBar(string: String) {
-    this.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(string))
+fun Player.sendActionBar(message: String) {
+    this.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(message))
 }
+
 /**
  * Sends an action bar message to the player.
  *
- * @param string The message to be displayed in the action bar.
+ * @param message The message to be displayed in the action bar.
  * @param time The duration in ticks for which the message should be displayed.
  */
-fun Player.sendActionBar(string: String, time: Int) = sendActionBar(string, time, TimeUnit.TICKS)
+fun Player.sendActionBar(message: String, time: Int) = sendActionBar(message, time, TimeUnit.TICKS)
 
 /**
  * Sets the food level of the player to the maximum value (20).
@@ -114,17 +115,40 @@ fun Player.removeActivePotionEffects() {
 /**
  * Sends a message to the player.
  *
- * @param component the message component to send
+ * @param component The message component to send
  */
 fun Player.sendMessage(component: Component) = UndefinedAPI.adventure().player(this).sendMessage(component)
 
 /**
  * Sends an action bar message to the player.
  *
- * @param component The message to be displayed as the action bar, represented as a [Component].
+ * @param message The action bar message to be sent.
+ * @param time The duration for which the action bar message should be displayed.
+ * @param timeUnit The time unit in which the duration is measured. (Default: [TimeUnit.TICKS])
+ *
+ * @throws IllegalArgumentException if the provided `time` parameter is negative.
  */
-fun Player.sendActionBar(component: Component) = UndefinedAPI.adventure().player(this).sendActionBar(component)
+fun Player.sendActionBar(message: Component, time: Int, timeUnit: TimeUnit = TimeUnit.TICKS) {
+    repeatingTask(
+        1,
+        timeUnit.toTicks(time.toLong()).toInt()
+    ) { this@sendActionBar.sendActionBar(message) }
+}
 
+/**
+ * Sends an action bar message to the player.
+ *
+ * @param message The message to be displayed as the action bar, represented as a [Component].
+ */
+fun Player.sendActionBar(message: Component) = UndefinedAPI.adventure().player(this).sendActionBar(message)
+
+/**
+ * Sends an action bar message to the player.
+ *
+ * @param message The message to be displayed in the action bar.
+ * @param time The duration in ticks for which the message should be displayed.
+ */
+fun Player.sendActionBar(message: Component, time: Int) = sendActionBar(message, time, TimeUnit.TICKS)
 
 fun Player.sendBlockUpdateArray(hashMap: HashMap<Location, BlockData>) {
     sendBlockUpdateArray(hashMap.keys.toList(), hashMap.values.toList())
