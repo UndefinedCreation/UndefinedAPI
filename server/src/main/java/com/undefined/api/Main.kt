@@ -13,20 +13,12 @@ class Main: JavaPlugin() {
     override fun onEnable() {
         api = UndefinedAPI(this)
 
-
-        UndefinedCommand("Items")
-            .addExecutePlayer {
-                val player = player!!
-                val text = api.createFakeEntity(EntityType.INTERACTION)!! as NMSInteractionEntity
-
-                text.addViewer(player)
-                text.spawn(player.location)
-                text.height = 0.5f
-                text.width = 2f
-                text.interact { println("Interact") }
-
-                return@addExecutePlayer false
-            }
+        val list: List<String> = listOf("String", "OtherString", "YetAnotherString")
+        UndefinedCommand("test")
+            .addListSubCommand({ list }, deserialize = {
+                println(this.value)
+                println(this.sender.name)
+            })
 
     }
 }

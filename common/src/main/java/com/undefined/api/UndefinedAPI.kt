@@ -8,7 +8,6 @@ import com.undefined.api.nms.NMSManager
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.plugin.java.JavaPlugin
 
-
 /**
  * Represents a class that provides an undefined API.
  *

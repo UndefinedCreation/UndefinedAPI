@@ -99,14 +99,14 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
     }
 
     override fun getNames(sender: CommandSender): List<String> = listOf()
-    override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean = true
+    override fun runSpecialExecute(args: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean = true
 
 }
 
-class UndefinedCoreCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList(), private val c1: AllCommand.() -> Boolean, private val c2: Pair<CommandSender, Array<out String>?>.() -> MutableList<String> ): BukkitCommand(name) {
+class UndefinedCoreCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList(), private val execution: AllCommand.() -> Boolean, private val tabCompletion: Pair<CommandSender, Array<out String>?>.() -> MutableList<String>) : BukkitCommand(name) {
 
-    override fun execute(p0: CommandSender, p1: String, p2: Array<out String>?): Boolean = c1.invoke(AllCommand(p0, p2))
-    override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>?): MutableList<String> = c2.invoke(Pair(sender, args))
+    override fun execute(sender: CommandSender, alias: String, args: Array<out String>?): Boolean = execution.invoke(AllCommand(sender, args))
+    override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>?): MutableList<String> = tabCompletion.invoke(Pair(sender, args))
 
     init {
         setDescription(description)

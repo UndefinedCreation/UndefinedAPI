@@ -1,6 +1,7 @@
 package com.undefined.api.command
 
 import com.undefined.api.command.info.AllCommand
+import com.undefined.api.command.info.ListSubCommandInfo
 import com.undefined.api.command.sub.*
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
@@ -99,8 +100,14 @@ abstract class BaseUndefinedCommand {
         return subCommand
     }
 
-    fun <T> addListSubCommand(list: CommandSender.() -> List<T>, serialize: T.() -> String = { this.toString() }, deserialize: String.() -> T = { this as T }): ListSubCommand<T> {
+    fun <T> addListSubCommand(list: CommandSender.() -> List<T>, serialize: T.() -> String = { this.toString() }, deserialize: ListSubCommandInfo<String>.() -> T = { this.value as T }): ListSubCommand<T> {
         val subCommand = ListSubCommand(list, serialize, deserialize)
+        subCommandList.add(subCommand)
+        return subCommand
+    }
+
+    fun <T> addListSubCommand(list: List<T>, serialize: T.() -> String = { this.toString() }, deserialize: ListSubCommandInfo<String>.() -> T = { this.value as T }): ListSubCommand<T> {
+        val subCommand = ListSubCommand({ list }, serialize, deserialize)
         subCommandList.add(subCommand)
         return subCommand
     }
@@ -120,6 +127,6 @@ abstract class BaseUndefinedCommand {
 
     internal fun getSubCommand(name: String): UndefinedSubCommand? = subCommandList.filter { it.name == name }.getOrNull(0) ?: subCommandList.filter { list.contains(it::class.java) }.getOrNull(0)
     abstract fun getNames(sender: CommandSender): List<String>
-    abstract fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean
+    abstract fun runSpecialExecute(args: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean
 
 }

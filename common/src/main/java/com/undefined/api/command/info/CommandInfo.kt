@@ -16,4 +16,4 @@ data class BooleanSubCommandInfo(val sender: CommandSender, val boolean: Boolean
 
 class EnumSubCommandInfo<T: Enum<T>>(val sender: CommandSender, val value: T)
 
-class ListSubCommandInfo<T>(val sender: CommandSender, val value: T)
+data class ListSubCommandInfo<T>(val sender: CommandSender, val value: T)

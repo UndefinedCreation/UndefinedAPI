@@ -18,9 +18,9 @@ class StringSubCommand: UndefinedSubCommand("undefined_api_value") {
 
     override fun getNames(sender: CommandSender): List<String> = listOf("<text>")
 
-    override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
-        if (arg.isEmpty()) return  false
-        val string = arg[indexOf]
+    override fun runSpecialExecute(args: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
+        if (args.isEmpty()) return  false
+        val string = args[indexOf]
 
         stringExe.forEach { execution ->
             if (!execution.invoke(StringSubCommandInfo(commandSender, string))) return false
@@ -42,9 +42,9 @@ class NumberSubCommand: UndefinedSubCommand("undefined_api_number") {
 
     override fun getNames(sender: CommandSender): List<String> = listOf("<number>")
 
-    override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
-        if (arg.isEmpty()) return  false
-        val stringN = arg[indexOf]
+    override fun runSpecialExecute(args: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
+        if (args.isEmpty()) return  false
+        val stringN = args[indexOf]
 
         try {
             numberExe.forEach { execution ->
@@ -69,9 +69,9 @@ class BooleanSubCommand: UndefinedSubCommand("undefined_api_boolean") {
 
     override fun getNames(sender: CommandSender): List<String> = listOf("true", "false")
 
-    override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
-        if (arg.isEmpty()) return  false
-        val stringN = arg[indexOf]
+    override fun runSpecialExecute(args: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
+        if (args.isEmpty()) return  false
+        val stringN = args[indexOf]
 
         stringN.toBoolean().let {
             booleanExe.forEach { execution ->

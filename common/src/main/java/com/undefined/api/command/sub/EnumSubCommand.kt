@@ -18,9 +18,9 @@ class EnumSubCommand<T: Enum<T>>(
 
     fun clearEnumExecute() = enumExe.clear()
 
-    override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
-        if (arg.isEmpty()) return false
-        val string = arg[indexOf]
+    override fun runSpecialExecute(args: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
+        if (args.isEmpty()) return false
+        val string = args[indexOf]
         val enumV = getEnumValue(string)
 
         enumExe.forEach { execution ->

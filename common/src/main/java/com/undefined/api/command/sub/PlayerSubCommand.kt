@@ -17,9 +17,9 @@ class PlayerSubCommand: UndefinedSubCommand("undefined_api_players") {
 
     override fun getNames(sender: CommandSender): List<String> = Bukkit.getOnlinePlayers().map { it.name }
 
-    override fun runSpecialExecute(arg: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
-        if (arg.isEmpty()) return false
-        val offinePlayer = Bukkit.getOfflinePlayer(arg[indexOf])
+    override fun runSpecialExecute(args: Array<out String>, commandSender: CommandSender, indexOf: Int): Boolean {
+        if (args.isEmpty()) return false
+        val offinePlayer = Bukkit.getOfflinePlayer(args[indexOf])
         if (!offinePlayer.isOnline) return false
 
         targetExe.forEach { execution ->
