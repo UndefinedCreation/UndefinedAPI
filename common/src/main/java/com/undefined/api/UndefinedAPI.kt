@@ -39,8 +39,8 @@ class UndefinedAPI(javaPlugin: JavaPlugin) {
         lateinit var api: UndefinedAPI
 
         fun adventure(): BukkitAudiences {
-            checkNotNull(adventure()) { "Tried to access Adventure when the plugin was disabled!" }
-            return adventure()
+            checkNotNull(api.adventure) { "Tried to access Adventure when the plugin was disabled!" }
+            return api.adventure
         }
     }
 }
