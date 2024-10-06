@@ -2,7 +2,6 @@ package com.undefined.api.nms
 
 import com.undefined.api.extension.getNMSVersion
 
-
 class NMSManager {
 
     init {

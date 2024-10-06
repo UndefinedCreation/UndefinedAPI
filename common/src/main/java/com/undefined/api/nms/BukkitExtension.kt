@@ -35,3 +35,13 @@ fun Player.getTexture(): Array<String> {
         else -> arrayOf("","")
     }
 }
+
+fun Player.triggerTotem(): Boolean {
+    val version = getNMSVersion()
+    return when(version) {
+        "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.PlayerExtension.triggerTotem(this)
+        "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.PlayerExtension.triggerTotem(this)
+        "1.21" -> com.undefined.api.nms.v1_21.extensions.PlayerExtension.triggerTotem(this)
+        else -> false
+    }
+}

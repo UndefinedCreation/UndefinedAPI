@@ -244,14 +244,12 @@ class PacketListenerManager {
 
 
     private fun handleMainHandSwitch(msg: ServerboundSetCarriedItemPacket, player: Player) {
-
         val slot = msg.getEntityID()
         val item = player.inventory.getItem(slot)
 
         sync {
             Bukkit.getPluginManager().callEvent(PlayerMainHandSwitchEvent(player, item))
         }
-
     }
 
     private fun handleArmorChange(player: Player, msg: ClientboundContainerSetSlotPacket) {
@@ -339,7 +337,7 @@ class PacketListenerManager {
     }
 
     private fun checkQue(packet: Packet<*>): Boolean {
-        if (que.size == 6)  que.removeLast()
+        if (que.size == 6) que.removeLast()
         for (p in que) {
             if (p == packet) return false
         }

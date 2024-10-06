@@ -1,10 +1,20 @@
 package com.undefined.api.nms.v1_21.extensions
 
+import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ServerboundSwingPacket
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.network.ServerGamePacketListenerImpl
+import net.minecraft.stats.Stats
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.item.Items
+import org.bukkit.Material
 import org.bukkit.craftbukkit.entity.CraftPlayer
+import org.bukkit.craftbukkit.inventory.CraftItemStack
 import org.bukkit.entity.Player
+import org.bukkit.event.entity.EntityPotionEffectEvent
+import org.bukkit.inventory.ItemStack
 
 /**
  * Sends the given packets to each player in the list.
@@ -59,6 +69,40 @@ object PlayerExtension {
         return arrayOf(texture, sign)
     }
 
+    /**
+     * Triggers the totem if in main hand or offhand.
+     *
+     * @return if the player had a totem equipped
+     */
+    fun triggerTotem(player: Player): Boolean {
+        val item: ItemStack
+        when {
+            player.inventory.itemInMainHand.type == Material.TOTEM_OF_UNDYING -> {
+                item = player.inventory.itemInMainHand
+                player.inventory.itemInMainHand.amount = 0
+            }
+            player.inventory.itemInOffHand.type == Material.TOTEM_OF_UNDYING -> {
+                item = player.inventory.itemInOffHand
+                player.inventory.itemInOffHand.amount = 0
+            }
+            else -> return false
+        }
+
+        val serverPlayer: ServerPlayer = (player as CraftPlayer).handle
+        serverPlayer.awardStat(Stats.ITEM_USED[Items.TOTEM_OF_UNDYING])
+        CriteriaTriggers.USED_TOTEM.trigger(serverPlayer, CraftItemStack.asNMSCopy(item))
+
+        serverPlayer.setHealth(1.0f)
+
+        serverPlayer.removeAllEffects(EntityPotionEffectEvent.Cause.TOTEM)
+        serverPlayer.addEffect(MobEffectInstance(MobEffects.REGENERATION, 900, 1), EntityPotionEffectEvent.Cause.TOTEM)
+        serverPlayer.addEffect(MobEffectInstance(MobEffects.ABSORPTION, 100, 1), EntityPotionEffectEvent.Cause.TOTEM)
+        serverPlayer.addEffect(MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0), EntityPotionEffectEvent.Cause.TOTEM)
+
+        serverPlayer.level().broadcastEntityEvent(serverPlayer, 35.toByte())
+        return true
+    }
+
 }
 
 /**
@@ -67,3 +111,4 @@ object PlayerExtension {
  * @return true if the ServerboundSwingPacket class is remapped, false otherwise.
  */
 fun isRemapped(): Boolean = ServerboundSwingPacket::class.java.name == "net.minecraft.network.protocol.game.ServerboundSwingPacket"
+

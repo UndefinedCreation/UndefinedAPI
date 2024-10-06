@@ -12,8 +12,6 @@ dependencies {
     implementation(project(":api"))
 }
 
-
-
 tasks {
     assemble {
         dependsOn(reobfJar)
@@ -22,8 +20,8 @@ tasks {
     compileKotlin {
         kotlinOptions.jvmTarget = "21"
     }
-
 }
+
 kotlin {
     jvmToolchain(21)
 }
