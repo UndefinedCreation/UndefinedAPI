@@ -1,28 +1,46 @@
 package com.undefined.api.command
 
-import com.undefined.api.command.info.AllCommand
+import com.undefined.api.command.info.FullCommand
 import com.undefined.api.command.info.ListSubCommandInfo
 import com.undefined.api.command.sub.*
+import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 
 abstract class BaseUndefinedCommand {
 
-    internal val mainExecute: MutableList<AllCommand.() -> Boolean> = mutableListOf()
-    internal val genExecute: MutableList<CommandSender.() -> Boolean> = mutableListOf()
+    internal val incorrectMessages: MutableList<FullCommand.() -> Component> = mutableListOf()
+
+    internal val fullExecute: MutableList<FullCommand.() -> Boolean> = mutableListOf()
+    internal val generalExecute: MutableList<CommandSender.() -> Boolean> = mutableListOf()
     internal val playerExecute: MutableList<Player.() -> Boolean> = mutableListOf()
     internal val consoleExecute: MutableList<ConsoleCommandSender.() -> Boolean> = mutableListOf()
 
     val subCommandList: MutableList<UndefinedSubCommand> = mutableListOf()
 
-    fun addFullExecute(c: AllCommand.() -> Boolean): BaseUndefinedCommand {
-        mainExecute.add(c)
+    fun addIncorrectMessage(incorrectMessage: FullCommand.() -> Component): BaseUndefinedCommand {
+        incorrectMessages.add(incorrectMessage)
+        return this
+    }
+
+    fun addIncorrectMessage(incorrectMessage: String): BaseUndefinedCommand {
+        incorrectMessages.add { Component.text(incorrectMessage) }
+        return this
+    }
+
+    fun addIncorrectMessage(incorrectMessage: Component): BaseUndefinedCommand {
+        incorrectMessages.add { incorrectMessage }
+        return this
+    }
+
+    fun addFullExecute(c: FullCommand.() -> Boolean): BaseUndefinedCommand {
+        fullExecute.add(c)
         return this
     }
 
     fun addExecute(c: CommandSender.() -> Boolean): BaseUndefinedCommand {
-        genExecute.add(c)
+        generalExecute.add(c)
         return this
     }
 
@@ -112,7 +130,7 @@ abstract class BaseUndefinedCommand {
         return subCommand
     }
 
-    fun clearExecute() = genExecute.clear()
+    fun clearExecute() = generalExecute.clear()
     fun clearPlayerExecute() = playerExecute.clear()
     fun clearConsoleExecute() = consoleExecute.clear()
 

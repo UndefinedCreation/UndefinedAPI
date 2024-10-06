@@ -1,8 +1,10 @@
 package com.undefined.api.command
 
-import com.undefined.api.command.info.AllCommand
+import com.undefined.api.command.info.FullCommand
 import com.undefined.api.command.sub.UndefinedSubCommand
+import com.undefined.api.extension.sendMessage
 import com.undefined.api.nms.extensions.getPrivateField
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandMap
 import org.bukkit.command.CommandSender
@@ -12,7 +14,7 @@ import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
 
-class UndefinedCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList()): BaseUndefinedCommand()  {
+class UndefinedCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList()) : BaseUndefinedCommand()  {
 
     init {
         UndefinedCoreCommand(name, permission, description, aliases, {
@@ -29,19 +31,18 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
                 }
             }
 
-            genExecute.forEach { execution -> if (!execution.invoke(sender)) return@UndefinedCoreCommand false }
-            mainExecute.forEach { execution -> if (!execution.invoke(AllCommand(sender, arg))) return@UndefinedCoreCommand false}
+            generalExecute.forEach { execution -> if (!execution.invoke(sender)) return@UndefinedCoreCommand false }
+            fullExecute.forEach { execution -> if (!execution.invoke(FullCommand(sender, args))) return@UndefinedCoreCommand false}
 
-            if (arg.isNullOrEmpty()) return@UndefinedCoreCommand false
+            if (args.isNullOrEmpty()) return@UndefinedCoreCommand false
 
-            var lastSub: BaseUndefinedCommand = this@UndefinedCommand
-            arg.forEach { arg ->
-                val sub = getAndRun(lastSub, arg, this.arg, sender is Player, sender, this.arg.indexOf(arg)) ?: return@UndefinedCoreCommand false
-                lastSub = sub
+            var lastSubCommand: BaseUndefinedCommand = this@UndefinedCommand
+            args.forEach { arg ->
+                val currentSubCommand = getAndRun(lastSubCommand, arg, this.args, sender is Player, sender, this.args.indexOf(arg)) ?: return@UndefinedCoreCommand false
+                lastSubCommand = currentSubCommand
             }
 
             return@UndefinedCoreCommand true
-
         }, {
             if (this.second.isNullOrEmpty()) return@UndefinedCoreCommand mutableListOf()
             val index = this.second!!.size - 1
@@ -69,31 +70,40 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
     private fun getAndRun(
         sub: BaseUndefinedCommand,
         name: String,
-        arg: Array<out String>?,
+        args: Array<out String>?,
         isPlayer: Boolean,
-        commandSender: CommandSender,
+        sender: CommandSender,
         indexOf: Int
     ) : UndefinedSubCommand? {
         val command = sub.getSubCommand(name)
         command?.let {
             if (isPlayer) {
                 it.playerExecute.forEach { func ->
-                    (commandSender as? Player)?.let { player ->
+                    (sender as? Player)?.let { player ->
                         if (!func.invoke(player)) return null
                     }
                 }
             } else {
                 it.consoleExecute.forEach { func ->
-                    (commandSender as? ConsoleCommandSender)?.let { console ->
+                    (sender as? ConsoleCommandSender)?.let { console ->
                         if (!func.invoke(console)) return null
                     }
                 }
             }
-            it.genExecute.forEach { if (!it.invoke(commandSender)) return null }
-            it.mainExecute.forEach { if (!it.invoke(AllCommand(commandSender, arg))) return null}
+            it.generalExecute.forEach { if (!it.invoke(sender)) return null }
+            it.fullExecute.forEach { if (!it.invoke(FullCommand(sender, args))) return null }
 
-            if (!it.runSpecialExecute(arg!!, commandSender, indexOf)) return null
-
+            if (!it.runSpecialExecute(args!!, sender, indexOf)) return null
+        } ?: run {
+            if (isPlayer) {
+                (sender as? Player)?.let { player ->
+                    incorrectMessages.forEach { player.sendMessage(it.invoke(FullCommand(sender, args))) }
+                }
+            } else {
+                (sender as? ConsoleCommandSender)?.let { console ->
+                    incorrectMessages.forEach { console.sendMessage(PlainTextComponentSerializer.plainText().serialize(it.invoke(FullCommand(sender, args)))) }
+                }
+            }
         }
         return command
     }
@@ -103,9 +113,9 @@ class UndefinedCommand(name: String, permission: String? = null, description: St
 
 }
 
-class UndefinedCoreCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList(), private val execution: AllCommand.() -> Boolean, private val tabCompletion: Pair<CommandSender, Array<out String>?>.() -> MutableList<String>) : BukkitCommand(name) {
+class UndefinedCoreCommand(name: String, permission: String? = null, description: String = "", aliases: List<String> = emptyList(), private val execution: FullCommand.() -> Boolean, private val tabCompletion: Pair<CommandSender, Array<out String>?>.() -> MutableList<String>) : BukkitCommand(name) {
 
-    override fun execute(sender: CommandSender, alias: String, args: Array<out String>?): Boolean = execution.invoke(AllCommand(sender, args))
+    override fun execute(sender: CommandSender, alias: String, args: Array<out String>?): Boolean = execution.invoke(FullCommand(sender, args))
     override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>?): MutableList<String> = tabCompletion.invoke(Pair(sender, args))
 
     init {

@@ -4,6 +4,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.undefined.api.nms.interfaces.NMSLivingEntity
 import com.undefined.api.nms.interfaces.NMSPlayer
+import org.bukkit.Bukkit
 import java.io.InputStreamReader
 import java.net.URI
 import kotlin.math.floor
@@ -35,7 +36,7 @@ fun NMSPlayer.getSkinTexture(name: String): Array<String> {
             }
         }
     } catch (e: Exception) {
-        println("Failed to get texture: ${e.message}")
+        Bukkit.getLogger().severe("Failed to get texture: ${e.message}")
     }
 
     return arrayOf(texture, signature)

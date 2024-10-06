@@ -6,7 +6,7 @@ import org.bukkit.entity.Player
 
 open class TargetCommand(open val sender: CommandSender, open val target: Player)
 
-data class AllCommand(val sender: CommandSender, val arg: Array<out String>?)
+data class FullCommand(val sender: CommandSender, val args: Array<out String>?)
 
 data class StringSubCommandInfo(val sender: CommandSender, val string: String)
 

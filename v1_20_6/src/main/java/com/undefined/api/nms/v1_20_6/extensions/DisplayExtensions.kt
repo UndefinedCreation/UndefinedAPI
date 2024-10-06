@@ -37,9 +37,7 @@ fun Display.getTranslation(): Vector3f = entityData.get(getTranslationAccessor()
 
 fun Display.setScaleX(scale: Float): SynchedEntityData {
     val v = getScale()
-    println(v.x)
     val v2 = v.set(scale, v.y, v.z)
-    println(v2.x)
     entityData.set(getScaleAccessor(), v2)
     return entityData
 }
