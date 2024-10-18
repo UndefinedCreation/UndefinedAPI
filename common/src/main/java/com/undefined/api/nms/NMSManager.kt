@@ -8,7 +8,7 @@ class NMSManager {
         when(getNMSVersion()) {
             "1.20.4" -> com.undefined.api.nms.v1_20_4.event.PacketListenerManager()
             "1.20.6" -> com.undefined.api.nms.v1_20_6.event.PacketListenerManager()
-            "1.21" -> com.undefined.api.nms.v1_21.event.PacketListenerManager()
+            "1.21", "1.21.1" -> com.undefined.api.nms.v1_21.event.PacketListenerManager()
         }
     }
 
