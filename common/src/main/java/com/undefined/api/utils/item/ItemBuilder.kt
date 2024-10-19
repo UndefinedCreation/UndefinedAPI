@@ -61,11 +61,6 @@ class ItemBuilder(private val material: Material) {
         return this
     }
 
-    fun setLore(lore: List<String>): ItemBuilder {
-        this.lore = lore.map { it.miniMessage() }.toMutableList()
-        return this
-    }
-
     fun setLore(vararg lore: String): ItemBuilder {
         this.lore = lore.map { it.miniMessage() }.toMutableList()
         return this
