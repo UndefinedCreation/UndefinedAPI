@@ -60,11 +60,25 @@ abstract class UndefinedMenu(private val title: String, private val size: Int) {
      * @param itemStack The ItemStack to set in the slot.
      * @param movable Whether the item is movable or not. Defaults to false.
      */
-    fun Inventory.setItem(slot: Int, itemStack:ItemStack, movable: Boolean = false) {
+    fun Inventory.setItem(slot: Int, itemStack: ItemStack, movable: Boolean = false) {
         if (slot > size) return Bukkit.getLogger().warning("Menu : $title item outside of menu. Slot : $slot")
         movables.remove(slot)
         this.setItem(slot, itemStack)
         if (!movable) movables.add(slot)
+    }
+
+    /**
+     * Sets an item in the inventory at the specified slot. If the slot is outside the
+     * inventory size, a warning message is logged and the method returns without
+     * performing any action.
+     *
+     * @param slot The slot number where the item should be set.
+     * @param itemStack The ItemStack to set in the slot.
+     * @param consumer A lambda expression that takes a [ClickData] object as an argument and performs actions based on the click event.
+     */
+    fun Inventory.setItem(slot: Int, itemStack: ItemStack, consumer: ClickData.() -> Unit) {
+        this.setItem(slot, itemStack)
+        buttons.add(Button(slot, consumer))
     }
 
     /**
@@ -74,6 +88,16 @@ abstract class UndefinedMenu(private val title: String, private val size: Int) {
      */
     fun Inventory.addButton(button: Button) {
         buttons.add(button)
+    }
+
+    /**
+     * Adds a button to the inventory.
+     *
+     * @param slot The slot number where the button should be placed.
+     * @param consumer A lambda expression that takes a [ClickData] object as an argument and performs actions based on the click event.
+     */
+    fun Inventory.addButton(slot: Int, consumer: ClickData.() -> Unit) {
+        buttons.add(Button(slot, consumer))
     }
 
     fun Inventory.addButtons(slot: List<Int>, consumer: ClickData.() -> Unit) {
