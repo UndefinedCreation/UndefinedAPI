@@ -133,6 +133,17 @@ class ItemBuilder(private var itemStack: ItemStack) {
         return this
     }
 
+    /**
+     * Sets the lore of the item.
+     *
+     * @param lore A vararg of components representing the lore of the item.
+     * @return The ItemBuilder instance.
+     */
+    fun setLore(vararg lore: String): ItemBuilder {
+        this.lore = lore.toMutableList()
+        return this
+    }
+
     fun addLine(line: String): ItemBuilder {
         this.lore.add(line)
         return this
