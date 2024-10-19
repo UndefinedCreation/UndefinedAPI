@@ -32,7 +32,7 @@ import org.bukkit.scoreboard.Team
  */
 
 @Deprecated("Old and outdated")
-class UndefinedScoreboard(private val title: String, private val  scoreboard: Scoreboard) {
+class UndefinedScoreboard(private val title: String, private val scoreboard: Scoreboard) {
 
     /**
      * Creates a new object of type "Scoreboard" with the given title.

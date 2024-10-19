@@ -9,7 +9,7 @@ import org.bukkit.block.data.BlockData
 import org.bukkit.craftbukkit.v1_20_R3.block.data.CraftBlockData
 import org.bukkit.entity.EntityType
 
-class NMSBlockDisplayEntity(block: BlockData): NMSDisplayEntity(EntityType.BLOCK_DISPLAY), NMSBlockDisplayEntity {
+class NMSBlockDisplayEntity(block: BlockData) : NMSDisplayEntity(EntityType.BLOCK_DISPLAY), NMSBlockDisplayEntity {
 
     override var blockData: BlockData = block
         set(value) {

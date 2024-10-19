@@ -1,5 +1,6 @@
 package com.undefined.api.menu
 
+import com.undefined.api.utils.item.ItemBuilder
 import org.bukkit.Material
 
 /**
@@ -13,7 +14,7 @@ object Panes {
      * @param type the type of material to use for the pane
      * @return the created pane
      */
-    private fun pane(type: Material) = com.undefined.api.builders.ItemBuilder(type).setName(" ").build()
+    private fun pane(type: Material) = ItemBuilder(type).setPlainName(" ").build()
 
     /**
      * Represents a clear glass pane.

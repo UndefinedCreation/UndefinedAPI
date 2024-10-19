@@ -6,8 +6,6 @@ import net.md_5.bungee.api.ChatColor
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-private val miniMessage = MiniMessage.miniMessage()
-
 /**
  * Converts the given string to small text.
  *
@@ -48,7 +46,21 @@ fun String.toSmallText(): String {
  *
  * @return The converted Component.
  */
-fun String.toComponent(): Component = miniMessage.deserialize(this)
+fun String.toComponent(): Component = MiniMessage.miniMessage().deserialize(this)
+
+/**
+ * Converts the given string to a Component.
+ *
+ * @return The converted Component.
+ */
+fun String.component(): Component = Component.text(this)
+
+/**
+ * Converts the given string to a Component using the MiniMessage deserialization.
+ *
+ * @return The converted Component.
+ */
+fun String.miniMessage(): Component = MiniMessage.miniMessage().deserialize(this)
 
 /**
  * Map of replacement values for color formatting. This map is used to replace color placeholders in strings with their corresponding ChatColor values.
@@ -129,5 +141,3 @@ fun String.translateColor(): String {
 
     return string
 }
-
-

@@ -11,11 +11,14 @@ import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
 import kotlin.collections.HashMap
 
+@Deprecated("Outdated ItemBuilder, use the new one at com.undefined.api.utils.item.ItemBuilder.", ReplaceWith("ItemBuilder", "com.undefined.api.utils.item.ItemBuilder"))
 /**
  * Represents a builder for creating ItemStack objects.
  *
  * The ItemBuilder class provides methods to conveniently set various properties of an ItemStack object,
  * such as display name, lore, amount, custom model data, and localized name.
+ *
+ * @see com.undefined.api.utils.item.ItemBuilder
  */
 class ItemBuilder(private var itemStack: ItemStack) {
 
@@ -35,15 +38,14 @@ class ItemBuilder(private var itemStack: ItemStack) {
      *
      * @param material The material of the item.
      */
-    constructor(material: Material): this(ItemStack(material))
+    constructor(material: Material) : this(ItemStack(material))
 
     /**
      * Creates a new instance of the class using a base64 string representation of an ItemStack.
      *
      * @param base64String The base64 string representation of an ItemStack.
      */
-    constructor(base64String: String): this(base64String.asItemStack())
-
+    constructor(base64String: String) : this(base64String.asItemStack())
 
     /**
      * Sets the name of the ItemStack.
