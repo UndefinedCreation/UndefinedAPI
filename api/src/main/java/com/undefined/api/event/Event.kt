@@ -20,7 +20,7 @@ inline fun <reified T : Event> event(
     priority: EventPriority = EventPriority.NORMAL,
     ignoreCancelled: Boolean = false,
     crossinline callback: T.() -> Unit
-): UndefinedListener = UndefinedListener().apply{
+): UndefinedListener = UndefinedListener().apply {
     com.undefined.api.API.plugin.server.pluginManager.registerEvent(
         T::class.java,
         this,

@@ -51,12 +51,22 @@ class ItemBuilder(private val material: Material) {
         return this
     }
 
+    fun setLore(lore: List<Component>): ItemBuilder {
+        this.lore = lore.toMutableList()
+        return this
+    }
+
     fun setLore(vararg lore: Component): ItemBuilder {
         this.lore = lore.toMutableList()
         return this
     }
 
     fun setLore(lore: List<String>): ItemBuilder {
+        this.lore = lore.map { it.miniMessage() }.toMutableList()
+        return this
+    }
+
+    fun setLore(vararg lore: String): ItemBuilder {
         this.lore = lore.map { it.miniMessage() }.toMutableList()
         return this
     }
