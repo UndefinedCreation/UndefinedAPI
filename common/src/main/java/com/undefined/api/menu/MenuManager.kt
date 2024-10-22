@@ -4,6 +4,7 @@ import com.undefined.api.menu.normal.UndefinedMenu
 import com.undefined.api.menu.normal.button.ClickData
 import com.undefined.api.menu.normal.button.MenuButton
 import com.undefined.api.menu.page.UndefinedPageMenu
+import com.undefined.api.scheduler.delay
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -71,7 +72,7 @@ object MenuManager : Listener {
      * @param undefinedMenu the undefined menu to be opened
      */
     fun Player.openMenu(undefinedMenu: UndefinedMenu) {
-        com.undefined.api.scheduler.delay(1) {
+        delay(1) {
             if (undefinedMenu.inventory == null) undefinedMenu.inventory = undefinedMenu.generateInventory()
             openMenus[player!!.uniqueId] = undefinedMenu
             openInventory(undefinedMenu.inventory!!)

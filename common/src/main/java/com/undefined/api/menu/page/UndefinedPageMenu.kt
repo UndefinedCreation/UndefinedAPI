@@ -18,7 +18,12 @@ import org.bukkit.inventory.ItemStack
  * @property size The size of the menu.
  * @property list The list of ItemStacks for the menu.
  */
-abstract class UndefinedPageMenu(private val title: String, private val size: Int, private val list: List<ItemStack>): UndefinedMenu(title, size) {
+abstract class UndefinedPageMenu(private val title: String, private val size: Int, private var list: List<ItemStack>): UndefinedMenu(title, size) {
+
+    /**
+     * Represents a lambda that returns a list of `ItemStack`.
+     */
+    private val lambdaList: ((Unit) -> List<ItemStack>)? = null
 
     /**
      * Represents a nullable property that holds a reference to a PageButton object.
@@ -87,6 +92,32 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
      * Constructs a `UndefinedPageMenu` object with the given `title`, `menuSize`, and `list`.
      *
      * @param title The title of the menu.
+     * @param size The size of the menu.
+     * @param list A lambda that returns a list of `ItemStack` objects.
+     */
+    constructor(title: String, size: Int, list: (Unit) -> List<ItemStack>) : this(
+        title,
+        size,
+        list.invoke(Unit)
+    )
+
+    /**
+     * Constructs a `UndefinedPageMenu` object with the given `title`, `menuSize`, and `list`.
+     *
+     * @param title The title of the menu.
+     * @param menuSize The size of the menu. Defaults to `MenuSize.LARGE`.
+     * @param list A lambda that returns a list of `ItemStack` objects.
+     */
+    constructor(title: String, menuSize: MenuSize = MenuSize.LARGE, list: (Unit) -> List<ItemStack>) : this(
+        title,
+        menuSize.size,
+        list.invoke(Unit)
+    )
+
+    /**
+     * Constructs a `UndefinedPageMenu` object with the given `title`, `menuSize`, and `list`.
+     *
+     * @param title The title of the menu.
      * @param menuSize The size of the menu. Defaults to `MenuSize.LARGE`.
      * @param list A list of `ItemStack` objects.
      */
@@ -96,6 +127,18 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
         list
     )
 
+    /**
+     * If a lambda list is present, will update the main list accordingly to the return value of the lambda.
+     *
+     * It will also generate the inventory for the second time if shouldGenerateInventory is set to true.
+     *
+     * @param shouldGenerateInventory A boolean that if true, will run generateInventory. It defaults to true.
+     * @see generateInventory
+     */
+    fun update(shouldGenerateInventory: Boolean = true) {
+        lambdaList?.let { list = it.invoke(Unit) }
+        if (shouldGenerateInventory) generateInventory()
+    }
 
     /**
      * Navigates to the next page in the menu.
@@ -136,14 +179,12 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
      * @param display The lambda function used to configure the inventory.
      * @return The created inventory.
      */
-    fun createPageInventory(display: Inventory.() -> Unit): Inventory{
+    fun createPageInventory(display: Inventory.() -> Unit): Inventory {
         inventory = Bukkit.createInventory(null, size, title).apply(display)
         var index = 0
 
         inventory!!.contents.forEach {
-            if (it != null) {
-                itemsMap[index] = it
-            }
+            if (it != null) itemsMap[index] = it
             index++
         }
 
