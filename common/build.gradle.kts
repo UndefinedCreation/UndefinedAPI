@@ -15,7 +15,6 @@ dependencies {
     compileOnly(project(":v1_21"))
 }
 
-
 tasks {
     compileKotlin {
         kotlinOptions.jvmTarget = "21"
