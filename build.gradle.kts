@@ -46,14 +46,13 @@ allprojects {
     apply(plugin = "java")
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
-    apply(plugin="org.jetbrains.dokka")
+    apply(plugin = "org.jetbrains.dokka")
 
     group = groupIdVar
     version = versionVar
 
-
     publishing {
-        publications{
+        publications {
             register<MavenPublication>("pubMaven") {
                 groupId = groupIdVar
                 artifactId = artifactIdVar

@@ -39,7 +39,7 @@ import java.util.*
  * This class provides methods to manipulate and interact with a player,
  * such as moving, teleporting, setting items, changing pose, and more.
  */
-class NMSPlayer: NMSPlayer, NMSLivingEntity {
+class NMSPlayer : NMSPlayer, NMSLivingEntity {
 
     override val viewers: MutableList<Player> = mutableListOf()
     private var serverPlayer: ServerPlayer? = null

@@ -6,7 +6,7 @@ import com.undefined.api.nms.interfaces.NMSPlayer
 import org.bukkit.entity.Player
 
 @Deprecated("Use createFakeEntity instead")
-fun UndefinedAPI.createFakePlayer(name: String, skinName: String = name): NMSPlayer?{
+fun UndefinedAPI.createFakePlayer(name: String, skinName: String = name): NMSPlayer? {
     val version = getNMSVersion()
     return when(version) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.npc.NMSPlayer(name, skinName)
@@ -17,7 +17,7 @@ fun UndefinedAPI.createFakePlayer(name: String, skinName: String = name): NMSPla
 }
 
 @Deprecated("Use createFakeEntity instead")
-fun UndefinedAPI.createFakePlayer(name: String, texture: String, sign: String): NMSPlayer?{
+fun UndefinedAPI.createFakePlayer(name: String, texture: String, sign: String): NMSPlayer? {
     val version = getNMSVersion()
     return when(version) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.npc.NMSPlayer(name, texture, sign)

@@ -5,7 +5,7 @@ import com.undefined.api.command.info.NumberSubCommandInfo
 import com.undefined.api.command.info.StringSubCommandInfo
 import org.bukkit.command.CommandSender
 
-class StringSubCommand: UndefinedSubCommand("undefined_api_value") {
+class StringSubCommand : UndefinedSubCommand("undefined_api_value") {
 
     private val stringExe: MutableList<StringSubCommandInfo.() -> Boolean> = mutableListOf()
 
