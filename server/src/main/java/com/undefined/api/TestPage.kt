@@ -8,22 +8,10 @@ import com.undefined.api.menu.page.UndefinedPageMenu
 import com.undefined.api.menu.page.button.PageButton
 import com.undefined.api.utils.item.ItemBuilder
 import org.bukkit.Material
-import org.bukkit.inventory.Inventory
 
 class TestPage : UndefinedPageMenu("title", MenuSize.MINI, { Main.INSTANCE.value }) {
     override var clickData: ClickData.() -> Unit = {
-        val page = object : UndefinedMenu("title", MenuSize.MINI) {
-            override fun generateInventory() = createInventory {
-                setItem(1, ItemBuilder(Material.EMERALD).setName("test").build()) {
-                    println("click!")
-                    Main.INSTANCE.value.add(ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName("<reset><#ef4444>Test1").build())
-                    println(Main.INSTANCE.value)
-                    this@TestPage.update()
-                    println(Main.INSTANCE.value)
-                    player.openMenu(this@TestPage)
-                }
-            }
-        }
+        val page = OtherPage(this@TestPage)
         player.openMenu(page)
     }
 
@@ -32,4 +20,17 @@ class TestPage : UndefinedPageMenu("title", MenuSize.MINI, { Main.INSTANCE.value
         setNextButton(PageButton(26, ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName("<reset><#1ff04c>ɴᴇxᴛ ᴘᴀɢᴇ").build(), ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName("<reset><#ef4444>ᴘʀᴇᴠɪᴏᴜѕ ᴘᴀɢᴇ").build())) // TODO("Greener green")
     }
 
+}
+
+class OtherPage(val parent: UndefinedPageMenu) : UndefinedMenu("title", MenuSize.MINI) {
+    override fun generateInventory() = createInventory {
+        setItem(1, ItemBuilder(Material.EMERALD).setName("test").build()) {
+            println("click!")
+            Main.INSTANCE.value.add(ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName("<reset><#ef4444>Test1").build())
+            println(Main.INSTANCE.value.map { it.type })
+            parent.update()
+            println(Main.INSTANCE.value.map { it.type })
+            player.openMenu(parent)
+        }
+    }
 }

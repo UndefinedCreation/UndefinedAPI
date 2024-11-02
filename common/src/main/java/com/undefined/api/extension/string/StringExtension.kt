@@ -11,8 +11,7 @@ import java.util.regex.Pattern
  *
  * @return The converted string in small text.
  */
-fun String.toSmallText(): String {
-    return lowercase()
+fun String.toSmallText(): String = lowercase()
         .replace("q", "ꞯ")
         .replace("w", "ᴡ")
         .replace("e", "ᴇ")
@@ -39,7 +38,39 @@ fun String.toSmallText(): String {
         .replace("b", "ʙ")
         .replace("n", "ɴ")
         .replace("m", "ᴍ")
-}
+
+/**
+ * Converts the given small text string to normal text.
+ *
+ * @return The converted string in normal text.
+ */
+fun String.toNormalText() = lowercase()
+    .replace("ꞯ", "q")
+    .replace("ᴡ", "w")
+    .replace("ᴇ", "e")
+    .replace("ʀ", "r")
+    .replace("ᴛ", "t")
+    .replace("ʏ", "y")
+    .replace("ᴜ", "u")
+    .replace("ɪ", "i")
+    .replace("ᴏ", "o")
+    .replace("ᴘ", "p")
+    .replace("ᴀ", "a")
+    .replace("ѕ", "s")
+    .replace("ᴅ", "d")
+    .replace("ꜰ", "f")
+    .replace("ɢ", "g")
+    .replace("ʜ", "h")
+    .replace("ᴊ", "j")
+    .replace("ᴋ", "k")
+    .replace("ʟ", "l")
+    .replace("ᴢ", "z")
+    .replace("x", "x")
+    .replace("ᴄ", "c")
+    .replace("ᴠ", "v")
+    .replace("ʙ", "b")
+    .replace("ɴ", "n")
+    .replace("ᴍ", "m")
 
 /**
  * Converts the given string to a Component using the MiniMessage deserialization.

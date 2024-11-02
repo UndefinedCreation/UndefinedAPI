@@ -42,7 +42,7 @@ class ItemBuilder(private val material: Material) {
     }
 
     fun setName(name: String): ItemBuilder {
-        this.name = name.miniMessage()
+        this.name = "<reset>$name".miniMessage()
         return this
     }
 
@@ -62,7 +62,7 @@ class ItemBuilder(private val material: Material) {
     }
 
     fun setLore(vararg lore: String): ItemBuilder {
-        this.lore = lore.map { it.miniMessage() }.toMutableList()
+        this.lore = lore.map { "<reset>$it".miniMessage() }.toMutableList()
         return this
     }
 
@@ -72,7 +72,7 @@ class ItemBuilder(private val material: Material) {
     }
 
     fun addLore(vararg lore: String): ItemBuilder {
-        this.lore.addAll(lore.map { it.miniMessage() }.toList())
+        this.lore.addAll(lore.map { "<reset>$it".miniMessage() }.toList())
         return this
     }
 

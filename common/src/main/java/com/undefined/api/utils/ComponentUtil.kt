@@ -3,6 +3,14 @@ package com.undefined.api.utils
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
+
+/**
+ * Convert component into a plain string.
+ *
+ * @return A string in plain text format.
+ */
+fun Component.plainText(): String = PlainTextComponentSerializer.plainText().serialize(this)
 
 /**
  * Convert component into a string that uses the legacy format.

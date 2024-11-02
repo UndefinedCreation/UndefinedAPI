@@ -137,7 +137,7 @@ abstract class UndefinedPageMenu(private val title: String, private val size: In
      */
     fun update(shouldGenerateInventory: Boolean = true) {
         lambdaList?.let { list = it.invoke(Unit) }
-        if (shouldGenerateInventory) generateInventory()
+        if (shouldGenerateInventory) inventory = generateInventory()
     }
 
     /**

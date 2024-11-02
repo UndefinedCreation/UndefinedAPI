@@ -1,12 +1,12 @@
 package com.undefined.api.menu.presets
 
-import com.undefined.api.builders.ItemBuilder
 import com.undefined.api.extension.string.translateColor
 import com.undefined.api.menu.MenuSize
 import com.undefined.api.menu.normal.button.ClickData
 import com.undefined.api.menu.page.UndefinedPageMenu
 import com.undefined.api.menu.page.button.PageButton
 import com.undefined.api.menu.setRow
+import com.undefined.api.utils.item.ItemBuilder
 import org.bukkit.Material
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -33,19 +33,25 @@ class UndefinedDefaultPageMenu(
      */
     override fun generateInventory(): Inventory = createPageInventory {
         setBackButton(
-            PageButton(45, ItemBuilder(Material.RED_STAINED_GLASS_PANE)
-                .setName("<reset><#d92323>ʙᴀᴄᴋ ᴀ ᴘᴀɢᴇ".translateColor())
-                .addLine(" ")
-                .addLine("<reset><gray>ᴄʟɪᴄᴋ ᴛᴏ ɢᴏ ʙᴀᴄᴋ ᴀɴ ᴘᴀɢᴇ".translateColor()).build(),
-                ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build())
+            PageButton(
+                45,
+                ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+                    .setName("<reset><#d92323>ʙᴀᴄᴋ ᴀ ᴘᴀɢᴇ")
+                    .addPlainLore(" ")
+                    .addLore("<reset><gray>ᴄʟɪᴄᴋ ᴛᴏ ɢᴏ ʙᴀᴄᴋ ᴀɴ ᴘᴀɢᴇ").build(),
+                ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build()
+            )
         )
         setNextButton(
-            PageButton(53, ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
-                .setName("<reset><#32e67d>ɴᴇxᴛ ᴘᴀɢᴇ".translateColor())
-                .addLine(" ")
-                .addLine("<reset><gray>ᴄʟɪᴄᴋ ᴛᴏ ɢᴏ ᴛᴏ ᴛʜᴇ ɴᴇxᴛ ᴘᴀɢᴇ".translateColor()).build(), com.undefined.api.builders.ItemBuilder(
-                Material.GRAY_STAINED_GLASS_PANE
-            ).setName(" ").build())
+            PageButton(
+                53,
+                ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
+                    .setName("<reset><#32e67d>ɴᴇxᴛ ᴘᴀɢᴇ")
+                    .addPlainLore(" ")
+                    .addLore("<reset><gray>ᴄʟɪᴄᴋ ᴛᴏ ɢᴏ ᴛᴏ ᴛʜᴇ ɴᴇxᴛ ᴘᴀɢᴇ")
+                    .build(),
+                ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build()
+            )
         )
 
         setRow(5, ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build())
