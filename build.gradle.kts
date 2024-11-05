@@ -12,7 +12,7 @@ plugins {
 }
 
 apply(plugin = "maven-publish")
-val versionVar = "0.5.92"
+val versionVar = "0.5.93"
 val groupIdVar = "com.undefined"
 val artifactIdVar = "api"
 
@@ -89,6 +89,7 @@ dependencies {
     implementation(project(":v1_20_4:", "reobf"))
     implementation(project(":v1_20_6:", "reobf"))
     implementation(project(":v1_21:", "reobf"))
+    implementation(project(":v1_21_3:", "reobf"))
     implementation(project(":api"))
 }
 

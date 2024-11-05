@@ -21,7 +21,8 @@ fun Block.sendBreakProgress(player: Player, stage: Int) {
     when(getNMSVersion()) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.BlockExtension.setBlockProgress(player, this, stage)
         "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.BlockExtension.setBlockProgress(player, this, stage)
-        "1.21", "1.21.1", "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.setBlockProgress(player, this, stage)
+        "1.21", "1.21.1" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.setBlockProgress(player, this, stage)
+        "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21_3.extensions.BlockExtension.setBlockProgress(player, this, stage)
     }
 }
 
@@ -29,7 +30,8 @@ fun BlockData.getID(): Int =
     when(getNMSVersion()) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.BlockExtension.getID(this)
         "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.BlockExtension.getID(this)
-        "1.21", "1.21.1", "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.getID(this)
+        "1.21", "1.21.1" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.getID(this)
+        "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21_3.extensions.BlockExtension.getID(this)
         else -> 0
     }
 
@@ -37,7 +39,8 @@ fun Int.asBlockData(): BlockData =
     when(getNMSVersion()) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.BlockExtension.getBlockDataFromID(this)
         "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.BlockExtension.getBlockDataFromID(this)
-        "1.21", "1.21.1", "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.getBlockDataFromID(this)
+        "1.21", "1.21.1" -> com.undefined.api.nms.v1_21.extensions.BlockExtension.getBlockDataFromID(this)
+        "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21_3.extensions.BlockExtension.getBlockDataFromID(this)
         else -> Material.STONE.createBlockData()
     }
 

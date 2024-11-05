@@ -11,7 +11,8 @@ fun UndefinedAPI.createFakePlayer(name: String, skinName: String = name): NMSPla
     return when(version) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.npc.NMSPlayer(name, skinName)
         "1.20.6" -> com.undefined.api.nms.v1_20_6.npc.NMSPlayer(name, skinName)
-        "1.21", "1.21.1", "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21.npc.NMSPlayer(name, skinName)
+        "1.21", "1.21.1" -> com.undefined.api.nms.v1_21.npc.NMSPlayer(name, skinName)
+        "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21_3.npc.NMSPlayer(name, skinName)
         else -> null
     }
 }
@@ -22,7 +23,8 @@ fun UndefinedAPI.createFakePlayer(name: String, texture: String, sign: String): 
     return when(version) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.npc.NMSPlayer(name, texture, sign)
         "1.20.6" -> com.undefined.api.nms.v1_20_6.npc.NMSPlayer(name, texture, sign)
-        "1.21", "1.21.1", "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21.npc.NMSPlayer(name, texture, sign)
+        "1.21", "1.21.1" -> com.undefined.api.nms.v1_21.npc.NMSPlayer(name, texture, sign)
+        "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21_3.npc.NMSPlayer(name, texture, sign)
         else -> null
     }
 }
@@ -32,7 +34,8 @@ fun Player.getTexture(): Array<String> {
     return when(version) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.PlayerExtension.getTextures(this)
         "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.PlayerExtension.getTextures(this)
-        "1.21", "1.21.1", "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21.extensions.PlayerExtension.getTextures(this)
+        "1.21", "1.21.1" -> com.undefined.api.nms.v1_21.extensions.PlayerExtension.getTextures(this)
+        "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21_3.extensions.PlayerExtension.getTextures(this)
         else -> arrayOf("","")
     }
 }
@@ -42,7 +45,8 @@ fun Player.triggerTotem(): Boolean {
     return when(version) {
         "1.20.4" -> com.undefined.api.nms.v1_20_4.extensions.PlayerExtension.triggerTotem(this)
         "1.20.6" -> com.undefined.api.nms.v1_20_6.extensions.PlayerExtension.triggerTotem(this)
-        "1.21", "1.21.1", "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21.extensions.PlayerExtension.triggerTotem(this)
+        "1.21", "1.21.1" -> com.undefined.api.nms.v1_21.extensions.PlayerExtension.triggerTotem(this)
+        "1.21.2", "1.21.3" -> com.undefined.api.nms.v1_21_3.extensions.PlayerExtension.triggerTotem(this)
         else -> false
     }
 }
