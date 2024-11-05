@@ -106,7 +106,9 @@ private val factories = mapOf(
     "1.20.4" to NMSEntityV1_20_4Factory(),
     "1.20.6" to NMSEntityV1_20_6Factory(),
     "1.21" to NMSEntityV1_21Factory(),
-    "1.21.1" to NMSEntityV1_21Factory()
+    "1.21.1" to NMSEntityV1_21Factory(),
+    "1.21.2" to NMSEntityV1_21Factory(),
+    "1.21.3" to NMSEntityV1_21Factory()
 )
 
 fun UndefinedAPI.createFakeEntity(entityType: EntityType, vararg data: Any): NMSEntity? {
